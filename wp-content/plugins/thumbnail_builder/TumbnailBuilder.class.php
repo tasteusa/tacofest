@@ -52,14 +52,37 @@ class TumbnailBuilder {
         add_filter('manage_edit-linked_thumbnail_columns', [$this,'editLinkedThumbnailColumns'] ) ;
         add_action('save_post', [$this,'save_thumbnail_metabox'], 1, 2);
         add_action('edit_form_after_title', [$this,'remove_metaboxes'], 100 );
-        add_action('quick_edit_custom_box', [$this,'displayQuickEditInputs'], 10, 2 );
+        //add_action('quick_edit_custom_box', [$this,'displayQuickEditInputs'], 10, 2 );
         add_action('manage_linked_thumbnail_posts_custom_column', [$this,'editLinkedThumbnailColumnsData'], 10, 2 );
         add_action('admin_menu',[$this,'registerThumbGeneratorPage']);
         add_action('admin_menu',[$this,'registerCatThumbsPage']);
         add_action('admin_head', [$this, 'includeTableStyle']);
-
+        add_filter( 'wp_terms_checklist_args', [$this,'termRadioChecklist'] );
 
         $this->registerAjax();
+    }
+
+    function termRadioChecklist( $args ) {
+        $screen = get_current_screen();
+        global $pluginDir;
+        require_once $pluginDir.'TermRadioChecklist.class.php';
+
+        if ( ! empty( $args['taxonomy'] ) && $args['taxonomy'] === 'category' /* <== Change to your required taxonomy */ ) {
+            if ( empty( $args['walker'] ) || is_a( $args['walker'], 'Walker' ) ) { // Don't override 3rd party walkers.
+                $args['walker'] = new TermRadioChecklistClass;
+            }
+        }
+
+        return $args;
+    }
+
+    public function singleCategoryScript(){
+        $screen = get_current_screen();
+        if($screen->post_type == self::$postType){
+            global $pluginUrl;
+            var_dump('asedasdasd asd adas dasd asd asd ada dasd asd asdas dasdas das', $pluginUrl.'js/single_category.js');
+            wp_enqueue_script('single_cat', $pluginUrl.'js/single_category.js', ['jquery']);
+        }
     }
 
     public function registerAjax(){
