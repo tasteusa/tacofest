@@ -1,0 +1,16 @@
+body{
+    background-color: #f1f1f1;
+}
+.form-control{
+    height: 30px;
+}
+.single-linked-thumb .thumbnail img{
+    height: 225px;
+    width: auto;
+}
+
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

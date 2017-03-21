@@ -1,0 +1,7 @@
+td.column-img,
+th.column-img{
+    width: 60px;
+}
+.inline-edit-col.column-img .input-text-wrap{
+    margin-left: 40px;
+}

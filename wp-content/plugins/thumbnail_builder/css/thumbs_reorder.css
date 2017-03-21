@@ -1,0 +1,7 @@
+body{
+    background-color: #f1f1f1;
+}
+.single-linked-thumb .thumbnail img{
+    height: 225px;
+    width: auto;
+}
