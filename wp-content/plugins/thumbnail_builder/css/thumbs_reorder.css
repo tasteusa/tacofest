@@ -1,7 +1,19 @@
 body{
     background-color: #f1f1f1;
 }
+.sorting-process .single-linked-thumb .thumbnai{
+    border-style: dashed;
+}
 .single-linked-thumb .thumbnail img{
     height: 225px;
     width: auto;
+}
+
+.single-linked-thumb.changed .thumbnail{
+    box-shadow: -2px 2px 8px 0;
+}
+.thumbs-alert{
+    position: fixed;
+    bottom: 0;
+    z-index: 99999;
 }

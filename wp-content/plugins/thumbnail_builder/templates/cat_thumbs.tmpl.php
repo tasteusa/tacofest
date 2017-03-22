@@ -7,7 +7,7 @@
         <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
                 <select type="text" class="form-control category-select" placeholder="Search">
-                    <option value="0">select category</option>
+                    <option value="0">Without category</option>
                     <?php foreach($autocompleteCat as $id=>$name): ?>
                         <option value="<?php echo $id ?>"><?php echo $name ?></option>
                     <?php endforeach; ?>

@@ -71,7 +71,7 @@
                 method: "POST",
                 url: ajaxurl,
                 data:{
-                    'action': 'create_thumbs',
+                    'action': 'tb_create_thumbs',
                     'thumbs': thumbsData
                 },
                 dataType: "json",

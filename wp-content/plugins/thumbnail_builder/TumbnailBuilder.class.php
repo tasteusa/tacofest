@@ -20,6 +20,7 @@ class TumbnailBuilder {
 
 
     public function init(){
+        add_action('admin_enqueue_scripts', [$this,'enqueueAdminScripts']);
         register_post_type( self::$postType,
             array(
                 'labels' => array(
@@ -58,37 +59,26 @@ class TumbnailBuilder {
         add_action('admin_menu',[$this,'registerCatThumbsPage']);
         add_action('admin_head', [$this, 'includeTableStyle']);
         add_filter( 'wp_terms_checklist_args', [$this,'termRadioChecklist'] );
+    }
 
-        $this->registerAjax();
+    public function enqueueAdminScripts(){
+        wp_enqueue_script('jqColorPicker', plugin_dir_url(__FILE__) . 'js/jqColorPicker.min.js', ['jquery']);
+        wp_enqueue_style('jqColorPicker.custom', plugin_dir_url(__FILE__) . 'css/jqColorPicker.css');
     }
 
     function termRadioChecklist( $args ) {
         $screen = get_current_screen();
-        global $pluginDir;
-        require_once $pluginDir.'TermRadioChecklist.class.php';
+        if(!isset($screen->post_type) || $screen->post_type != self::$postType)  return $args;
+        global $TBPluginDir;
+        require_once $TBPluginDir.'TermRadioChecklist.class.php';
 
-        if ( ! empty( $args['taxonomy'] ) && $args['taxonomy'] === 'category' /* <== Change to your required taxonomy */ ) {
-            if ( empty( $args['walker'] ) || is_a( $args['walker'], 'Walker' ) ) { // Don't override 3rd party walkers.
+        if ( ! empty( $args['taxonomy'] ) && $args['taxonomy'] === 'category') {
+            if ( empty( $args['walker'] ) || is_a( $args['walker'], 'Walker' ) ) {
                 $args['walker'] = new TermRadioChecklistClass;
             }
         }
 
         return $args;
-    }
-
-    public function singleCategoryScript(){
-        $screen = get_current_screen();
-        if($screen->post_type == self::$postType){
-            global $pluginUrl;
-            var_dump('asedasdasd asd adas dasd asd asd ada dasd asd asdas dasdas das', $pluginUrl.'js/single_category.js');
-            wp_enqueue_script('single_cat', $pluginUrl.'js/single_category.js', ['jquery']);
-        }
-    }
-
-    public function registerAjax(){
-        add_action( 'wp_ajax_create_thumbs', [$this, 'createThumbnails'] );
-        add_action( 'wp_ajax_reorder_thumbs', [$this, 'reorderThumbsAjax'] );
-        add_action( 'wp_ajax_get_thumbs_in_cat', [$this, 'getThumbsInCategoryAjax'] );
     }
 
     public function includeTableStyle(){
@@ -101,38 +91,9 @@ class TumbnailBuilder {
         add_meta_box('wp_lt_weburl', 'Web Url', [$this,'wp_lt_weburl_view'], self::$postType, 'normal', 'high');
     }
 
-    public function createThumbnails(){
-        global $user_ID;
-        $postIds=[];
-        $pos = $this->getMaxPosition();
-        if($pos == null)$pos=1;
-        foreach ($_POST['thumbs'] as $thumb){
-            $newPost = array(
-                'post_title' => $thumb['title'],
-                'post_status' => 'publish',
-                'post_date' => date('Y-m-d H:i:s'),
-                'post_author' => $user_ID,
-                'post_type' => self::$postType,
-                'post_category' => array($thumb['tax'])
-            );
-            $postId = wp_insert_post($newPost);
-            set_post_thumbnail( $postId, $thumb['attach_id'] );
-
-            $url = $thumb['url'];
-
-            if($url != '' && strpos($url,"http://") === false && strpos($url,"https://") === false) $url = 'http://'.$url;
-            $this->updateMeta($postId, '_web_link', $url);
-            $pos +=1;
-            $this->updateMeta($postId, self::$PosMetaName, $pos);
-            $postIds[] = $postId;
-        }
-
-        echo json_encode($postIds);
-        wp_die();
-    }
-
     public function remove_metaboxes(){
         global $wp_meta_boxes;
+        if(!isset($wp_meta_boxes[self::$postType])) return;
         $metaBoxes = $wp_meta_boxes[self::$postType]['normal'];
 
         foreach ( $metaBoxes as $lvl=>$metaArray){
@@ -224,77 +185,6 @@ class TumbnailBuilder {
         } else {
             add_post_meta($postId, $key, $value);
         }
-    }
-
-    public function reorderThumbsAjax(){
-        $this->reorderThumb($_POST['targetPostId'],$_POST['supportPostId'],$_POST['put']);
-    }
-
-    public function getThumbsInCategoryAjax(){
-        global $wpdb;
-        $tax = $_POST['tax'];
-
-        $args = array(
-            'post_status' => 'publish',
-            'posts_per_page' => 100,
-            'post_type' => self::$postType,
-            'meta_key' => self::$PosMetaName,
-            'cat' => $tax,
-            'orderby' => ['meta_value_num'=>'ASC','post_title'=>'ASC'],
-        );
-
-        $thumbs = get_posts( $args );
-        $results=[];
-
-        foreach($thumbs as $thumb){
-            $results[] = [
-                'id'=> $thumb->ID,
-                'img'=> get_the_post_thumbnail_url($thumb->ID),
-                'title'=> $thumb->post_title,
-                'url'=> get_post_meta($thumb->ID, '_web_link', true),
-                'pos'=>get_post_meta($thumb->ID, self::$PosMetaName, true)
-            ];
-        }
-
-        echo json_encode(['thumbs'=>$results]); wp_die();
-    }
-
-    public function reorderThumb($targetPostId, $supportPostId, $put = 'after'){
-        global $wpdb;
-        $key = self::$PosMetaName;
-        $postType = self::$postType;
-
-        $currentPos = get_post_meta($targetPostId, self::$PosMetaName, true);
-        $targetPos = ($supportPostId==0)?1:get_post_meta($supportPostId, self::$PosMetaName, true);
-        $currentPos = (empty($currentPos))?1:(int)$currentPos;
-
-        $query = "SELECT {$wpdb->posts}.ID as post_id, {$wpdb->postmeta}.meta_value as pos
-                  FROM {$wpdb->postmeta}
-                  LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID          
-                  WHERE {$wpdb->postmeta}.meta_key='$key' 
-                  AND {$wpdb->posts}.post_type='$postType' 
-                  AND {$wpdb->posts}.ID != $targetPostId
-                  ";
-
-        if($targetPos < $currentPos ){
-            if($put == 'after')$targetPos = $targetPos+1;
-            if($put == 'before')$targetPos = ($targetPos>1)?$targetPos-1:1;
-            $query.="AND {$wpdb->postmeta}.meta_value >= $targetPos AND {$wpdb->postmeta}.meta_value < $currentPos ORDER BY {$wpdb->postmeta}.meta_value DESC";
-        }else{
-            $query.="AND {$wpdb->postmeta}.meta_value <= $targetPos AND {$wpdb->postmeta}.meta_value > $currentPos ORDER BY {$wpdb->postmeta}.meta_value ASC";
-        }
-        $query.= "";
-        $posts = $wpdb->get_results($query);
-        $changed = [];
-        $this->updateMeta($targetPostId, $key, $targetPos);
-        $changed[$targetPostId] = $currentPos.' -> '.$targetPos.' (main)';
-        $newPos = $currentPos;
-        foreach($posts as $post){
-            $changed[$post->post_id] = $post->pos.' -> '.$currentPos;
-            $this->updateMeta($post->post_id, $key, $currentPos);
-            $currentPos = $post->pos;
-        }
-        echo json_encode($changed);wp_die();
     }
 
     public function getMaxPosition(){

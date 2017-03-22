@@ -21,8 +21,12 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-    /*isset vc*/
+
+    $TBPluginDir = __DIR__.DIRECTORY_SEPARATOR;
+    $TBPluginUrl = plugin_dir_url(__FILE__);
+    /*add shortcode to visual composer*/
     if(function_exists('vc_add_shortcode_param')){
+
         function regVcParam(){
             vc_map( array(
                 "name" => __( "Linked Thumbnails Grid"),
@@ -33,7 +37,7 @@
                     array(
                         "type" => "vc_cat_param",
                         "class" => "",
-                        "heading" => __("Categories", "js_composer"),
+                        "heading" => __("Categories"),
                         "param_name" => "cat",
                         "description" => __( "Select Categories"),
                     ),
@@ -48,14 +52,58 @@
                     array(
                         "type" => "dropdown",
                         "class" => "",
-                        "heading" => __("Title Visibility", "js_composer"),
+                        "heading" => __("Thumbnail Title Visibility"),
                         "param_name" => "title",
                         "value" => ['yes','no'],
                         "description" => __("Show Title?"),
                     ),
+                    array(
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => __("Thumbnail Title Font"),
+                        "param_name" => "th_title_font",
+                        "description" => __("Enter Thumbnail Title Font"),
+                    ),
+                    array(
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => __("Thumbnail Title size (px)"),
+                        "param_name" => "th_title_size",
+                        "description" => __("Enter Font Size"),
+                    ),
+                    array(
+                        "type" => "vc_color_picker_param",
+                        "class" => "",
+                        "heading" => __("Thumbnail Title color"),
+                        "param_name" => "th_title_color",
+                        "description" => __( "Select Color"),
+                    ),
+                    array(
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => __("Category Title Size (px)"),
+                        "param_name" => "cat_title_size",
+                        "description" => __("Enter Font Size"),
+                    ),
+                    array(
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => __("Category Title Font"),
+                        "param_name" => "th_title_font",
+                        "description" => __("Enter Category Title Font"),
+                    ),
+                    array(
+                        "type" => "vc_color_picker_param",
+                        "class" => "",
+                        "heading" => __("Category Title color"),
+                        "param_name" => "cat_title_color",
+                        "description" => __( "Select Color"),
+                    ),
                 ),
             ) );
         }
+        /*complete adding shortcode to visual composer*/
+
         function vcCatParam($settings, $value){
             $categories = get_categories( array(
                 'orderby' => 'name',
@@ -63,18 +111,21 @@
                 'hide_empty' => false,
             ) );
 
-            require_once __DIR__.DIRECTORY_SEPARATOR.'templates/short_code/vc_cat_param.tmpl.php';
+            return LTTmplToVar('templates/short_code/vc_cat_param.tmpl.php', ['settings'=>$settings, 'value'=>$value, 'categories'=>$categories], true);
         }
+
+        function vcColorParam($settings, $value){
+            return LTTmplToVar('templates/short_code/vc_color_picker_param.tmpl.php', ['settings'=>$settings, 'value'=>$value], true);
+        }
+
         vc_add_shortcode_param('vc_cat_param','vcCatParam');
+        vc_add_shortcode_param('vc_color_picker_param','vcColorParam',$TBPluginUrl.'js/visual_composer/vc_color_picker_param.js');
         add_action( 'vc_before_init', 'regVcParam' );
     }
 
-
-    $pluginDir = __DIR__.DIRECTORY_SEPARATOR;
-    $pluginUrl = plugin_dir_url(__FILE__);
-
-    require_once $pluginDir.'TumbnailBuilder.class.php';
-    require_once $pluginDir.'shortcodes/LTGridShortcode.class.php';
+    require_once $TBPluginDir.'TumbnailBuilder.class.php';
+    require_once $TBPluginDir.'TBAjax.class.php';
+    require_once $TBPluginDir.'shortcodes/LTGridShortcode.class.php';
 
     register_activation_hook( __FILE__, array( 'TumbnailBuilder', 'plugin_activation' ) );
 
@@ -82,16 +133,21 @@
 
     $TBuilderClass = new TumbnailBuilder();
     $gridShortcode = new LTGridShortcode();
+    $TBAjax = new TBAjax();
 
     add_action( 'init', 'thumbnail_builder_init' );
     function thumbnail_builder_init(){
         global $TBuilderClass;
+        global $TBAjax;
+
         $TBuilderClass->init();
+        $TBAjax->init();
     }
-    function LTTmplToVar($file, $args=[]){
-        global $pluginDir;
+    function LTTmplToVar($file, $args=[], $extract=false){
+        global $TBPluginDir;
+        if($extract)extract($args);
         ob_start();
-        require($pluginDir.$file);
+        require($TBPluginDir.$file);
         return ob_get_clean();
     }
     

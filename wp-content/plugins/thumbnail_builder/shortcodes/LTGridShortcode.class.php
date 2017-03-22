@@ -7,7 +7,13 @@ class LTGridShortcode {
         'col' => 4,
         'perPage' => 100,
         'title' => 'yes',
-        'cat' => []
+        'cat' => [],
+        'th_title_font' => false,
+        'th_title_size' => false,
+        'th_title_color' => false,
+        'cat_title_font' => false,
+        'cat_title_size' => false,
+        'cat_title_color' => false,
     ];
 
 
@@ -18,8 +24,8 @@ class LTGridShortcode {
     }
 
     function render( $args, $content = '') {
-        global $pluginUrl;
-        wp_enqueue_style('ltgs_style', $pluginUrl . '/css/thumbnail_grid_shortcode.css');
+        global $TBPluginUrl;
+        wp_enqueue_style('ltgs_style', $TBPluginUrl . '/css/thumbnail_grid_shortcode.css');
         $args = (gettype($args) == 'array')?array_merge(self::$defaults,$args):self::$defaults;
 
         if($args['col'] > 6) $args['col']=6;
@@ -71,11 +77,14 @@ class LTGridShortcode {
 
         }
         wp_reset_query();
-        $html = '<div class="LTGridContainer">';
+
+        $shortcodeId = 'lgts_'.uniqid();
+        $args['shortcodeId'] = $shortcodeId;
+        $html = '<div id="'.$shortcodeId.'" class="LTGridContainer">';
         foreach($byCategoryContent as $taxId=>$content){
             $html .= LTTmplToVar('templates/short_code/category_grid_container.tmpl.php',['catName'=>$catTitles[$taxId],'content'=>$content]);
         }
-
+        $html .= LTTmplToVar('templates/short_code/shortcode_styles.tmpl.php',$args, true);
         return $html.'</div>';
 
     }
