@@ -1,6 +1,4 @@
-.ltg_item .thumbnail img,
-#content .ltg_item .thumbnail img,
-#Content .ltg_item .thumbnail img{
+.LTGridContainer .ltg_item .thumbnail img{
     height: 150px;
     width: auto;
 }

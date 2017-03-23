@@ -4,6 +4,8 @@ class TumbnailBuilder {
     public static $metaBoxIds = ['wp_lt_weburl'];
     public static $postType = 'linked_thumbnail';
     public static $PosMetaName = '_thumb_glob_order';
+    private static $optName = '_lgts_cat_order';
+    public static $categories = [];
 
     public function __constructor(){
 
@@ -20,6 +22,7 @@ class TumbnailBuilder {
 
 
     public function init(){
+        $this->checkCatOrderOpt();
         add_action('admin_enqueue_scripts', [$this,'enqueueAdminScripts']);
         register_post_type( self::$postType,
             array(
@@ -57,8 +60,52 @@ class TumbnailBuilder {
         add_action('manage_linked_thumbnail_posts_custom_column', [$this,'editLinkedThumbnailColumnsData'], 10, 2 );
         add_action('admin_menu',[$this,'registerThumbGeneratorPage']);
         add_action('admin_menu',[$this,'registerCatThumbsPage']);
+        add_action('admin_menu',[$this,'registerCatReorderPage']);
         add_action('admin_head', [$this, 'includeTableStyle']);
         add_filter( 'wp_terms_checklist_args', [$this,'termRadioChecklist'] );
+    }
+
+    private function checkCatOrderOpt(){
+
+        $optVal = get_option(self::$optName,false);
+        $changedVal = ['0'];
+        $keyValCategories =[];
+        $CategoriesSorted =[];
+
+        if($optVal !== false){
+            $optVal = json_decode($optVal,true);
+            $changedVal = $optVal;
+        }
+
+        $categories = get_categories( [
+            'orderby' => 'name',
+            'hide_empty' => false,
+        ] );
+
+        foreach( $categories as $category ) {
+            $keyValCategories[$category->term_id] = $category;
+            if(!in_array((string)$category->term_id,$changedVal))$changedVal[]=(string)$category->term_id;
+        }
+
+        $changedValNew = $changedVal;
+        foreach ($changedVal as $id=>$catId){
+
+            if(!isset($keyValCategories[$catId])){
+                if($catId != '0') unset($changedValNew[$id]);
+                continue;
+            }
+
+            $CategoriesSorted[] = $keyValCategories[$catId];
+        }
+
+        if($changedValNew !=  $optVal){
+            (!$optVal)?add_option(self::$optName,json_encode($changedValNew)):update_option(self::$optName,json_encode($changedValNew));
+        }
+        /*echo '<pre>';
+        var_dump($optVal);
+        var_dump($CategoriesSorted);
+        echo '</pre>';exit;*/
+        self::$categories = $CategoriesSorted;
     }
 
     public function enqueueAdminScripts(){
@@ -231,11 +278,7 @@ class TumbnailBuilder {
 
     function thumbGeneratorView() {
 
-        $categories = get_categories( array(
-            'orderby' => 'name',
-            'order'   => 'ASC',
-            'hide_empty' => false,
-        ) );
+        $categories = self::$categories;
 
         $redirectUrl = get_admin_url( null, '/edit.php?post_type=linked_thumbnail');
         $autocompleteCat = [];
@@ -244,12 +287,12 @@ class TumbnailBuilder {
         }
 
         wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
-        wp_enqueue_style('thumb.generator', plugin_dir_url(__FILE__) . '/css/generator.css');
+        wp_enqueue_style('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/css/generator.css');
 
         wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
-        wp_enqueue_script('thumb.generator', plugin_dir_url(__FILE__) . '/js/generator.js', ['jquery','jquery.tmpl']);
+        wp_enqueue_script('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/js/generator.js', ['jquery','jquery.tmpl']);
 
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/thumb_generator.tmpl.php';
@@ -268,10 +311,7 @@ class TumbnailBuilder {
 
     public function catThumbsView() {
 
-        $categories = get_categories( array(
-            'orderby' => 'name',
-            'order'   => 'ASC'
-        ) );
+        $categories = self::$categories;
 
         $autocompleteCat = [];
         foreach( $categories as $category ) {
@@ -279,14 +319,41 @@ class TumbnailBuilder {
         }
 
         wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
-        wp_enqueue_style('thumb.reorder', plugin_dir_url(__FILE__) . '/css/thumbs_reorder.css');
+        wp_enqueue_style('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/css/thumbs_reorder.css');
 
         wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
-        wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/reorder.js', ['jquery','jquery.tmpl']);
+        wp_enqueue_script('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/js/reorder.js', ['jquery','jquery.tmpl']);
 
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb_reorder.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/cat_thumbs.tmpl.php';
+    }
+
+
+    public function registerCatReorderPage() {
+        add_submenu_page(
+            "edit.php?post_type=".self::$postType,
+            __( 'Categories Reorder'),
+            __( 'Categories Reorder'),
+            'manage_options',
+            'thumbnail-cat-reorder',
+            [$this, 'catReorderView']
+        );
+    }
+
+    public function catReorderView() {
+
+        $categories = self::$categories;
+
+        wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
+        wp_enqueue_style('ltgs.cat.reorder', plugin_dir_url(__FILE__) . '/css/cat_reorder.css');
+
+        wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
+        $this->includeJqueryUi();
+        wp_enqueue_media();
+        wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/cat_reorder.js', ['jquery','jquery.tmpl']);
+
+        require_once __DIR__.DIRECTORY_SEPARATOR.'templates/cat_reorder.tmpl.php';
     }
 }

@@ -4,6 +4,7 @@ class TBAjax {
 
     public static $postType = 'linked_thumbnail';
     public static $PosMetaName = '_thumb_glob_order';
+    private static $optName = '_lgts_cat_order';
 
     public function __constructor(){
 
@@ -18,6 +19,14 @@ class TBAjax {
         add_action( 'wp_ajax_tb_reorder_thumbs', [$this, 'reorderThumbsAjax'] );
         add_action( 'wp_ajax_tb_get_thumbs_in_cat', [$this, 'getThumbsInCategoryAjax'] );
         add_action( 'wp_ajax_tb_edit_thumb', [$this, 'editThumbnailAjax'] );
+        add_action( 'wp_ajax_tb_reorder_cat', [$this, 'reorderCatAjax'] );
+    }
+
+    public function reorderCatAjax(){
+        $orderArray = $_POST['orderArray'];
+        $orderJson =json_encode($orderArray);
+        $optVal = get_option(self::$optName,false);
+        if($optVal != $orderJson) update_option(self::$optName, $orderJson);
     }
 
     public function editThumbnailAjax(){
