@@ -22,15 +22,15 @@ define( 'STATIC_IN_CHILD', false );
  * --------------------------------------------------------------------------- */
 add_action( 'wp_enqueue_scripts', 'mfnch_enqueue_styles', 101 );
 function mfnch_enqueue_styles() {
-	
+
 	// Enqueue the parent stylesheet
 // 	wp_enqueue_style( 'parent-style', get_template_directory_uri() .'/style.css' );		//we don't need this if it's empty
-	
+
 	// Enqueue the parent rtl stylesheet
 	if ( is_rtl() ) {
 		wp_enqueue_style( 'mfn-rtl', get_template_directory_uri() . '/rtl.css' );
 	}
-	
+
 	// Enqueue the child stylesheet
 	wp_dequeue_style( 'style' );
 	wp_enqueue_style( 'style', get_stylesheet_directory_uri() .'/style.css' );
@@ -38,7 +38,7 @@ function mfnch_enqueue_styles() {
 	// Enqueue bootstrap
 	wp_dequeue_style( 'bootstrap' );
 	wp_enqueue_style( 'bootstrap', get_stylesheet_directory_uri() .'/css/bootstrap.min.css' );
-	
+
 }
 
 
@@ -51,7 +51,23 @@ function mfnch_textdomain() {
     load_child_theme_textdomain( 'mfn-opts', get_stylesheet_directory() . '/languages' );
 }
 
+if( ! function_exists( 'child_mfn_register_sidebar' ) ) {
 
+    function child_mfn_register_sidebar()
+    {
+        register_sidebar(array(
+            'name' => __('Top Line', 'mfn-opts'),
+            'id' => 'above-header-line',
+            'description' => __('Appears Above Header.', 'betheme'),
+            'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+            'after_widget' => '</aside>',
+            'before_title' => '<h4>',
+            'after_title' => '</h4>',
+        ));
+    }
+
+    add_action('widgets_init', 'child_mfn_register_sidebar');
+}
 /* ---------------------------------------------------------------------------
  * Override theme functions
  * 

@@ -11,4 +11,154 @@ Version: 		1.6.1
 /* Theme customization starts here
 -------------------------------------------------------------- */
 
+/************************Fonts************************/
 
+/***Crisp*************************/
+@font-face {
+    font-family: crispFont;
+    src: url(./fonts/Crisp.ttf) format("truetype");
+}
+/********************************/
+
+/***PassionOne******************/
+@font-face {
+    font-family: PassionOne;
+    src: url(./fonts/passionOne/PassionOne-Regular.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: PassionOne;
+    src: url(./fonts/passionOne/PassionOne-Bold.ttf);
+    font-weight: bold;
+}
+@font-face {
+    font-family: PassionOne;
+    src: url(./fonts/passionOne/PassionOne-Black.ttf);
+    font-weight: 900;
+}
+/********************************/
+
+/***sourceSansPro******************/
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Italic.ttf);
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Regular.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Bold.ttf);
+    font-weight: bold;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-BoldItalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Semibold.ttf);
+    font-weight: bold;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-SemiboldItalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+/********************************/
+
+/***********************End Fonts********************/
+
+
+/***header******************************************************/
+#Top_bar .menu_wrapper .menu li a{
+    padding: 0 0;
+}
+.header-split #Header .container .top_bar_left .logo{
+    width: 280px;
+    background-color: white;
+    border-radius: 0 0 5px 5px;
+}
+.header-split #Header .top_bar_left .container .logo #logo{
+
+}
+.child_header_wrapper .above-deader-line{
+    background-color: #dd3333;
+    height: 60px;
+    padding-right: 20px;
+}
+#Top_bar .menu_wrapper .menu li a span{
+    padding: 0 15px;
+    border: none;
+    color: white;
+    font-size: 30px;
+    line-height: 103px;
+    font-family: PassionOne;
+}
+
+@media only screen and (min-width: 768px){
+    .child_header_wrapper .above-deader-line{
+        padding-right: 260px;
+    }
+    .header-semi #Header #Top_bar:not(.is-sticky) {
+        height: 300px;
+        background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 ); /* IE6-9 */
+    }
+}
+/************************************************************************************************/
+
+/****MainPage*************************************************************************************/
+
+.sessions-row .sessions-header{
+    font-size: 72px;
+    line-height: initial;
+    color: #de3b3b;
+    font-family: PassionOne;
+    margin-top: 54px;
+}
+.wpb_wrapper .vc_inner{
+    margin-bottom: 0;
+}
+.sessions-row .session-header-row{
+    margin-bottom: 0;
+}
+.sessions-row .sessions-description-block{
+    max-width: 880px;
+}
+.sessions-row .sessions-description-block .session-descr-left{
+    border-right: 1px solid black;
+}
+.sessions-row .sessions-description-block .session-descr-header{
+    font-family: PassionOne;
+    line-height: initial;
+    font-size: 48px;
+    margin-bottom: 0;
+    color: black;
+}
+.sessions-row .sessions-description-block .session-descr-text p{
+    margin-bottom: 0;
+    font-family: sourceSansPro;
+    font-weight: 600;
+    line-height: 28px;
+    font-size: 24px;
+    color: black;
+}
+.sessions-row .per-ticket-text p{
+    font-size: 24px;
+    line-height: 30px;
+    color: black;
+    padding-bottom: 0;
+}
+.sessions-row .sessions-header.per-session-header{
+    margin-bottom: 0;
+}
