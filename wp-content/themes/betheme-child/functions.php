@@ -16,6 +16,7 @@ define( 'WHITE_LABEL', false );
 // Static CSS is placed in Child Theme directory ----------
 define( 'STATIC_IN_CHILD', false );
 
+require_once( get_stylesheet_directory() .'/functions/theme-ch-menu.php' );
 
 /* ---------------------------------------------------------------------------
  * Enqueue Style

@@ -64,55 +64,122 @@ Version: 		1.6.1
 @font-face {
     font-family: sourceSansPro;
     src: url(./fonts/sourceSansPro/SourceSansPro-Semibold.ttf);
-    font-weight: bold;
+    font-weight: 600;
 }
 @font-face {
     font-family: sourceSansPro;
     src: url(./fonts/sourceSansPro/SourceSansPro-SemiboldItalic.ttf);
-    font-weight: bold;
+    font-weight: 600;
     font-style: italic;
+}
+/********************************/
+
+/***raleway******************/
+@font-face {
+    font-family: raleway;
+    src: url(./fonts/raleway/Raleway-Regular.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: raleway;
+    src: url(./fonts/raleway/Raleway-Bold.ttf);
+    font-weight: bold;
 }
 /********************************/
 
 /***********************End Fonts********************/
 
 
+body #Wrapper, body #Content{
+    background-color: white;
+}
+
 /***header******************************************************/
 #Top_bar .menu_wrapper .menu li a{
     padding: 0 0;
 }
-.header-split #Header .container .top_bar_left .logo{
-    width: 280px;
-    background-color: white;
-    border-radius: 0 0 5px 5px;
-}
+
 .header-split #Header .top_bar_left .container .logo #logo{
 
 }
 .child_header_wrapper .above-deader-line{
     background-color: #dd3333;
     height: 60px;
-    padding-right: 20px;
 }
+#Top_bar .menu_wrapper .mfnch-menu-split{
+    flex: 1;
+}
+#Top_bar.is-sticky .menu_wrapper .menu li a span{
+    margin: 0;
+    color: #000;
+}
+#Top_bar.is-sticky .menu_wrapper .menu li a{
+    padding: 0;
+    margin: 0;
+}
+
+#Top_bar .menu_wrapper .mfnch-menu-split-right .menu{
+    padding-left: 30px;
+}
+#Top_bar .menu_wrapper .mfnch-menu-split-left .menu{
+    padding-right: 30px;
+}
+
 #Top_bar .menu_wrapper .menu li a span{
     padding: 0 15px;
     border: none;
     color: white;
     font-size: 30px;
-    line-height: 103px;
+    line-height: initial;
+    margin-top: 44px;
     font-family: PassionOne;
+}
+.slider-foglite{
+    background-color: transparent !important;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 );
+}
+.mfnch-menu-split .menu {
+    margin-bottom: 0;
 }
 
 @media only screen and (min-width: 768px){
-    .child_header_wrapper .above-deader-line{
-        padding-right: 260px;
+
+    .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo{
+        width: 280px;
+        min-width: 280px;
+        background-color: white;
+        border-radius: 0 0 5px 5px;
+        position: relative;
+        left: auto;
+        right: auto;
     }
-    .header-semi #Header #Top_bar:not(.is-sticky) {
-        height: 300px;
-        background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 ); /* IE6-9 */
+
+    .header-split #Header #Top_bar.is-sticky .container-fluid .top_bar_left .menu_wrapper .logo img{
+        min-height: 50px;
+    }
+    .header-split #Header #Top_bar.is-sticky .container-fluid .top_bar_left .menu_wrapper .logo{
+        width: auto;
+        min-width: 10px;
+    }
+    .header-split #Header #Top_bar.is-sticky .container-fluid .top_bar_left .menu_wrapper #logo{
+        height: 60px !important;
+    }
+
+    .menu_wrapper.menu_wrapper_split{
+        display: flex;
+        justify-content: center;
+    }
+
+    .header-semi #Header #Top_bar:not(.is-sticky){
+        background: transparent;
+        /*height: 600px;
+        background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%);
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 );*/
     }
 }
 /************************************************************************************************/
@@ -126,25 +193,31 @@ Version: 		1.6.1
     font-family: PassionOne;
     margin-top: 54px;
 }
+
 .wpb_wrapper .vc_inner{
     margin-bottom: 0;
 }
+
 .sessions-row .session-header-row{
     margin-bottom: 0;
 }
+
 .sessions-row .sessions-description-block{
     max-width: 880px;
 }
+
 .sessions-row .sessions-description-block .session-descr-left{
     border-right: 1px solid black;
 }
-.sessions-row .sessions-description-block .session-descr-header{
+
+.sessions-row .session-descr-header{
     font-family: PassionOne;
     line-height: initial;
     font-size: 48px;
     margin-bottom: 0;
     color: black;
 }
+
 .sessions-row .sessions-description-block .session-descr-text p{
     margin-bottom: 0;
     font-family: sourceSansPro;
@@ -153,12 +226,162 @@ Version: 		1.6.1
     font-size: 24px;
     color: black;
 }
+
 .sessions-row .per-ticket-text p{
     font-size: 24px;
     line-height: 30px;
     color: black;
     padding-bottom: 0;
 }
+
+.sessions-row .per-ticket-text{
+    margin-bottom: 20px;
+}
+
 .sessions-row .sessions-header.per-session-header{
     margin-bottom: 0;
+}
+
+.tickets-row{
+    justify-content: center;
+}
+
+.tickets-row .wpb_wrapper > div{
+    margin-bottom: 0;
+}
+
+.tickets-row .single-ticket-block .vc_column-inner{
+    padding: 0;
+}
+
+.tickets-row .single-ticket-block{
+    height: 480px;
+    width: 431px;
+    border: 5px solid;
+    border-radius: 10px;
+    margin-right: 22px;
+    margin-bottom: 45px;
+}
+
+.tickets-row .single-ticket-block .taco-ticket-title{
+    font-family: PassionOne;
+    font-size: 42px;
+    color: black;
+    line-height: initial;
+    margin-top: 15px;
+}
+
+.tickets-row .single-ticket-block .taco-ticket-text {
+    margin-top: 11px;
+}
+.tickets-row .single-ticket-block .taco-ticket-text p{
+    font-family: sourceSansPro;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 24px;
+    color: black;
+}
+
+.tickets-row .single-ticket-block .taco-ticket-green-text p{
+    color: #80a039;
+}
+
+.tickets-row .single-ticket-block .taco-ticket-red-text p{
+    color: #dd3333;
+}
+
+.tickets-row .single-ticket-block.taco-general-ticket{
+    border-color: #f1d269;
+}
+
+.tickets-row .single-ticket-block.taco-general-ticket .taco-ticket-title{
+    color: #f1d269;
+}
+
+.tickets-row .single-ticket-block.taco-tequila-ticket{
+    border-color: #80a039;
+    width: 470px;
+}
+
+.tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-title{
+    color: #80a039;
+}
+
+.tickets-row .single-ticket-block.taco-vip-ticket{
+    border-color: #dd3333;
+}
+
+.tickets-row .single-ticket-block.taco-vip-ticket .taco-ticket-title{
+    color: #dd3333;
+}
+
+.tickets-row .single-ticket-block:last-child{
+    margin-right: 0;
+}
+
+.sessions-row .vc_btn3-container.t-buy-tickets-btn a.vc_btn3{
+    background: transparent;
+    background-color: #ce2626;
+    box-shadow: 0 10px 0 #991d1e;
+    font-family: raleway;
+    font-weight: bold;
+    font-size: 48px;
+    border-radius: 15px;
+    line-height: 48px;
+    padding: 17px 60px;
+    border: none;
+}
+.sessions-row .session-note-text{
+    margin-bottom: 65px;
+}
+.sessions-row .session-note-text p{
+    font-family: sourceSansPro;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: normal;
+    color: black;
+}
+
+@media only screen and (min-width: 1400px){
+    .section .section_wrapper, .page .container {
+        max-width: 1400px;
+    }
+}
+
+.sessions-row .session-descr-header.food-subtitle p{
+    text-align: center;
+    margin-bottom: 0;
+    line-height: 48px;
+}
+
+.sessions-row .session-descr-header.food-subtitle{
+    margin-bottom: 63px;
+}
+
+.sessions-row .session-food-img img{
+    height: 493px;
+    max-height: 493px;
+    width: auto;
+}
+
+.sessions-row .session-food-title p{
+    font-family: PassionOne;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 34px;
+    margin-bottom: 0;
+    color: black;
+}
+
+.sessions-row .session-food-list li {
+    font-family: sourceSansPro;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 26px;
+    color: black;
+}
+
+.sessions-row .session-food-list li strong{
+    font-weight: 600;
+    color: #dd3333;
 }

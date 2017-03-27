@@ -75,8 +75,10 @@
 		<div id="Header_wrapper" class="child_header_wrapper" <?php echo $header_style; ?>>
            <?php if ( is_active_sidebar( 'above-header-line' ) ): ?>
                <div class="above-deader-line">
-                   <div class="pull-right">
-                       <?php dynamic_sidebar('above-header-line') ?>
+                   <div class="container">
+                       <div class="pull-right">
+                           <?php dynamic_sidebar('above-header-line') ?>
+                       </div>
                    </div>
                </div>
            <?php endif; ?>
