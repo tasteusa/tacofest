@@ -24,7 +24,6 @@ Version: 		1.6.1
 @font-face {
     font-family: PassionOne;
     src: url(./fonts/passionOne/PassionOne-Regular.ttf);
-    font-weight: normal;
 }
 @font-face {
     font-family: PassionOne;
@@ -52,6 +51,17 @@ Version: 		1.6.1
 }
 @font-face {
     font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Semibold.ttf);
+    font-weight: 600;
+}
+@font-face {
+    font-family: sourceSansPro;
+    src: url(./fonts/sourceSansPro/SourceSansPro-SemiboldItalic.ttf);
+    font-weight: 600;
+    font-style: italic;
+}
+@font-face {
+    font-family: sourceSansPro;
     src: url(./fonts/sourceSansPro/SourceSansPro-Bold.ttf);
     font-weight: bold;
 }
@@ -63,13 +73,13 @@ Version: 		1.6.1
 }
 @font-face {
     font-family: sourceSansPro;
-    src: url(./fonts/sourceSansPro/SourceSansPro-Semibold.ttf);
-    font-weight: 600;
+    src: url(./fonts/sourceSansPro/SourceSansPro-Black.ttf);
+    font-weight: 900;
 }
 @font-face {
     font-family: sourceSansPro;
-    src: url(./fonts/sourceSansPro/SourceSansPro-SemiboldItalic.ttf);
-    font-weight: 600;
+    src: url(./fonts/sourceSansPro/SourceSansPro-BlackItalic.ttf);
+    font-weight: 900;
     font-style: italic;
 }
 /********************************/
@@ -89,9 +99,14 @@ Version: 		1.6.1
 
 /***********************End Fonts********************/
 
-
-body #Wrapper, body #Content{
-    background-color: white;
+#Footer .footer_copy ul.social{
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+#Footer .footer_copy ul.social li a{
+    color:white;
+    line-height: normal;
+    font-size: 40px;
 }
 
 /***header******************************************************/
@@ -102,50 +117,22 @@ body #Wrapper, body #Content{
 .header-split #Header .top_bar_left .container .logo #logo{
 
 }
-.child_header_wrapper .above-deader-line{
-    background-color: #dd3333;
-    height: 60px;
+.header-semi #Header #Top_bar:not(.is-sticky){
+    background: transparent !important;
 }
-#Top_bar .menu_wrapper .mfnch-menu-split{
-    flex: 1;
-}
-#Top_bar.is-sticky .menu_wrapper .menu li a span{
-    margin: 0;
-    color: #000;
-}
-#Top_bar.is-sticky .menu_wrapper .menu li a{
-    padding: 0;
-    margin: 0;
-}
+@media only screen and (min-width: 1240px){
+    .header-semi #Header #Top_bar:not(.is-sticky) .Top_bar_inner{
+        background: transparent;
+    }
 
-#Top_bar .menu_wrapper .mfnch-menu-split-right .menu{
-    padding-left: 30px;
-}
-#Top_bar .menu_wrapper .mfnch-menu-split-left .menu{
-    padding-right: 30px;
-}
+    body:not(.header-simple) #Top_bar #menu.hiddOnDesk{
+        display: none !important;
+    }
 
-#Top_bar .menu_wrapper .menu li a span{
-    padding: 0 15px;
-    border: none;
-    color: white;
-    font-size: 30px;
-    line-height: initial;
-    margin-top: 44px;
-    font-family: PassionOne;
-}
-.slider-foglite{
-    background-color: transparent !important;
-    background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%);
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 );
-}
-.mfnch-menu-split .menu {
-    margin-bottom: 0;
-}
-
-@media only screen and (min-width: 768px){
+    .menu_wrapper.menu_wrapper_split{
+        display: flex;
+        justify-content: center;
+    }
 
     .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo{
         width: 280px;
@@ -167,20 +154,147 @@ body #Wrapper, body #Content{
     .header-split #Header #Top_bar.is-sticky .container-fluid .top_bar_left .menu_wrapper #logo{
         height: 60px !important;
     }
-
-    .menu_wrapper.menu_wrapper_split{
-        display: flex;
-        justify-content: center;
+}
+@media (max-width: 1239px){
+    .header-semi #Header #Top_bar:not(.is-sticky) .Top_bar_inner{
+        background-color: white;
     }
 
-    .header-semi #Header #Top_bar:not(.is-sticky){
-        background: transparent;
-        /*height: 600px;
-        background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%);
-        background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
-        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 );*/
+    .header-semi #Header #Top_bar:not(.is-sticky) .mfnch-menu-split{
+        display: none;
     }
+    .header-split #Header .container-fluid .top_bar_left .menu_wrapper #logo{
+        height: auto;
+        line-height: normal;
+        margin: 0;
+        width: 100%;
+    }
+    .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo{
+        width: 105px;
+        min-width: 105px;
+        padding: 0;
+    }
+
+}
+
+.child_header_wrapper .above-header-line ul.social{
+    display: block;
+    color: white;
+    font-size: 40px;
+    margin-bottom: 0;
+    margin-top: 10px;
+    float: right;
+}
+
+.child_header_wrapper .above-header-line ul.social li:first-child{
+    margin-right: -6px;
+}
+.child_header_wrapper .above-header-line ul.social li{
+    float: left;
+}
+
+.child_header_wrapper .above-header-line ul.social li a{
+    color: white;
+}
+
+.child_header_wrapper .above-header-line{
+    background-color: #dd3333;
+    height: 60px;
+}
+#Top_bar .menu_wrapper .mfnch-menu-split{
+    flex: 1;
+}
+#Top_bar.is-sticky .menu_wrapper .menu li a span{
+    margin: 0;
+    color: #000;
+}
+#Top_bar.is-sticky .menu_wrapper .menu li a{
+    padding: 0;
+    margin: 0;
+}
+
+#Top_bar .menu_wrapper .mfnch-menu-split-right .menu{
+    padding-left: 21px;
+}
+#Top_bar .menu_wrapper .mfnch-menu-split-left .menu{
+    padding-right: 21px;
+}
+
+#Top_bar .menu_wrapper .menu li a span{
+    padding: 0 10px;
+    border: none;
+    color: white;
+    font-size: 30px;
+    line-height: initial;
+    margin-top: 44px;
+    font-family: PassionOne;
+}
+.slider-foglite{
+    background-color: transparent !important;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0.01) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(255,255,255,0.01) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#03ffffff',GradientType=0 );
+}
+.mfnch-menu-split .menu {
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width: 767px){
+
+    .header-semi #Header #Top_bar a.responsive-menu-toggle {
+        top: 50%;
+    }
+    .under-header-line{
+        display: none;
+    }
+    .under-header-line-mobile {
+        display: block !important;
+        position: absolute;
+        z-index: 999;
+    }
+
+}
+.under-header-line.under-header-line-mobile {
+    display: none;
+}
+.header-semi #Header #Top_bar.is-sticky .under-header-line{
+    display: none;
+}
+.under-header-line {
+    background-color: transparent;
+}
+.under-header-line h4{
+    font-size: 81px;
+    line-height: normal;
+    color: white;
+    font-family: passionOne;
+    text-align: center;
+    margin-top: 75px;
+    margin-bottom: auto;
+}
+.under-header-line .under-header-text p {
+    font-size: 43px;
+    color: white;
+    font-family: passionOne;
+    font-weight: bold;
+    text-align: center;
+    line-height: 43px;
+}
+
+.under-header-line .t-buy-tickets-btn a{
+    background: transparent;
+    background-color: #ce2626;
+    box-shadow: 0 10px 0 #991d1e;
+    font-family: raleway;
+    font-weight: bold;
+    font-size: 48px;
+    border-radius: 15px;
+    line-height: 48px;
+    padding: 17px 60px;
+    border: none;
+    margin-right: 6px;
+    margin-top: 52px;
 }
 /************************************************************************************************/
 
@@ -188,10 +302,11 @@ body #Wrapper, body #Content{
 
 .sessions-row .sessions-header{
     font-size: 72px;
-    line-height: initial;
     color: #de3b3b;
     font-family: PassionOne;
-    margin-top: 54px;
+    margin-top: 56px;
+    line-height: 70px;
+    margin-bottom: 14px;
 }
 
 .wpb_wrapper .vc_inner{
@@ -208,42 +323,53 @@ body #Wrapper, body #Content{
 
 .sessions-row .sessions-description-block .session-descr-left{
     border-right: 1px solid black;
+    padding-left: 3px;
+}
+.sessions-row .sessions-description-block .session-descr-right{
+    padding-left: 6px;
 }
 
 .sessions-row .session-descr-header{
     font-family: PassionOne;
-    line-height: initial;
+    line-height: 44px;
     font-size: 48px;
     margin-bottom: 0;
     color: black;
 }
 
+.sessions-row .sessions-description-block .session-descr-text{
+    margin-bottom: 0;
+}
 .sessions-row .sessions-description-block .session-descr-text p{
     margin-bottom: 0;
     font-family: sourceSansPro;
     font-weight: 600;
-    line-height: 28px;
-    font-size: 24px;
+    line-height: 27px;
+    font-size: 25px;
     color: black;
 }
 
 .sessions-row .per-ticket-text p{
-    font-size: 24px;
+    font-size: 28px;
     line-height: 30px;
     color: black;
     padding-bottom: 0;
+    margin-bottom: 0;
+    font-family: passionOne;
 }
 
 .sessions-row .per-ticket-text{
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .sessions-row .sessions-header.per-session-header{
-    margin-bottom: 0;
+    margin-bottom: -7px;
+    margin-top: 62px;
 }
 
 .tickets-row{
     justify-content: center;
+    padding-right: 5px;
 }
 
 .tickets-row .wpb_wrapper > div{
@@ -259,7 +385,7 @@ body #Wrapper, body #Content{
     width: 431px;
     border: 5px solid;
     border-radius: 10px;
-    margin-right: 22px;
+    margin-right: 23px;
     margin-bottom: 45px;
 }
 
@@ -272,18 +398,25 @@ body #Wrapper, body #Content{
 }
 
 .tickets-row .single-ticket-block .taco-ticket-text {
-    margin-top: 11px;
+    margin-top: 4px;
 }
 .tickets-row .single-ticket-block .taco-ticket-text p{
     font-family: sourceSansPro;
     font-weight: 600;
     font-size: 24px;
-    line-height: 24px;
+    line-height: 26px;
     color: black;
+}
+.tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-text p{
+    line-height: 27px;
+}
+.tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-text.taco-ticket-green-text p{
+    line-height: 24px;
 }
 
 .tickets-row .single-ticket-block .taco-ticket-green-text p{
     color: #80a039;
+    line-height: 24px;
 }
 
 .tickets-row .single-ticket-block .taco-ticket-red-text p{
@@ -292,6 +425,8 @@ body #Wrapper, body #Content{
 
 .tickets-row .single-ticket-block.taco-general-ticket{
     border-color: #f1d269;
+    display: block;
+    padding-top: 28px;
 }
 
 .tickets-row .single-ticket-block.taco-general-ticket .taco-ticket-title{
@@ -301,6 +436,8 @@ body #Wrapper, body #Content{
 .tickets-row .single-ticket-block.taco-tequila-ticket{
     border-color: #80a039;
     width: 470px;
+    display: block;
+    padding-top: 33px;
 }
 
 .tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-title{
@@ -309,10 +446,13 @@ body #Wrapper, body #Content{
 
 .tickets-row .single-ticket-block.taco-vip-ticket{
     border-color: #dd3333;
+    padding: 32px 22px 0 22px;
+    display: block;
 }
 
 .tickets-row .single-ticket-block.taco-vip-ticket .taco-ticket-title{
     color: #dd3333;
+    margin-top: 12px;
 }
 
 .tickets-row .single-ticket-block:last-child{
@@ -330,9 +470,10 @@ body #Wrapper, body #Content{
     line-height: 48px;
     padding: 17px 60px;
     border: none;
+    margin-right: 6px;
 }
 .sessions-row .session-note-text{
-    margin-bottom: 65px;
+    margin-bottom: 55px;
 }
 .sessions-row .session-note-text p{
     font-family: sourceSansPro;
@@ -342,20 +483,22 @@ body #Wrapper, body #Content{
     color: black;
 }
 
-@media only screen and (min-width: 1400px){
+@media only screen and (min-width: 1450px){
     .section .section_wrapper, .page .container {
-        max-width: 1400px;
+        width: 1441px;
+        max-width: 1450px;
     }
 }
 
 .sessions-row .session-descr-header.food-subtitle p{
     text-align: center;
     margin-bottom: 0;
-    line-height: 48px;
+    line-height: 30px;
+    margin-top: 12px;
 }
 
 .sessions-row .session-descr-header.food-subtitle{
-    margin-bottom: 63px;
+    margin-bottom: 58px;
 }
 
 .sessions-row .session-food-img img{
@@ -364,6 +507,23 @@ body #Wrapper, body #Content{
     width: auto;
 }
 
+.sessions-row .session-separator{
+    margin-bottom: 0;
+}
+
+.sessions-row .session-food-title{
+    margin-bottom: 20px;
+}
+.food-column-left{
+    padding-left: 28px;
+}
+.food-column-right{
+    padding-right: 46px;
+    padding-top: 6px;
+}
+.sessions-row .sessions-header.per-session-header.session-food-main-header {
+    margin-top: 55px;
+}
 .sessions-row .session-food-title p{
     font-family: PassionOne;
     font-weight: bold;
@@ -371,17 +531,23 @@ body #Wrapper, body #Content{
     line-height: 34px;
     margin-bottom: 0;
     color: black;
+    letter-spacing: -1.8px;
+}
+
+.sessions-row .session-food-list ul {
+    margin-left: 38px;
 }
 
 .sessions-row .session-food-list li {
     font-family: sourceSansPro;
     font-weight: 600;
     font-size: 26px;
-    line-height: 26px;
+    line-height: 25px;
     color: black;
+    margin-bottom: 15px;
 }
 
 .sessions-row .session-food-list li strong{
-    font-weight: 600;
+    font-weight: 900;
     color: #dd3333;
 }

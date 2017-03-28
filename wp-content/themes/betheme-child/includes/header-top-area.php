@@ -57,72 +57,92 @@
 <div class="header_placeholder"></div>
 
 <div id="Top_bar" class="loading">
+    <div class="Top_bar_inner">
+        <div class="<?php echo ($mfncSplitMenu)?'container-fluid':'container'?>">
+            <div class="column one">
 
-	<div class="<?php echo ($mfncSplitMenu)?'container-fluid':'container'?>">
-		<div class="column one">
-		
-			<div class="top_bar_left clearfix">
-			
-				<!-- Logo -->
-				<?php if(!$mfncSplitMenu) get_template_part( 'includes/include', 'logo' ); ?>
-			
-				<div class="menu_wrapper <?php echo ($mfncSplitMenu)?'menu_wrapper_split':'' ?>">
-					<?php 
-						if( ( mfn_header_style( true ) != 'header-overlay' ) && ( mfn_opts_get( 'menu-style' ) != 'hide' ) ){
-	
-							// TODO: modify the mfn_header_style() function to be able to find the text 'header-split' in headers array
-							
-							// #menu --------------------------
-							if( $mfncSplitMenu ){
-								// split -------
-                                mfnch_wp_split_menu();
-                                get_template_part( 'includes/include', 'logo' );
-                                mfnch_wp_split_menu('right');
-							} else {
-								// default -----
-								mfn_wp_nav_menu();
-							}
-						
-							// responsive menu button ---------
-							$mb_class = '';
-							if( mfn_opts_get('header-menu-mobile-sticky') ) $mb_class .= ' is-sticky';
+                <div class="top_bar_left clearfix">
 
-							echo '<a class="responsive-menu-toggle '. $mb_class .'" href="#">';
-								if( $menu_text = trim( mfn_opts_get( 'header-menu-text' ) ) ){
-									echo '<span>'. $menu_text .'</span>';
-								} else {
-									echo '<i class="icon-menu-fine"></i>';
-								}
-							echo '</a>';
-							
-						}
-					?>					
-				</div>			
-				
-				<div class="secondary_menu_wrapper">
-					<!-- #secondary-menu -->
-					<?php mfn_wp_secondary_menu(); ?>
-				</div>
-				
-				<div class="banner_wrapper">
-					<?php mfn_opts_show( 'header-banner' ); ?>
-				</div>
-				
-				<div class="search_wrapper">
-					<!-- #searchform -->
-					
-					<?php get_search_form( true ); ?>
-					
-				</div>				
-				
-			</div>
-			
-			<?php 
-				if( ! mfn_opts_get( 'top-bar-right-hide' ) ){
-					get_template_part( 'includes/header', 'top-bar-right' );
-				}
-			?>
-			
-		</div>
-	</div>
+                    <!-- Logo -->
+                    <?php if(!$mfncSplitMenu) get_template_part( 'includes/include', 'logo' ); ?>
+
+                    <div class="menu_wrapper <?php echo ($mfncSplitMenu)?'menu_wrapper_split':'' ?>">
+                        <?php
+                            if( ( mfn_header_style( true ) != 'header-overlay' ) && ( mfn_opts_get( 'menu-style' ) != 'hide' ) ){
+
+                                // TODO: modify the mfn_header_style() function to be able to find the text 'header-split' in headers array
+
+                                // #menu --------------------------
+                                if( $mfncSplitMenu ){
+                                    // split -------
+                                    mfnch_wp_split_menu_hid();
+                                    mfnch_wp_split_menu();
+                                    get_template_part( 'includes/include', 'logo' );
+                                    mfnch_wp_split_menu('right');
+                                } else {
+                                    // default -----
+                                    mfn_wp_nav_menu();
+                                }
+
+                                // responsive menu button ---------
+                                $mb_class = '';
+                                if( mfn_opts_get('header-menu-mobile-sticky') ) $mb_class .= ' is-sticky';
+
+                                echo '<a class="responsive-menu-toggle '. $mb_class .'" href="#">';
+                                    if( $menu_text = trim( mfn_opts_get( 'header-menu-text' ) ) ){
+                                        echo '<span>'. $menu_text .'</span>';
+                                    } else {
+                                        echo '<i class="icon-menu-fine"></i>';
+                                    }
+                                echo '</a>';
+
+                            }
+                        ?>
+                        <div class="clear"></div>
+                    </div>
+
+
+                    <div class="secondary_menu_wrapper">
+                        <!-- #secondary-menu -->
+                        <?php mfn_wp_secondary_menu(); ?>
+                    </div>
+
+                    <div class="banner_wrapper">
+                        <?php mfn_opts_show( 'header-banner' ); ?>
+                    </div>
+
+                    <div class="search_wrapper">
+                        <!-- #searchform -->
+
+                        <?php get_search_form( true ); ?>
+
+                    </div>
+
+                </div>
+
+                <?php
+                    if( ! mfn_opts_get( 'top-bar-right-hide' ) ){
+                        get_template_part( 'includes/header', 'top-bar-right' );
+                    }
+                ?>
+
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <?php if ( is_active_sidebar( 'under-header-line' ) ): ?>
+        <div class="under-header-line">
+            <div class="container-fluid">
+                <?php dynamic_sidebar('under-header-line') ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
+
+<?php if ( is_active_sidebar( 'under-header-line' ) ): ?>
+    <div class="under-header-line under-header-line-mobile">
+        <div class="container-fluid">
+            <?php dynamic_sidebar('under-header-line') ?>
+        </div>
+    </div>
+<?php endif; ?>

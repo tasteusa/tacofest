@@ -74,10 +74,11 @@
 		<!-- #Header_bg -->
 		<div id="Header_wrapper" class="child_header_wrapper" <?php echo $header_style; ?>>
            <?php if ( is_active_sidebar( 'above-header-line' ) ): ?>
-               <div class="above-deader-line">
+               <div class="above-header-line">
                    <div class="container">
                        <div class="pull-right">
                            <?php dynamic_sidebar('above-header-line') ?>
+                           <?php get_template_part( 'includes/include', 'social' ); ?>
                        </div>
                    </div>
                </div>

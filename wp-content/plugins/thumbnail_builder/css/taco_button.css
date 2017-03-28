@@ -2,9 +2,11 @@ a.taco-btn{
     color: white;
     background-color: #fbb900;
     height: 40px;
-    line-height: 24px;
+    line-height: 30px;
     font-size: 18px;
     margin-top: 10px;
     border-radius: 10px;
     font-family: sourceSansPro;
+    padding: 5px 16px;
+    margin-left: 6px;
 }

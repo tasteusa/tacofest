@@ -56,3 +56,54 @@ if( ! function_exists( 'mfnch_wp_split_menu' ) )
         }
 	}
 }
+
+if( ! function_exists( 'mfnch_wp_nav_menu' ) )
+{
+
+    function mfnch_wp_split_menu_hid($extClass='')
+    {
+        echo '<nav id="menu" class="hiddOnDesk">';
+
+// Main Menu Left ----------------------------
+        $args = array(
+            'container' 		=> false,
+            'menu_id'         	=> false,
+            'menu_class'		=> 'menu menu_left',
+            'fallback_cb'		=> false,
+            'theme_location'	=> 'main-menu',
+            'depth' 			=> 5,
+            'link_before'     	=> '<span>',
+            'link_after'      	=> '</span>',
+        );
+
+// custom walker for mega menu
+        $theme_disable = mfn_opts_get( 'theme-disable' );
+        if( ! isset( $theme_disable['mega-menu'] ) ){
+            $args['walker']		= new Walker_Nav_Menu_Mfn;
+        }
+
+        wp_nav_menu( $args );
+
+// Main Menu Right ----------------------------
+        $args = array(
+            'container' 		=> false,
+            'menu_id'         	=> false,
+            'menu_class'		=> 'menu menu_right',
+            'fallback_cb'		=> false,
+            'theme_location'	=> 'secondary-menu',
+            'depth' 			=> 5,
+            'link_before'     	=> '<span>',
+            'link_after'      	=> '</span>',
+        );
+
+// custom walker for mega menu
+        $theme_disable = mfn_opts_get( 'theme-disable' );
+        if( ! isset( $theme_disable['mega-menu'] ) ){
+            $args['walker']		= new Walker_Nav_Menu_Mfn;
+        }
+
+        wp_nav_menu( $args );
+
+        echo '</nav>';
+    }
+}
