@@ -248,6 +248,33 @@ Version: 		1.6.1
     .under-header-line{
         display: none;
     }
+    #Header_wrapper .container{
+        padding: 0 !important;
+    }
+    #Header .under-header-line h4 {
+        margin-top: 10px;
+    }
+    .header-split #Header #Top_bar.is-sticky{
+        display: none;
+    }
+
+    #Content .section_wrapper{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .sessions-row .tickets-row .single-ticket-block.taco-tequila-ticket{
+        width: 430px;
+    }
+
+    .tickets-row .single-ticket-block.taco-vip-ticket{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .sessions-row .tickets-row .single-ticket-block{
+        margin-right: 0;
+    }
     .under-header-line-mobile {
         display: block !important;
         position: absolute;
@@ -381,12 +408,13 @@ Version: 		1.6.1
 }
 
 .tickets-row .single-ticket-block{
-    height: 480px;
+    min-height: 480px;
     width: 431px;
     border: 5px solid;
     border-radius: 10px;
     margin-right: 23px;
     margin-bottom: 45px;
+    padding-bottom: 10px;
 }
 
 .tickets-row .single-ticket-block .taco-ticket-title{
@@ -446,7 +474,7 @@ Version: 		1.6.1
 
 .tickets-row .single-ticket-block.taco-vip-ticket{
     border-color: #dd3333;
-    padding: 32px 22px 0 22px;
+    padding: 32px 22px 10px 22px;
     display: block;
 }
 
@@ -501,6 +529,12 @@ Version: 		1.6.1
     margin-bottom: 58px;
 }
 
+.sessions-row .session-food-img{
+    margin-bottom: 30px;
+}
+.sessions-row .session-food-img .vc_single_image-wrapper{
+    margin-bottom: 0px;
+}
 .sessions-row .session-food-img img{
     height: 493px;
     max-height: 493px;
