@@ -120,6 +120,10 @@ Version: 		1.6.1
 .header-semi #Header #Top_bar:not(.is-sticky){
     background: transparent !important;
 }
+.above-footer-block .vc_btn3-container.t-buy-tickets-btn a.vc_btn3{
+    margin-bottom: 57px;
+    max-width: 100%;
+}
 @media only screen and (min-width: 1240px){
     .header-semi #Header #Top_bar:not(.is-sticky) .Top_bar_inner{
         background: transparent;
@@ -277,10 +281,32 @@ Version: 		1.6.1
     }
     .under-header-line-mobile {
         display: block !important;
+        width: 100%;
         position: absolute;
         z-index: 999;
     }
+    .child_header_wrapper .above-header-line a.taco-btn{
+        padding: 5px 10px;
+        font-size: 15px;
+    }
+    .child_header_wrapper .above-header-line ul.social{
+        display: none;
+    }
 
+}
+.under-header-line.under-header-line-mobile .under-header-text p{
+    font-size: 30px;
+    line-height: 30px;
+}
+.under-header-line.under-header-line-mobile .vc_btn3-container.t-buy-tickets-btn a.vc_btn3{
+    font-size: 30px;
+    padding: 10px 40px;
+    line-height: 30px;
+}
+.under-header-line.under-header-line-mobile h4{
+    font-size: 60px;
+    line-height: normal;
+    margin-top: 20px;
 }
 .under-header-line.under-header-line-mobile {
     display: none;
@@ -309,7 +335,7 @@ Version: 		1.6.1
     line-height: 43px;
 }
 
-.under-header-line .t-buy-tickets-btn a{
+.under-header-line .vc_btn3-container.t-buy-tickets-btn a.vc_btn3{
     background: transparent;
     background-color: #ce2626;
     box-shadow: 0 10px 0 #991d1e;
@@ -486,7 +512,7 @@ Version: 		1.6.1
 .tickets-row .single-ticket-block:last-child{
     margin-right: 0;
 }
-
+.above-footer-block .vc_btn3-container.t-buy-tickets-btn a.vc_btn3,
 .sessions-row .vc_btn3-container.t-buy-tickets-btn a.vc_btn3{
     background: transparent;
     background-color: #ce2626;

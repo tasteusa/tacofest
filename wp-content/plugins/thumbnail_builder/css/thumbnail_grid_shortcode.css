@@ -1,4 +1,12 @@
 .LTGridContainer .ltg_item .thumbnail img{
-    height: 150px;
     width: auto;
+}
+.LTGridContainer .lgts_category_title{
+    margin-top: 0;
+    margin-bottom: 50px;
+}
+.LTGridContainer .ltg_item .thumbnail{
+    border: none;
+    background-color: transparent;
+    margin-bottom: 49px;
 }

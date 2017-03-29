@@ -11,14 +11,24 @@ class LTGridShortcode {
         'title' => 'yes',
         'cat' => [],
         'cat_excl' => [],
+        'cont_max_w' => 'none',
+        'thumbs_cont_max_w' => 'none',
+        'cont_sep' => 'no',
+        'cont_sep_last' => 'no',
+        'cont_sep_color' => "#000000",
+        'cont_sep_th'=>1,
+        'cont_sep_mt'=>0,
+        'cont_sep_mb'=>0,
         'th_title_font' => false,
         'th_title_size' => false,
         'th_title_color' => false,
+        'th_title_transform' => false,
         'th_title_pos' => 'default',
         'th_title_weight' => 'default',
         'th_image_size' => 150,
         'th_image_sizing' => 'auto',
         'cat_title_font' => false,
+        'cat_title_transform' => false,
         'cat_title_size' => false,
         'cat_title_color' => false,
         'cat_title_pos' => 'default',
@@ -96,8 +106,9 @@ class LTGridShortcode {
         foreach($byCategoryContent as $taxId=>$content){
            if(trim($content)!='') $html .= LTTmplToVar('templates/short_code/category_grid_container.tmpl.php',['catName'=>$catTitles[$taxId],'content'=>$content]);
         }
-        $html .= LTTmplToVar('templates/short_code/shortcode_styles.tmpl.php',$args, true);
-        return $html.'</div>';
+
+        $html .= '</div>';
+        return $html.LTTmplToVar('templates/short_code/shortcode_styles.tmpl.php',$args, true);
 
     }
 }

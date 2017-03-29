@@ -4,6 +4,7 @@ if(function_exists('vc_add_shortcode_param')){
 
     function regVcParam(){
         $weightOts = ['default','bold','bolder','lighter','normal','100','200','300','400','500','600','700','800','900'];
+        $transfOts = ['none','capitalize','uppercase','lowercase'];
         vc_map( array(
             "name" => __( "Linked Thumbnails Grid"),
             "base" => "LTGS",
@@ -36,6 +37,78 @@ if(function_exists('vc_add_shortcode_param')){
                     "value" => [1,2,3,4,6],
                     "description" => __( "Select Columns Number"),
                     'group' => 'General'
+                ),
+                array(
+                    "type" => "textfield",
+                    "class" => "",
+                    "heading" => __("Container Max Width (px)"),
+                    "param_name" => "cont_max_w",
+                    'value' => 'none',
+                    "description" => __("Enter Width"),
+                    'group' => 'General'
+                ),
+                array(
+                    "type" => "textfield",
+                    "class" => "",
+                    "heading" => __("Thumbnails Container Max Width (px)"),
+                    "param_name" => "thumbs_cont_max_w",
+                    'value' => 'none',
+                    "description" => __("Enter Width"),
+                    'group' => 'General'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Category Separator Line"),
+                    "param_name" => "cont_sep",
+                    "value" => ['no','yes'],
+                    "description" => __("Show Separator?"),
+                    'group' => 'Category Separator'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Last Category Separator"),
+                    "param_name" => "cont_sep_last",
+                    "value" => ['no','yes'],
+                    "description" => __("Show Last Separator?"),
+                    'group' => 'Category Separator'
+                ),
+                array(
+                    "type" => "textfield",
+                    "class" => "",
+                    "heading" => __("Separator Thickness (px)"),
+                    "param_name" => "cont_sep_th",
+                    'value' => 1,
+                    "description" => __("Enter Separator Thickness"),
+                    'group' => 'Category Separator'
+                ),
+                array(
+                    "type" => "textfield",
+                    "class" => "",
+                    "heading" => __("Separator Top Margin (px)"),
+                    "param_name" => "cont_sep_mt",
+                    'value' => 0,
+                    "description" => __("Enter Separator Top Margin"),
+                    'group' => 'Category Separator'
+                ),
+                array(
+                    "type" => "textfield",
+                    "class" => "",
+                    "heading" => __("Separator Bottom Margin (px)"),
+                    "param_name" => "cont_sep_mb",
+                    'value' => 0,
+                    "description" => __("Enter Separator Bottom Margin"),
+                    'group' => 'Category Separator'
+                ),
+                array(
+                    "type" => "vc_color_picker_param",
+                    "class" => "",
+                    "heading" => __("Separator Line Color"),
+                    "param_name" => "cont_sep_color",
+                    "value" =>'#000000',
+                    "description" => __( "Select Color"),
+                    'group' => 'Category Separator'
                 ),
                 array(
                     "type" => "textfield",
@@ -92,11 +165,20 @@ if(function_exists('vc_add_shortcode_param')){
                 array(
                     "type" => "dropdown",
                     "class" => "",
+                    "heading" => __("Thumbnail Title transform"),
+                    "param_name" => "th_title_transform",
+                    "value" => $transfOts,
+                    "description" => __("Select Text Transform"),
+                    'group' => 'Thumbnail'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
                     "heading" => __("Thumbnail Title Weight"),
                     "param_name" => "th_title_weight",
                     "value" => $weightOts,
                     "description" => __("Select Weight"),
-                    'group' => 'Category Title'
+                    'group' => 'Thumbnail'
                 ),
                 array(
                     "type" => "vc_color_picker_param",
@@ -127,8 +209,17 @@ if(function_exists('vc_add_shortcode_param')){
                     "type" => "textfield",
                     "class" => "",
                     "heading" => __("Category Title Font"),
-                    "param_name" => "th_title_font",
+                    "param_name" => "cat_title_font",
                     "description" => __("Enter Category Title Font"),
+                    'group' => 'Category Title'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Category Title transform"),
+                    "param_name" => "cat_title_transform",
+                    "value" => $transfOts,
+                    "description" => __("Select Text Transform"),
                     'group' => 'Category Title'
                 ),
                 array(
