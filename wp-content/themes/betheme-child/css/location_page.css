@@ -4,3 +4,63 @@
 .under-header-line .under-header-text{
     display: none;
 }
+
+.location_title p{
+    color: rgb(221, 51, 51);
+    text-transform: uppercase;
+    font-size: 80px;
+    line-height: initial;
+    font-family: PassionOne;
+    text-align: center;
+    font-weight: normal;
+    margin-top: 44px;
+}
+.location_ditrections_title p{
+    font-family: PassionOne;
+    line-height: 44px;
+    font-size: 36px;
+    margin-bottom: 0;
+    color: black;
+    text-align: center;
+}
+.location_under_title p{
+    font-family: PassionOne;
+    line-height: 44px;
+    font-size: 48px;
+    margin-bottom: 0;
+    color: black;
+    text-align: center;
+    margin-top: 40px;
+}
+.wpb_text_column.wpb_content_element.location_under_title{
+    margin-bottom: 25px;
+}
+.wpb_text_column.wpb_content_element.location_text{
+    margin-bottom: 32px;
+}
+.wpb_text_column.wpb_content_element.location_ditrections_title{
+    margin-bottom: 0px;
+}
+.above-footer-block .vc_btn3-container.t-buy-tickets-btn.vc_btn3-center{
+    margin-top: 45px;
+    margin-bottom: 30px;
+}
+.location_text p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+}
+.location_text_after_directions p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 35px;
+
+}
