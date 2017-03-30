@@ -1,0 +1,82 @@
+.under-header-line h4{
+    display: none;
+}
+.under-header-line .under-header-text{
+    display: none;
+}
+
+.vendor_sponsor_title p{
+    color: rgb(221, 51, 51);
+    text-transform: uppercase;
+    font-size: 84px;
+    line-height: 84px;
+    font-family: PassionOne;
+    text-align: center;
+    font-weight: normal;
+    margin-top: 44px;
+}
+
+
+.vendor_sponsor_text_first p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+}
+.vendor_sponsor_text_second p a{
+    color: #dd3333;
+}
+.vendor_sponsor_text_second p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+    font-style: italic;
+}
+.vendor_sponsor_date_text p{
+    font-family: sourceSansPro;
+    font-size: 36px;
+    line-height: 48px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+}
+
+.wpb_wrapper .vc_btn3-container.vendor_sign_up_btn a{
+    text-align: center;
+    max-width: 100%;
+    color: #f2f2f2;
+    background: transparent;
+    background-color: #ce2626;
+    box-shadow: 0 10px 0 #991d1e;
+    font-family: raleway;
+    font-weight: bold;
+    font-size: 48px;
+    border-radius: 15px;
+    line-height: 48px;
+    padding: 17px 60px;
+    border: none;
+    margin-right: 6px;
+    padding: 17px 33px;
+}
+.wpb_wrapper .vc_btn3-container.vendor_sign_up_btn a:hover{
+    color: #f2f2f2;
+    background: transparent;
+    background-color: #ce2626;
+    box-shadow: 0 10px 0 #991d1e;
+}
+.above-footer-block .t-buy-tickets-btn{
+    display: none;
+}
+.wpb_text_column.wpb_content_element.vendor_sponsor_date_text{
+    margin-top: 60px;
+}
+.wpb_wrapper .vc_btn3-container.vendor_sign_up_btn{
+    margin-top: 84px;
+    margin-bottom: 112px;
+}
