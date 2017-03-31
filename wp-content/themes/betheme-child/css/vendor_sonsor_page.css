@@ -4,8 +4,12 @@
 .under-header-line .under-header-text{
     display: none;
 }
-
-.vendor_sponsor_title p{
+.vendor_sponsor_title .wpb_wrapper{
+    text-align: center;
+    margin-top: 46px;
+    line-height: 84px;
+}
+.vendor_sponsor_title .wpb_wrapper div{
     color: rgb(221, 51, 51);
     text-transform: uppercase;
     font-size: 84px;
@@ -13,7 +17,8 @@
     font-family: PassionOne;
     text-align: center;
     font-weight: normal;
-    margin-top: 44px;
+    margin: 0;
+    display: inline-block;
 }
 
 
@@ -61,7 +66,6 @@
     line-height: 48px;
     padding: 17px 60px;
     border: none;
-    margin-right: 6px;
     padding: 17px 33px;
 }
 .wpb_wrapper .vc_btn3-container.vendor_sign_up_btn a:hover{
@@ -74,7 +78,7 @@
     display: none;
 }
 .wpb_text_column.wpb_content_element.vendor_sponsor_date_text{
-    margin-top: 60px;
+    margin-top: 40px;
 }
 .wpb_wrapper .vc_btn3-container.vendor_sign_up_btn{
     margin-top: 84px;
