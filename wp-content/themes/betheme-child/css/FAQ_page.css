@@ -1,0 +1,103 @@
+.under-header-line h4{
+    display: none;
+}
+.under-header-line .under-header-text{
+    display: none;
+}
+
+.faq_title p{
+    color: rgb(221, 51, 51);
+    text-transform: uppercase;
+    font-size: 80px;
+    line-height: initial;
+    font-family: PassionOne;
+    text-align: center;
+    font-weight: normal;
+    margin-top: 44px;
+}
+
+.faq_under_title p{
+    font-family: PassionOne;
+    line-height: 44px;
+    font-size: 48px;
+    margin-bottom: 0;
+    color: black;
+    margin-top: 40px;
+}
+.wpb_wrapper .faq_main_text_second{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+    margin-bottom: 86px;
+}
+.faq_main_text_second p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+    margin-bottom: 37px;
+}
+.faq_main_text p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 600;
+    color: black;
+    margin-top: 15px;
+    margin-bottom: 37px;
+}
+.location_text_after_directions p{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 35px;
+
+}
+.wpcf7 form{
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 56px;
+}
+.wpcf7 form p{
+    margin: 0;
+}
+.wpcf7 form label{
+    width: 100%;
+    font-size: 18px;
+    color: black;
+    margin-bottom: 25px;
+}
+.wpcf7 form label.faq_message{
+    margin-bottom: 15px;
+}
+.wpcf7 form label input{
+    height: 40px;
+}
+.wpcf7 form label textarea{
+    height: 190px;
+    margin: 0;
+}
+.wpcf7 form input[type="submit"]{
+    border-radius: 2px;
+    height: 53px;
+    width: 115px;
+    margin: 0;
+    font-size: 18px;
+    text-transform: uppercase;
+    background-color: #a0ce4e;
+}
+.wpb_wrapper .faq_separator{
+    margin-bottom: 58px;
+}
+
+.above-footer-block .vc_btn3-container.t-buy-tickets-btn.vc_btn3-center a{
+    margin-bottom: 44px;
+}
