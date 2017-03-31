@@ -177,5 +177,7 @@ if( $back_to_top_class == 'hide' ){
 <!-- wp_footer() -->
 <?php wp_footer(); ?>
 
+<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script><script type="text/javascript">require(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us8.list-manage.com","uuid":"9f71368dc454f7ad28ffeb362","lid":"3b7ee7f5cd"}) })</script>
+
 </body>
 </html>
