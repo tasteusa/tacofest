@@ -99,6 +99,10 @@ Version: 		1.6.1
 
 /***********************End Fonts********************/
 
+body{
+    overflow: visible !important;
+}
+
 #Footer .footer_copy ul.social{
     margin-top: -10px;
     margin-bottom: 10px;
