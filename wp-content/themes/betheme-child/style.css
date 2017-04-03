@@ -550,7 +550,7 @@ body{
 .sessions-row .session-descr-header.food-subtitle p{
     text-align: center;
     margin-bottom: 0;
-    line-height: 30px;
+    line-height: 48px;
     margin-top: 12px;
 }
 
@@ -613,4 +613,8 @@ body{
 .sessions-row .session-food-list li strong{
     font-weight: 900;
     color: #dd3333;
+}
+
+#Top_bar #logo img.logo-mobile{
+    margin: 3px 0px;
 }
