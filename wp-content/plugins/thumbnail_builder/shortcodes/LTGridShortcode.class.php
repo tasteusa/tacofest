@@ -33,6 +33,7 @@ class LTGridShortcode {
         'cat_title_color' => false,
         'cat_title_pos' => 'default',
         'cat_title_weight' => 'default',
+        'show_description' => 'yes',
     ];
 
 
@@ -94,7 +95,12 @@ class LTGridShortcode {
             } else {
                 if(!isset($byCategoryContent['cat_'.$cat[0]->term_id])) $byCategoryContent['cat_'.$cat[0]->term_id] = '';
                 $byCategoryContent['cat_'.$cat[0]->term_id] .= LTTmplToVar('templates/short_code/grid_item.tmpl.php',$tmplArgs);
-                if(!isset($catTitles['cat_'.$cat[0]->term_id]))$catTitles['cat_'.$cat[0]->term_id] = $cat[0]->name;
+                if(!isset($catTitles['cat_'.$cat[0]->term_id])){
+                    $catTitles['cat_'.$cat[0]->term_id]['name'] = $cat[0]->name;
+                    if( $args['show_description'] == 'yes') {
+                        $catTitles['cat_' . $cat[0]->term_id]['description'] = $cat[0]->description;
+                    }
+                }
             }
 
         }

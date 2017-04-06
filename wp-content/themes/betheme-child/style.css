@@ -618,3 +618,12 @@ body{
 #Top_bar #logo img.logo-mobile{
     margin: 3px 0px;
 }
+.category_description{
+    font-family: sourceSansPro;
+    font-size: 26px;
+    line-height: 36px;
+    text-align: center;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 10px;
+}

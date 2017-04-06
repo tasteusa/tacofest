@@ -239,6 +239,15 @@ if(function_exists('vc_add_shortcode_param')){
                     "description" => __( "Select Color"),
                     'group' => 'Category Title'
                 ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Show description?"),
+                    "param_name" => "show_description",
+                    "value" => ['yes','no'],
+                    "description" => __("Show category description under title?"),
+                    'group' => 'Category Title'
+                ),
             ),
         ) );
     }
