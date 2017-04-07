@@ -271,10 +271,6 @@ body{
         padding-right: 0 !important;
     }
 
-    .sessions-row .tickets-row .single-ticket-block.taco-tequila-ticket{
-        width: 430px;
-    }
-
     .tickets-row .single-ticket-block.taco-vip-ticket{
         padding-left: 0;
         padding-right: 0;
@@ -641,7 +637,7 @@ body{
     .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
         width: 380px;
         margin-right: 10px;
-        margin-left: 10px;
+        margin-leftazenzin: 10px;
     }
 
 }
