@@ -627,3 +627,16 @@ body{
     color: black;
     margin-bottom: 10px;
 }
+@media (max-width: 1560px) {
+    #Top_bar .menu_wrapper .menu li a span{
+        font-size: 26px
+    }
+    .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo {
+        width: 183px;
+        min-width: 183px;
+    }
+    .logo-valign-top #Top_bar #logo {
+        height: 170px;
+    }
+}
+
