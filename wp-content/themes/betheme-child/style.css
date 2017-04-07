@@ -638,8 +638,11 @@ body{
     .logo-valign-top #Top_bar #logo {
         height: 170px;
     }
-    .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket{
+    .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
         width: 380px;
+        margin-right: 10px;
+        margin-left: 10px;
     }
+
 }
 
