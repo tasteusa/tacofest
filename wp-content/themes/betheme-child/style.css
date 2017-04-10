@@ -623,6 +623,11 @@ body{
     color: black;
     margin-bottom: 10px;
 }
+@media (max-width: 957px) {
+    .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
+        margin-right: 0px;
+    }
+}
 @media (max-width: 1560px) {
     #Top_bar .menu_wrapper .menu li a span{
         font-size: 26px
@@ -636,7 +641,6 @@ body{
     }
     .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
         width: 380px;
-        margin-right: 10px;
         margin-leftazenzin: 10px;
     }
 

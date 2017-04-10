@@ -38,6 +38,7 @@
 
     $TBuilderClass = new TumbnailBuilder();
     $gridShortcode = new LTGridShortcode();
+    $bbShortcode = new ByButtonShortcode();
     $TBAjax = new TBAjax();
 
     add_action( 'init', 'thumbnail_builder_init' );

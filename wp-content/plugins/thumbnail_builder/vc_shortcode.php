@@ -273,5 +273,22 @@ if(function_exists('vc_add_shortcode_param')){
     vc_add_shortcode_param('vc_cat_param','vcCatParam');
     vc_add_shortcode_param('vc_color_picker_param','vcColorParam',$TBPluginUrl.'js/visual_composer/vc_color_picker_param.js');
     add_action( 'vc_before_init', 'regVcParam' );
+
+
+    function reg_By_Button(){
+
+        vc_map( array(
+            "name" => __( "By Button"),
+            "base" => "BBS",
+            "class" => "",
+            "category" => 'shortcodes',
+            "params" => array(
+            ),
+        ) );
+    }
+
+    add_action( 'vc_before_init', 'reg_By_Button' );
+
+
 }
 /*complete adding shortcode to visual composer*/

@@ -118,3 +118,30 @@ class LTGridShortcode {
 
     }
 }
+
+class ByButtonShortcode {
+
+    public static $postType = 'dd_shortcode';
+    public static $PosMetaName = '_thumb_glob_order';
+    private static $optName = '_bb_cat_order';
+
+    public static $defaults = [
+
+    ];
+
+
+    public function __construct() {
+
+        add_shortcode( 'BBS', array( $this, 'render' ) );
+
+    }
+
+    function render( $args, $content = '') {
+        $bb_title = get_option('bb_title') ? get_option('bb_title') : 'BUY TICKETS';
+
+        $bb_button_url = get_option('bb_button_url') ? get_option('bb_button_url') : '#';
+
+        echo do_shortcode('[vc_btn title="'.$bb_title.'" color="danger" align="center" el_class="t-buy-tickets-btn" link="url:'.urlencode($bb_button_url).'|title:'.urlencode($bb_title).'||" ]');
+
+    }
+}
