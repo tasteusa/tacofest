@@ -30,6 +30,7 @@
     require_once $TBPluginDir.'vc_shortcode.php';
     require_once $TBPluginDir.'TBAjax.class.php';
     require_once $TBPluginDir.'shortcodes/LTGridShortcode.class.php';
+    require_once $TBPluginDir.'by_button_widget.php';
 
     register_activation_hook( __FILE__, array( 'TumbnailBuilder', 'plugin_activation' ) );
 
