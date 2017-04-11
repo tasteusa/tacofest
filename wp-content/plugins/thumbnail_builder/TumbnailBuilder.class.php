@@ -61,6 +61,7 @@ class TumbnailBuilder {
         add_action('admin_menu',[$this,'registerThumbGeneratorPage']);
         add_action('admin_menu',[$this,'registerCatThumbsPage']);
         add_action('admin_menu',[$this,'registerCatReorderPage']);
+        add_action('admin_menu',[$this,'registerCatSettingsPage']);
         add_action('admin_head', [$this, 'includeTableStyle']);
         add_filter( 'wp_terms_checklist_args', [$this,'termRadioChecklist'] );
     }
@@ -355,5 +356,89 @@ class TumbnailBuilder {
         wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/cat_reorder.js', ['jquery','jquery.tmpl']);
 
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/cat_reorder.tmpl.php';
+    }
+
+    public function registerCatSettingsPage() {
+        $this->register_cat_settings();
+        add_submenu_page(
+            "edit.php?post_type=".self::$postType,
+            __( 'Default Style Settings'),
+            __( 'Default Style Settings'),
+            'manage_options',
+            'thumbnail-cat-settings',
+            [$this, 'catSettingsView']
+        );
+    }
+
+    function register_cat_settings() {
+        //register our settings
+        register_setting( 'thumb_cat-settings-group', 'class' );
+        register_setting( 'thumb_cat-settings-group', 'col' );
+        register_setting( 'thumb_cat-settings-group', 'perPage' );
+        register_setting( 'thumb_cat-settings-group', 'title' );
+        register_setting( 'thumb_cat-settings-group', 'cat' );
+        register_setting( 'thumb_cat-settings-group', 'cat_excl' );
+        register_setting( 'thumb_cat-settings-group', 'cont_max_w' );
+        register_setting( 'thumb_cat-settings-group', 'thumbs_cont_max_w' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep_last' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep_color' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep_th' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep_mt' );
+        register_setting( 'thumb_cat-settings-group', 'cont_sep_mb' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_font' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_size' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_color' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_transform' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_pos' );
+        register_setting( 'thumb_cat-settings-group', 'th_title_weight' );
+        register_setting( 'thumb_cat-settings-group', 'th_image_size' );
+        register_setting( 'thumb_cat-settings-group', 'th_image_sizing' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_font' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_transform' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_size' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_color' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_pos' );
+        register_setting( 'thumb_cat-settings-group', 'cat_title_weight' );
+        register_setting( 'thumb_cat-settings-group', 'show_description' );
+        register_setting( 'thumb_cat-settings-group', 'bb_title' );
+        register_setting( 'thumb_cat-settings-group', 'bb_title' );
+        register_setting( 'thumb_cat-settings-group', 'bb_title' );
+
+    }
+    public function catSettingsView() {
+
+        wp_enqueue_script( 'wp-color-picker' );
+        wp_enqueue_style( 'wp-color-picker' );
+
+        $defaults = [
+            'col' => get_option('col')? get_option('col') : 4 ,
+            'title' => get_option('title')? get_option('title') : 'yes',
+            'cont_max_w' => get_option('cont_max_w')? get_option('cont_max_w') : 1400,
+            'thumbs_cont_max_w' => get_option('thumbs_cont_max_w')? get_option('thumbs_cont_max_w') : 1132,
+            'cont_sep' => get_option('cont_sep')? get_option('cont_sep') : 'no',
+            'cont_sep_last' => get_option('cont_sep_last')? get_option('cont_sep_last') : 'no',
+            'cont_sep_color' => get_option('cont_sep_color')? get_option('cont_sep_color') : "#000000",
+            'cont_sep_th'=> get_option('cont_sep_th')? get_option('cont_sep_th') : 1,
+            'cont_sep_mt'=> get_option('cont_sep_mt')? get_option('cont_sep_mt') : 0,
+            'cont_sep_mb'=> get_option('cont_sep_mb')? get_option('cont_sep_mb') : 0,
+            'th_title_font' => get_option('th_title_font')? get_option('th_title_font') : 'sourceSansPro',
+            'th_title_size' => get_option('th_title_size')? get_option('th_title_size') : 18,
+            'th_title_color' => get_option('th_title_color')? get_option('th_title_color') : '#f23404',
+            'th_title_transform' => get_option('th_title_transform')? get_option('th_title_transform') : 'none',
+            'th_title_pos' => get_option('th_title_pos')? get_option('th_title_pos') : 'default',
+            'th_title_weight' => get_option('th_title_weight')? get_option('th_title_weight') : 'default',
+            'th_image_size' => get_option('th_image_size')? get_option('th_image_size') : 150,
+            'th_image_sizing' => get_option('th_image_sizing')? get_option('th_image_sizing') : 'auto',
+            'cat_title_font' => get_option('cat_title_font')? get_option('cat_title_font') : 'PassionOne',
+            'cat_title_transform' => get_option('cat_title_transform')? get_option('cat_title_transform') : 'none',
+            'cat_title_size' => get_option('cat_title_size')? get_option('cat_title_size') : 80,
+            'cat_title_color' => get_option('cat_title_color')? get_option('cat_title_color') : '#dd3333',
+            'cat_title_pos' => get_option('cat_title_pos')? get_option('cat_title_pos') : 'default',
+            'cat_title_weight' => get_option('cat_title_weight')? get_option('cat_title_weight') : 'default',
+            'show_description' => get_option('show_description')? get_option('show_description') : 'yes',
+        ];
+
+        require_once __DIR__.DIRECTORY_SEPARATOR.'templates/thumb_settings.tmpl.php';
     }
 }

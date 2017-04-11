@@ -7,7 +7,6 @@ class LTGridShortcode {
     public static $defaults = [
         'class' => '',
         'col' => 4,
-        'perPage' => 300,
         'title' => 'yes',
         'cat' => [],
         'cat_excl' => [],
@@ -39,6 +38,34 @@ class LTGridShortcode {
 
     public function __construct() {
 
+
+        self::$defaults['col'] = get_option('col')? get_option('col') : 4 ;
+        self::$defaults['title'] = get_option('title')? get_option('title') : 'yes';
+        self::$defaults['cont_max_w'] = get_option('cont_max_w')? get_option('cont_max_w') : 1400;
+        self::$defaults['thumbs_cont_max_w'] = get_option('thumbs_cont_max_w')? get_option('thumbs_cont_max_w') : 1132;
+        self::$defaults['cont_sep'] = get_option('cont_sep')? get_option('cont_sep') : 'no';
+        self::$defaults['cont_sep_last'] = get_option('cont_sep_last')? get_option('cont_sep_last') : 'no';
+        self::$defaults['cont_sep_color'] = get_option('cont_sep_color')? get_option('cont_sep_color') : "#000000";
+        self::$defaults['cont_sep_th']= get_option('cont_sep_th')? get_option('cont_sep_th') : 1;
+        self::$defaults['cont_sep_mt']= get_option('cont_sep_mt')? get_option('cont_sep_mt') : 0;
+        self::$defaults['cont_sep_mb']= get_option('cont_sep_mb')? get_option('cont_sep_mb') : 0;
+        self::$defaults['th_title_font'] = get_option('th_title_font')? get_option('th_title_font') : 'sourceSansPro';
+        self::$defaults['th_title_size'] = get_option('th_title_size')? get_option('th_title_size') : 18;
+        self::$defaults['th_title_color'] = get_option('th_title_color')? get_option('th_title_color') : '#f23404';
+        self::$defaults['th_title_transform'] = get_option('th_title_transform')? get_option('th_title_transform') : false;
+        self::$defaults['th_title_pos'] = get_option('th_title_pos')? get_option('th_title_pos') : 'default';
+        self::$defaults['th_title_weight'] = get_option('th_title_weight')? get_option('th_title_weight') : 'default';
+        self::$defaults['th_image_size'] = get_option('th_image_size')? get_option('th_image_size') : 150;
+        self::$defaults['th_image_sizing'] = get_option('th_image_sizing')? get_option('th_image_sizing') : 'auto';
+        self::$defaults['cat_title_font'] = get_option('cat_title_font')? get_option('cat_title_font') : 'sourceSansPro';
+        self::$defaults['cat_title_transform'] = get_option('cat_title_transform')? get_option('cat_title_transform') : 'none';
+        self::$defaults['cat_title_size'] = get_option('cat_title_size')? get_option('cat_title_size') : 80;
+        self::$defaults['cat_title_color'] = get_option('cat_title_color')? get_option('cat_title_color') : '#dd3333';
+        self::$defaults['cat_title_pos'] = get_option('cat_title_pos')? get_option('cat_title_pos') : 'default';
+        self::$defaults['cat_title_weight'] = get_option('cat_title_weight')? get_option('cat_title_weight') : 'default';
+        self::$defaults['show_description'] = get_option('show_description')? get_option('show_description') : 'yes';
+
+
         add_shortcode( 'LTGS', array( $this, 'render' ) );
 
     }
@@ -52,7 +79,7 @@ class LTGridShortcode {
         if($args['cat_excl'] != '') $args['cat_excl'] = explode(',',$args['cat_excl']);
         $queryArgs = array(
             'post_status' => 'publish',
-            'posts_per_page' => $args['perPage'],
+            'posts_per_page' => '-1',
             'post_type' => self::$postType,
             'meta_key' => self::$PosMetaName,
             'cat' => $args['cat'],
