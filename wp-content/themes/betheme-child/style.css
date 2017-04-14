@@ -292,6 +292,15 @@ body{
     .child_header_wrapper .above-header-line ul.social{
         display: none;
     }
+    .wpb_wrapper .tickets-row .single-ticket-block,.wpb_wrapper  .tickets-row .single-ticket-block.taco-tequila-ticket,.wpb_wrapper   .tickets-row .single-ticket-block:last-child{
+        width: 320px;
+    }
+    .vc_btn3-container{
+        margin: 0 25px 20px;
+    }
+    .sessions-row .vc_row .vc_btn3-container.t-buy-tickets-btn a.vc_btn3 {
+        padding: 17px 50px;
+    }
 
 }
 .under-header-line.under-header-line-mobile .under-header-text p{
