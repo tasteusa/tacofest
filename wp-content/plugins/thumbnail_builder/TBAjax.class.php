@@ -60,47 +60,19 @@ class TBAjax {
     }
 
     public function reorderThumbsAjax(){
-        $this->reorderThumb($_POST['targetPostId'],$_POST['supportPostId'],$_POST['put']);
+        $this->reorderThumb();
     }
 
-    public function reorderThumb($targetPostId, $supportPostId, $put = 'after'){
-        global $wpdb;
-        global $TBuilderClass;
+    public function reorderThumb(){
 
-        $key = self::$PosMetaName;
-        $postType = self::$postType;
+        $items = $_POST['items'];
+        $category = $_POST['category'];
 
-        $currentPos = get_post_meta($targetPostId, self::$PosMetaName, true);
-        $targetPos = ($supportPostId==0)?1:get_post_meta($supportPostId, self::$PosMetaName, true);
-        $currentPos = (empty($currentPos))?1:(int)$currentPos;
-
-        $query = "SELECT {$wpdb->posts}.ID as post_id, {$wpdb->postmeta}.meta_value as pos
-                  FROM {$wpdb->postmeta}
-                  LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID          
-                  WHERE {$wpdb->postmeta}.meta_key='$key' 
-                  AND {$wpdb->posts}.post_type='$postType' 
-                  AND {$wpdb->posts}.ID != $targetPostId
-                  ";
-
-        if($targetPos < $currentPos ){
-            if($put == 'after')$targetPos = $targetPos+1;
-            if($put == 'before')$targetPos = ($targetPos>1)?$targetPos-1:1;
-            $query.="AND {$wpdb->postmeta}.meta_value >= $targetPos AND {$wpdb->postmeta}.meta_value < $currentPos ORDER BY {$wpdb->postmeta}.meta_value DESC";
-        }else{
-            $query.="AND {$wpdb->postmeta}.meta_value <= $targetPos AND {$wpdb->postmeta}.meta_value > $currentPos ORDER BY {$wpdb->postmeta}.meta_value ASC";
+        if(isset($items) && is_array($items) && isset($category)){
+            update_term_meta($category, 'category_order',json_encode($items));
         }
-        $query.= "";
-        $posts = $wpdb->get_results($query);
-        $changed = [];
-        $TBuilderClass->updateMeta($targetPostId, $key, $targetPos);
-        $changed[$targetPostId] = $currentPos.' -> '.$targetPos.' (main)';
-        $newPos = $currentPos;
-        foreach($posts as $post){
-            $changed[$post->post_id] = $post->pos.' -> '.$currentPos;
-            $TBuilderClass->updateMeta($post->post_id, $key, $currentPos);
-            $currentPos = $post->pos;
-        }
-        echo json_encode($changed);wp_die();
+
+        echo json_encode($items);wp_die();
     }
 
     public function createThumbnails(){
@@ -158,6 +130,20 @@ class TBAjax {
 
         $thumbs = get_posts( $args );
         $results=[];
+
+        $category_order = json_decode(get_term_meta($tax,'category_order')[0]);
+        if(isset($category_order) && is_array($category_order)){
+            $sorted_posts = [];
+            foreach($category_order as $id) {
+                foreach($thumbs as $key=>$thumb){
+                    if($thumb->ID == $id){
+                        $sorted_posts[] = $thumb;
+                        unset($thumbs[$key]);
+                    }
+                }
+            }
+            $thumbs =  array_merge($sorted_posts,$thumbs);
+        }
 
         foreach($thumbs as $thumb){
             $results[] = [

@@ -75,6 +75,50 @@ class LTGridShortcode {
         wp_enqueue_style('ltgs_style', $TBPluginUrl . '/css/thumbnail_grid_shortcode.css');
         $args = (gettype($args) == 'array')?array_merge(self::$defaults,$args):self::$defaults;
 
+
+        $result_thumbnails = array();
+
+        if(empty($args['cat'])){
+
+            $cats = get_categories();
+        }else{
+            $cats = explode(',',$args['cat']);
+            if(!empty($args['cat_excl'])){
+                $cat_excl = explode(',',$args['cat_excl']);
+                foreach ($cat_excl as $cl) {
+                    if(($key = array_search($cl, $cats)) !== false) {
+                        unset($cats[$key]);
+                    }
+                }
+            }
+        }
+        foreach ($cats as $cat_id){
+            $category_args = array(
+                'post_status' => 'publish',
+                'posts_per_page' => 100,
+                'post_type' => self::$postType,
+                'meta_key' => self::$PosMetaName,
+                'cat' => $cat_id
+            );
+            $thumbsq = get_posts( $category_args );
+
+
+            $category_order = json_decode(get_term_meta($cat_id,'category_order')[0]);
+            if(isset($category_order) && is_array($category_order)){
+                $sorted_posts = [];
+                foreach($category_order as $id) {
+                    foreach($thumbsq as $key=>$thumb){
+                        if($thumb->ID == $id){
+                            $sorted_posts[] = $thumb;
+                            unset($thumbsq[$key]);
+                        }
+                    }
+                }
+                $thumbsq =  array_merge($sorted_posts,$thumbsq);
+            }
+            $result_thumbnails = array_merge($result_thumbnails,$thumbsq);
+        }
+
         if($args['col'] > 6) $args['col']=6;
         if($args['cat_excl'] != '') $args['cat_excl'] = explode(',',$args['cat_excl']);
         $queryArgs = array(
@@ -102,8 +146,10 @@ class LTGridShortcode {
         if($bootstrapSmColumn > 12) $bootstrapSmColumn = 12;
         $attr['gridClasses'] = sprintf( 'col-lg-%s col-md-%s col-sm-%s', $bootstrapColumns, $bootstrapColumns, $bootstrapSmColumn );
 
-        while( $thumbs->have_posts() ) {
-            $thumbs->the_post();
+        foreach ($result_thumbnails as $thumbnail){
+            global $post;
+            $post = $thumbnail;
+
             $tmplArgs =[
                 'imageUrl' =>get_the_post_thumbnail_url(get_the_ID()),
                 'url' => get_post_meta(get_the_ID(), '_web_link', true),
@@ -137,7 +183,9 @@ class LTGridShortcode {
         $args['shortcodeId'] = $shortcodeId;
         $html = '<div id="'.$shortcodeId.'" class="LTGridContainer">';
         foreach($byCategoryContent as $taxId=>$content){
-           if(trim($content)!='') $html .= LTTmplToVar('templates/short_code/category_grid_container.tmpl.php',['catName'=>$catTitles[$taxId],'content'=>$content]);
+           if(trim($content)!=''){
+               $html .= LTTmplToVar('templates/short_code/category_grid_container.tmpl.php',['catName'=>$catTitles[$taxId],'content'=>$content]);
+           }
         }
 
         $html .= '</div>';

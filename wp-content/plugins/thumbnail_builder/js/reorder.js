@@ -174,19 +174,17 @@
             tolerance: "pointer",
             helper: 'clone',
             update: function(e, ui){
-                var supEl =ui.item.prev();
-                var put = 'after';
 
-                if(supEl.length <= 0){
-                    supEl = ui.item.next();
-                    put = 'before';
-                }
-
+                var order = [];
+                $('.single-linked-thumb .hiddden-thumb-id').each(function () {
+                    var id = $(this).val();
+                    order.push(id);
+                });
+                var cat = $('.category-select').val();
                 var data = {
                     action: 'tb_reorder_thumbs',
-                    targetPostId: ui.item.find('.hiddden-thumb-id').val(),
-                    supportPostId: supEl.find('.hiddden-thumb-id').val(),
-                    put: put
+                    items: order,
+                    category: cat,
                 };
 
                 $( ".thumbs-container" ).sortable( "disable" ).addClass('sorting-process');

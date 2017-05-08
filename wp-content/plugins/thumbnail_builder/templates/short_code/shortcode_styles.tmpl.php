@@ -121,4 +121,8 @@
              font-weight: <?php echo $th_title_weight ?>;
          <?php endif; ?>
     }
+
+    #<?php echo $shortcodeId; ?> .ltg_item .caption {
+        height: 83px;
+    }
 </style>
