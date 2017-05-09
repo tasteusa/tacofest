@@ -111,6 +111,7 @@ class TBAjax {
     public function getThumbsInCategoryAjax(){
         global $wpdb;
         $tax = $_POST['tax'];
+        $order = $_POST['order'];
 
         $args = array(
             'post_status' => 'publish',
@@ -131,18 +132,24 @@ class TBAjax {
         $thumbs = get_posts( $args );
         $results=[];
 
-        $category_order = json_decode(get_term_meta($tax,'category_order')[0]);
-        if(isset($category_order) && is_array($category_order)){
-            $sorted_posts = [];
-            foreach($category_order as $id) {
-                foreach($thumbs as $key=>$thumb){
-                    if($thumb->ID == $id){
-                        $sorted_posts[] = $thumb;
-                        unset($thumbs[$key]);
+        if($order == 'a-z'){
+            usort($thumbs, array($this,'compareByName'));
+            $items = array_map(create_function('$thumb', 'return $thumb->ID;'), $thumbs);
+            update_term_meta($tax, 'category_order',json_encode($items));
+        }else {
+            $category_order = json_decode(get_term_meta($tax,'category_order')[0]);
+            if(isset($category_order) && is_array($category_order)){
+                $sorted_posts = [];
+                foreach($category_order as $id) {
+                    foreach($thumbs as $key=>$thumb){
+                        if($thumb->ID == $id){
+                            $sorted_posts[] = $thumb;
+                            unset($thumbs[$key]);
+                        }
                     }
                 }
+                $thumbs =  array_merge($sorted_posts,$thumbs);
             }
-            $thumbs =  array_merge($sorted_posts,$thumbs);
         }
 
         foreach($thumbs as $thumb){
@@ -156,5 +163,8 @@ class TBAjax {
         }
 
         echo json_encode(['thumbs'=>$results]); wp_die();
+    }
+    function compareByName($a, $b) {
+        return strcmp($a->post_title, $b->post_title);
     }
 }

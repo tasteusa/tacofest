@@ -17,6 +17,11 @@
         </form>
         <div class="clearfix"></div>
     </div>
+    <div class="form-container row">
+        <div class="navbar-form navbar-left">
+            <a class="btn btn-primary btn-sm sort-thumbs-a-z disabled" >Sort A-Z</a>
+        </div>
+    </div>
     <div class="row thumbs-container">
 
     </div>

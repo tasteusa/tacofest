@@ -102,7 +102,6 @@ class LTGridShortcode {
             );
             $thumbsq = get_posts( $category_args );
 
-
             $category_order = json_decode(get_term_meta($cat_id,'category_order')[0]);
             if(isset($category_order) && is_array($category_order)){
                 $sorted_posts = [];

@@ -28,7 +28,19 @@
         $('.load-thumbs').on('click',function(){
             var cat = $('.category-select').val();
             var btn = $(this);
+            loadThumbsContainer(cat,'custom',btn);
+            $('.sort-thumbs-a-z').removeClass('disabled');
+        });
+
+        $('.sort-thumbs-a-z').on('click',function(){
+            var cat = $('.category-select').val();
+            var btn = $(this);
+            loadThumbsContainer(cat,'a-z',btn);
+        });
+
+        function loadThumbsContainer(cat,order,btn) {
             btn.addClass('disabled');
+            var btn_name = btn.html();
             btn.html('Please Wait...');
             $( ".row.thumbs-container" ).empty();
             $.ajax({
@@ -36,6 +48,7 @@
                 url: ajaxurl,
                 data:{
                     'action': 'tb_get_thumbs_in_cat',
+                    'order': order,
                     'tax': cat
                 },
                 dataType: "json",
@@ -54,11 +67,11 @@
                 },
                 complete: function(){
                     btn.removeClass('disabled');
-                    btn.html('load thumbnails');
+                    btn.html(btn_name);
                 }
             });
-        });
-
+        }
+        
         function makeChanged(thumbContainer){
             thumbContainer.addClass('changed');
             thumbContainer.find('.save-thumb').removeClass('disabled');
