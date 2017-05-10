@@ -152,6 +152,7 @@ class LTGridShortcode {
             $tmplArgs =[
                 'imageUrl' =>get_the_post_thumbnail_url(get_the_ID()),
                 'url' => get_post_meta(get_the_ID(), '_web_link', true),
+                'text' => get_post_meta(get_the_ID(), '_add_text', true),
                 'gridClasses'=> $attr['gridClasses'],
                 'title'=>''
             ];

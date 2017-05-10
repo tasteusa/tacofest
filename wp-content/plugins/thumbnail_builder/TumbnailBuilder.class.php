@@ -137,6 +137,7 @@ class TumbnailBuilder {
 
     public function add_thumnail_metaboxes(){
         add_meta_box('wp_lt_weburl', 'Web Url', [$this,'wp_lt_weburl_view'], self::$postType, 'normal', 'high');
+        add_meta_box('wp_lt_add_text', 'Additional Text', [$this,'wp_lt_add_text_view']);
     }
 
     public function remove_metaboxes(){
@@ -201,6 +202,13 @@ class TumbnailBuilder {
         echo '<input type="text" name="_web_link" value="' . $location  . '" class="widefat" />';
     }
 
+    public function wp_lt_add_text_view(){
+        global $post;
+        echo '<input type="hidden" name="LTmeta_noncename" id="LTmeta_noncename" value="' . wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+        $location = get_post_meta($post->ID, '_add_text', true);
+        echo '<input type="text" name="_add_text" value="' . $location  . '" class="widefat" />';
+    }
+
     public function save_thumbnail_metabox($postId, $post){
         if (!isset($_POST['LTmeta_noncename']) || !wp_verify_nonce( $_POST['LTmeta_noncename'], plugin_basename(__FILE__) )) {
             return $post->ID;
@@ -208,14 +216,16 @@ class TumbnailBuilder {
 
         if ( !current_user_can( 'edit_post', $post->ID )) return $post->ID;
 
-        $key = '_web_link';
-        $value =  isset($_POST[$key])?$_POST[$key]:'';
+        $weblink =  isset($_POST['_web_link'])?$_POST['_web_link']:'';
 
-        if(strpos($value,"http://") === false && strpos($value,"https://") === false) $value = 'http://'.$value;
+        if(strpos($weblink,"http://") === false && strpos($weblink,"https://") === false) $weblink = 'http://'.$weblink;
         if( $post->post_type == 'revision' ) return $post->ID;
 
-        $this->updateMeta($post->ID, $key, $value);
+        $this->updateMeta($post->ID, '_web_link', $weblink);
         $postPos = get_post_meta($post->ID, self::$PosMetaName, true);
+
+        $text =  isset($_POST['_add_text'])?$_POST['_add_text']:'';
+        update_post_meta($post->ID, '_add_text', $text);
 
         if(!empty($postPos)) return $post->ID;
 

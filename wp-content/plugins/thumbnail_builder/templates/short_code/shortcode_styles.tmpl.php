@@ -125,4 +125,8 @@
     #<?php echo $shortcodeId; ?> .ltg_item .caption {
         height: 83px;
     }
+    #<?php echo $shortcodeId; ?> .ltg_item .caption p {
+        max-height: 60px;
+         overflow: hidden;
+     }
 </style>

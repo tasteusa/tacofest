@@ -10,6 +10,7 @@
             <h4 class="entry-title lgts_thumb_title">
                 <a href="<?php echo $args['url']; ?>"><?php echo $args['title']; ?></a>
             </h4>
+            <p><?php echo $args['text']; ?></p>
         </div>
         <?php endif; ?>
     </div>
