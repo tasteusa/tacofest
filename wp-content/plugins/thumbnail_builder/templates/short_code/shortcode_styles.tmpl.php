@@ -126,7 +126,8 @@
         height: 83px;
     }
     #<?php echo $shortcodeId; ?> .ltg_item .caption p {
-        max-height: 60px;
-         overflow: hidden;
+        max-height: 56px;
+        overflow: hidden;
+        text-align: center;
      }
 </style>

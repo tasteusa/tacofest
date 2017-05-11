@@ -206,7 +206,7 @@ class TumbnailBuilder {
         global $post;
         echo '<input type="hidden" name="LTmeta_noncename" id="LTmeta_noncename" value="' . wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
         $location = get_post_meta($post->ID, '_add_text', true);
-        echo '<input type="text" name="_add_text" value="' . $location  . '" class="widefat" />';
+        echo '<textarea style="width: 230px" rows="3" name="_add_text" value="' . $location  . '" class="widefat" >'.$location.'</textarea>';
     }
 
     public function save_thumbnail_metabox($postId, $post){
