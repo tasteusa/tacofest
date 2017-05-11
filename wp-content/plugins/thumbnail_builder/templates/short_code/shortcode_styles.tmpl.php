@@ -129,5 +129,8 @@
         max-height: 56px;
         overflow: hidden;
         text-align: center;
+         display: -webkit-box;
+         -webkit-line-clamp: 3;
+         -webkit-box-orient: vertical;
      }
 </style>
