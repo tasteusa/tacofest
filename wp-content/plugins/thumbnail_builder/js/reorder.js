@@ -110,7 +110,8 @@
                 thumbTitle: $.trim(thumb.find('.title-field').val()),
                 thumbImg: (thumb.find('.hiddden-img-id').val() != '')?thumb.find('.hiddden-img-id').val():null,
                 thumbCat: (thumb.find('.category-field').val() != '')?thumb.find('.category-field').val():0,
-                thumbUrl:$.trim(thumb.find('.url-field').val())
+                thumbUrl:$.trim(thumb.find('.url-field').val()),
+                thumbText:$.trim(thumb.find('.text-field').val())
             };
             showAlert('Please wait...','info');
 

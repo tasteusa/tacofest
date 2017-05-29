@@ -14,6 +14,10 @@
                         <input type="text" name="url" class="form-control form-control-sm url-field" placeholder="Url">
                     </div>
                     <div class="form-group">
+                        <label>Additional Text</label>
+                        <input type="text" name="text" class="form-control form-control-sm text-field" placeholder="Additional Text">
+                    </div>
+                    <div class="form-group">
                         <label>Category</label>
                         <input type="text" name="Category" class="form-control form-control-sm category-field" data-value="0" placeholder="Category">
                     </div>

@@ -35,6 +35,7 @@ class TBAjax {
         $postId = (isset($_POST['thumbId']))?esc_sql($_POST['thumbId']):null;
         $postTitle = (isset($_POST['thumbTitle']) && trim($_POST['thumbTitle'])!="")?esc_sql(trim($_POST['thumbTitle'])):null;
         $postUrl = (isset($_POST['thumbUrl']) && trim($_POST['thumbUrl'])!="")?esc_sql(trim($_POST['thumbUrl'])):'';
+        $postText = (isset($_POST['thumbText']) && trim($_POST['thumbText'])!="")?esc_sql(trim($_POST['thumbText'])):'';
         $postImage = (isset($_POST['thumbImg']))?esc_sql(trim($_POST['thumbImg'])):null;
         $postCategory = (isset($_POST['thumbCat']) && trim($_POST['thumbCat']) != 0)?[esc_sql($_POST['thumbCat'])]:[];
 
@@ -52,6 +53,7 @@ class TBAjax {
         ]);
 
         $TBuilderClass->updateMeta($postId, '_web_link', $postUrl);
+        update_post_meta($postId, '_add_text', $postText);
         wp_set_post_categories( $postId, $postCategory, false);
         if($postImage != null) set_post_thumbnail( $postId, $postImage );
 
@@ -95,7 +97,8 @@ class TBAjax {
             set_post_thumbnail( $postId, esc_sql($thumb['attach_id']) );
 
             $url = esc_sql($thumb['url']);
-
+            $text = esc_sql($thumb['text']);
+            update_post_meta($postId, '_add_text', $text);
             if($url != '' && strpos($url,"http://") === false && strpos($url,"https://") === false) $url = 'http://'.$url;
             $TBuilderClass->updateMeta($postId, '_web_link', $url);
             $pos +=1;
@@ -130,6 +133,7 @@ class TBAjax {
         }
 
         $thumbs = get_posts( $args );
+        wp_reset_query();
         $results=[];
 
         if($order == 'a-z'){
@@ -158,6 +162,7 @@ class TBAjax {
                 'img'=> get_the_post_thumbnail_url($thumb->ID),
                 'title'=> $thumb->post_title,
                 'url'=> get_post_meta($thumb->ID, '_web_link', true),
+                'text'=> get_post_meta($thumb->ID, '_add_text', true),
                 'taxId'=>$_POST['tax']
             ];
         }

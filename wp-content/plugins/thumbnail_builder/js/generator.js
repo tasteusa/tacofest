@@ -40,6 +40,7 @@
                     title: $.trim($(thumb).find('.title-field').val()),
                     attach_id: $(thumb).find('.hiddden-img-id').val(),
                     tax: $(thumb).find('.category-field').data('value'),
+                    text: $(thumb).find('.text-field').val(),
                     url:$.trim($(thumb).find('.url-field').val())
                 };
 

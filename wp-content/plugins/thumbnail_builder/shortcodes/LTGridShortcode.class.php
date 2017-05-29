@@ -93,6 +93,10 @@ class LTGridShortcode {
             }
         }
         foreach ($cats as $cat_id){
+            if(!is_numeric($cat_id)){
+                $term = get_term_by('slug',$cat_id,'category');
+                $cat_id = $term->term_id;
+            }
             $category_args = array(
                 'post_status' => 'publish',
                 'posts_per_page' => 100,
@@ -102,7 +106,11 @@ class LTGridShortcode {
             );
             $thumbsq = get_posts( $category_args );
 
-            $category_order = json_decode(get_term_meta($cat_id,'category_order')[0]);
+            $category_order = [];
+            if (isset(get_term_meta($cat_id,'category_order')[0])){
+                $category_order = json_decode(get_term_meta($cat_id,'category_order')[0]);
+            }
+
             if(isset($category_order) && is_array($category_order)){
                 $sorted_posts = [];
                 foreach($category_order as $id) {
