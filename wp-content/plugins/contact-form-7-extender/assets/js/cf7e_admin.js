@@ -57,7 +57,12 @@ jQuery(document).on('click', '#delete-selected', function (e) {
 			jQuery.ajax({
 				type: 'POST',
 				url: url,
-				data: {action : 'cf7e_delete_record', deleteArr: deleteArr, all: jQuery('.contact-form-7-wrapper input[name="select-all"]').val()},
+				data: {
+					action : 'cf7e_delete_record',
+					deleteArr: deleteArr,
+					filter: jQuery('#site_url').val(),
+					all: jQuery('.contact-form-7-wrapper input[name="select-all"]').val()
+				},
 				success: function(resp) {
 					jQuery('.loader').hide();
 					jQuery('.flash-message').html(resp).slideDown();

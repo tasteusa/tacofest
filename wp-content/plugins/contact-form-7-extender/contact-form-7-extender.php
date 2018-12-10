@@ -647,12 +647,18 @@ function cf7e_delete_record() {
 	if ( isset( $_POST['deleteArr'] ) && ! empty( $_POST['deleteArr'] ) ) {
 		global $wpdb;
 		if ( $_POST['all'] == '1' ) {
+		    $filter = $_POST['filter'];
+
 			$aggregationResults = [];
-			$list               = $wpdb->get_results( "SELECT CFDBA_tbl_name as name FROM SaveContactForm7_lookup" );
-			foreach ( $list as $table ) {
-				$aggregationResults[ $table->name ] = $wpdb->get_results( "SELECT id FROM $table->name" );
-			}
-			$aggregationResults[ $wpdb->prefix . 'cf7e_aggregation_data' ] = $wpdb->get_results( "SELECT id FROM " . $wpdb->prefix . "cf7e_aggregation_data" );
+			if(strlen($filter) == 0){
+                $list               = $wpdb->get_results( "SELECT CFDBA_tbl_name as name FROM SaveContactForm7_lookup" );
+                foreach ( $list as $table ) {
+                    $aggregationResults[ $table->name ] = $wpdb->get_results( "SELECT id FROM $table->name" );
+                }
+            }
+
+			$aggregationResults[ $wpdb->prefix . 'cf7e_aggregation_data' ] = $wpdb->get_results( "SELECT id FROM " . $wpdb->prefix . "cf7e_aggregation_data" . ( strlen($filter) > 0 ? " where from_site='". $filter ."'" : '' ) );
+
 			foreach ( $aggregationResults as $key => $result ) {
 				foreach ( $result as $single ) {
 					$wpdb->delete( $key, [ 'id' => $single->id ] );
