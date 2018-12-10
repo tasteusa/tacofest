@@ -357,7 +357,7 @@ function cf7e_aggregation_filter_render( $data = [] ) {
 		}
 		$aggregationResults[ $wpdb->prefix . 'cf7e_aggregation_data' ] = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "cf7e_aggregation_data WHERE from_site NOT LIKE '" . get_site_url() . "'  ORDER BY created_on $sort" );
 	}
-
+    $prepareResult = [];
 	foreach ( $aggregationResults as $key => $result ) {
 		foreach ( $result as $single ) {
 			if ( ! isset( $single->from_site ) ) {
@@ -367,20 +367,24 @@ function cf7e_aggregation_filter_render( $data = [] ) {
 			$prepareResult[] = $single;
 		}
 	}
-	if ( $sort == 'ASC' ) {
-		usort( $prepareResult, function ( $item1, $item2 ) {
-			return $item1->created_on >= $item2->created_on;
-		} );
-	} else {
-		usort( $prepareResult, function ( $item1, $item2 ) {
-			return $item1->created_on <= $item2->created_on;
-		} );
-	}
 	$count = count( $prepareResult );
-	if ( $limit > 0 ) {
+	if(!empty($prepareResult)){
+        if ( $sort == 'ASC' ) {
+            usort( $prepareResult, function ( $item1, $item2 ) {
+                return $item1->created_on >= $item2->created_on;
+            } );
+        } else {
+            usort( $prepareResult, function ( $item1, $item2 ) {
+                return $item1->created_on <= $item2->created_on;
+            } );
+        }
 
-		$prepareResult = array_slice( $prepareResult, $start, $limit );
-	}
+        if ( $limit > 0 ) {
+
+            $prepareResult = array_slice( $prepareResult, $start, $limit );
+        }
+    }
+
 
 	return [
 		'sort'          => $sort,
