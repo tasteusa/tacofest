@@ -432,23 +432,26 @@ function cf7e_aggregation_page() {
 				<legend><strong><?php echo __( "Filter By Site Url" ); ?></strong></legend>
 				<label for="site_url"><?php echo __( "Input Site Url" ); ?></label>
 				<?php
-				$selected = '';
-				if ( isset( $_POST['site_url'] ) && $_POST['site_url'] == get_site_url() || ( isset( $_GET['site_url'] ) && $_GET['site_url'] == get_site_url() ) ) :
-					$selected = 'selected';
-				endif
+//				$selected = '';
+//				if ( isset( $_POST['site_url'] ) && $_POST['site_url'] == get_site_url() ||
+//                    ( isset( $_GET['site_url'] ) && $_GET['site_url'] == get_site_url() ) ) :
+//					$selected = 'selected';
+//				endif;
+
 				?>
 				<select name="site_url" id="site_url">
-					<option value="" selected><?php echo __( "Select all" ) ?></option>
-					<option <?php echo $selected; ?> value="<?php echo get_site_url(); ?>"><?php echo get_site_url(); ?></option>
+					<option value="" <?php echo (null == isset($_POST['site_url']) || empty($_POST['site_url'])) ? 'selected' : ''; ?> ><?php echo __( "Select all" ) ?></option>
+					<option <?php echo $_POST['site_url']==get_site_url() ? "selected" : ''; ?> value="<?php echo get_site_url(); ?>"><?php echo get_site_url(); ?></option>
 					<?php
-					$selected = '';
+					//$selected = '';
 					foreach ( $siteList as $site ) {
 
-						if ( isset( $_POST['site_url'] ) && $_POST['site_url'] == $site->from_site || ( isset( $_GET['site_url'] ) && $_GET['site_url'] == $site->from_site ) ) :
-							$selected = 'selected';
-						endif;
+//						if ( isset( $_POST['site_url'] ) && $_POST['site_url'] == $site->from_site ||
+//                            ( isset( $_GET['site_url'] ) && $_GET['site_url'] == $site->from_site ) ) :
+//							$selected = 'selected';
+//						endif;
 						?>
-						<option <?php echo $selected; ?>
+						<option <?php echo $_POST['site_url']==$site->from_site ? "selected" : ''; ?>
 							value="<?php echo $site->from_site ?>"><?php echo $site->from_site ?></option>
 						<?php
 
