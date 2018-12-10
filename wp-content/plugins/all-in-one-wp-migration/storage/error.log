@@ -1,0 +1,30 @@
+Jul 10 2018 07:14:03
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:03
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:04
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:04
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:04
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:06
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:06
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:06
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:07
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+
+Jul 10 2018 07:14:07
+{"type":2,"message":"fopen(\/var\/www\/tacofest\/wp-content\/wflogs\/ips.php): failed to open stream: Permission denied","file":"\/var\/www\/tacofest\/wp-content\/plugins\/wordfence\/vendor\/wordfence\/wf-waf\/src\/lib\/storage\/file.php","line":380}
+

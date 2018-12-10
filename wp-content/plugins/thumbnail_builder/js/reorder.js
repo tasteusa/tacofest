@@ -1,6 +1,7 @@
 ( function( $ ) {
     var mediaFrame = false;
     var loadedCategory = null;
+    var parentSelector = (typeof(reorderBlock) != "undefined") ? reorderBlock+' ' : '';
     $(document).ready(function () {
         var alertRolesAliases ={
             'error':'danger'
@@ -11,9 +12,9 @@
         function showAlert(message, role, timeout, cb){
             if(typeof(alertRolesAliases[role]) == "string") role = alertRolesAliases[role];
 
-            if($('.thumbs-alert').length > 0) $('.thumbs-alert').remove();
+            if($(parentSelector+'.thumbs-alert').length > 0) $(parentSelector+'.thumbs-alert').remove();
             var tmpAlert = alert.clone(true).addClass('alert-'+role).html(message);
-            $('.form-container').before(tmpAlert);
+            $(parentSelector+'.form-container').before(tmpAlert);
 
             if(typeof(timeout) !="undefined" && timeout){
                 if(alertTimeout != null) clearTimeout(alertTimeout);
@@ -25,15 +26,15 @@
             }
         }
 
-        $('.load-thumbs').on('click',function(){
-            var cat = $('.category-select').val();
+        $(parentSelector+'.load-thumbs').on('click',function(){
+            var cat = $(parentSelector+'.category-select').val();
             var btn = $(this);
             loadThumbsContainer(cat,'custom',btn);
-            $('.sort-thumbs-a-z').removeClass('disabled');
+            $(parentSelector+'.sort-thumbs-a-z').removeClass('disabled');
         });
 
-        $('.sort-thumbs-a-z').on('click',function(){
-            var cat = $('.category-select').val();
+        $(parentSelector+'.sort-thumbs-a-z').on('click',function(){
+            var cat = $(parentSelector+'.category-select').val();
             var btn = $(this);
             loadThumbsContainer(cat,'a-z',btn);
         });
@@ -42,7 +43,7 @@
             btn.addClass('disabled');
             var btn_name = btn.html();
             btn.html('Please Wait...');
-            $( ".row.thumbs-container" ).empty();
+            $(parentSelector+".row.thumbs-container" ).empty();
             $.ajax({
                 method: "POST",
                 url: ajaxurl,
@@ -55,14 +56,15 @@
                 success: function (response) {
 
                     if(typeof(response.thumbs) != 'undefined' && response.thumbs.length > 0){
-                        var thumbHtml = $( "#thumbTemplate" ).tmpl( response.thumbs ).appendTo( ".row.thumbs-container" );
-                        $( ".row.thumbs-container" ).append(thumbHtml);
+                        var thumbHtml = $("#thumbReorderTemplate" ).tmpl( response.thumbs ).appendTo(parentSelector+".row.thumbs-container" );
+                        $(parentSelector+".row.thumbs-container" ).append(thumbHtml);
                     }else{
                         showAlert('No Thumbnails Found','info', 3000, false);
                     }
                     loadedCategory = cat;
                 },
                 error:function(){
+                    loadedCategory = null;
                     showAlert('Server Error','danger', 3000, false);
                 },
                 complete: function(){
@@ -77,12 +79,12 @@
             thumbContainer.find('.save-thumb').removeClass('disabled');
         }
 
-        $( ".thumbs-container" ).on('input', 'input, select', function(){
+        $(parentSelector+".thumbs-container" ).on('input', 'input, select', function(){
             var thumbContainer = $(this).closest('.single-linked-thumb');
             makeChanged(thumbContainer);
         });
 
-        $( ".thumbs-container" ).on('click','.single-linked-thumb .thumb-img', function(e){
+        $(parentSelector+".thumbs-container" ).on('click','.single-linked-thumb .thumb-img', function(e){
             var img = $(this);
             var thumbContainer = img.closest('.single-linked-thumb');
             var imgField = thumbContainer.find('.hiddden-img-id');
@@ -94,7 +96,7 @@
             });
         });
 
-        $( ".thumbs-container" ).on('click','.single-linked-thumb .save-thumb', function(e){
+        $(parentSelector+".thumbs-container" ).on('click','.single-linked-thumb .save-thumb', function(e){
             var btn = $(this);
             var thumb = btn.closest('.single-linked-thumb');
 
@@ -103,14 +105,15 @@
                 return false;
             }
 
-            $( ".thumbs-container" ).sortable( "disable" );
+            $(parentSelector+".thumbs-container" ).sortable( "disable" );
             var data = {
                 action: 'tb_edit_thumb',
                 thumbId: thumb.find('.hiddden-thumb-id').val(),
                 thumbTitle: $.trim(thumb.find('.title-field').val()),
                 thumbImg: (thumb.find('.hiddden-img-id').val() != '')?thumb.find('.hiddden-img-id').val():null,
                 thumbCat: (thumb.find('.category-field').val() != '')?thumb.find('.category-field').val():0,
-                thumbUrl:$.trim(thumb.find('.url-field').val())
+                thumbUrl:$.trim(thumb.find('.url-field').val()),
+                thumbText:$.trim(thumb.find('.text-field').val())
             };
             showAlert('Please wait...','info');
 
@@ -135,7 +138,7 @@
                     showAlert('Server Error','danger', 3000, false);
                 },
                 complete: function(){
-                    $( ".thumbs-container" ).sortable( "enable" );
+                    $(parentSelector+".thumbs-container" ).sortable( "enable" );
                 }
             });
         });
@@ -147,7 +150,7 @@
         }
 
         function hideAlert(){
-            if($('.thumbs-alert').length > 0) $('.thumbs-alert').remove();
+            if($(parentSelector+'.thumbs-alert').length > 0) $(parentSelector+'.thumbs-alert').remove();
         }
 
         var imgCb = null;
@@ -182,25 +185,44 @@
             mediaFrame.open();
         }
 
-        $( ".thumbs-container" ).sortable({
+        $(document).on('click', parentSelector+'.single-linked-thumb .delete-thumb',function(){
+            var thumb = $(this).closest('.single-linked-thumb');
+            thumb.remove();
+
+            var data = {
+                thumbId: thumb.find('.hiddden-thumb-id').val(),
+                action: 'tb_delete_thumb'
+            };
+
+            $.ajax({
+                method: "POST",
+                url: ajaxurl,
+                data:data,
+                dataType: "json"
+            });
+
+            $(parentSelector+'.thumbs-container').sortable('refresh');
+        });
+
+        $(parentSelector+".thumbs-container" ).sortable({
             items: "div.single-linked-thumb",
             tolerance: "pointer",
             helper: 'clone',
             update: function(e, ui){
 
                 var order = [];
-                $('.single-linked-thumb .hiddden-thumb-id').each(function () {
+                $(parentSelector+'.single-linked-thumb .hiddden-thumb-id').each(function () {
                     var id = $(this).val();
                     order.push(id);
                 });
-                var cat = $('.category-select').val();
+
                 var data = {
                     action: 'tb_reorder_thumbs',
                     items: order,
-                    category: cat,
+                    category: loadedCategory,
                 };
 
-                $( ".thumbs-container" ).sortable( "disable" ).addClass('sorting-process');
+                $(parentSelector+".thumbs-container" ).sortable( "disable" ).addClass('sorting-process');
                 showAlert('Sorting is in progress, please wait...','info', false, false);
 
                 $.ajax({
@@ -213,12 +235,12 @@
                     },
                     complete: function(){
                         hideAlert();
-                        $( ".thumbs-container" ).sortable( "enable" ).removeClass('sorting-process');
+                        $(parentSelector+".thumbs-container" ).sortable( "enable" ).removeClass('sorting-process');
                     }
                 });
             }
         });
-        $( ".thumbs-container" ).disableSelection();
+        $(parentSelector+".thumbs-container" ).disableSelection();
 
     });
 })(jQuery);

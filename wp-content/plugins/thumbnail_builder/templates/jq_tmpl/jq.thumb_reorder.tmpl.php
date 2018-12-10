@@ -1,4 +1,4 @@
-<script id="thumbTemplate" type="text/x-jquery-tmpl">
+<script id="thumbReorderTemplate" type="text/x-jquery-tmpl">
     <div class="col-sm-6 col-md-4 col-lg-3 single-linked-thumb">
         <div class="thumbnail">
             <img class='thumb-img' src="${img}" />
@@ -15,6 +15,10 @@
                         <input type="text" name="url" class="form-control form-control-sm url-field" placeholder="Url" value="${url}">
                     </div>
                     <div class="form-group">
+                        <label>Text</label>
+                        <input type="text" name="thumbText" class="form-control form-control-sm text-field" placeholder="Additional text" value="${text}">
+                    </div>
+                    <div class="form-group">
                         <label>Category</label>
                         <select name="Category" class="form-control form-control-sm category-field" value="${taxId}">
                             <option {%if taxId==0 %}selected{%/if%} value="${catId}">Without category</option>
@@ -25,6 +29,7 @@
                     </div>
                 </form>
                 <div>
+                    <a class="btn btn-danger pull-left delete-thumb">remove</a>
                     <a class="btn btn-success disabled pull-right save-thumb">Save</a>
                     <div class="clearfix"></div>
                 </div>

@@ -99,6 +99,7 @@ function register_by_button_settings() {
     //register our settings
     register_setting( 'by_button-settings-group', 'bb_title' );
     register_setting( 'by_button-settings-group', 'bb_button_url' );
+    register_setting( 'by_button-settings-group', 'bb_fest_id' );
 }
 
 function by_button_settings_page() {
@@ -119,6 +120,11 @@ function by_button_settings_page() {
                 <tr valign="top">
                     <th scope="row">Button URL</th>
                     <td><input type="text" name="bb_button_url" value="<?php echo esc_attr( get_option('bb_button_url') ); ?>" placeholder="http://my-site.com" /></td>
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row">Festival ID</th>
+                    <td><input type="text" name="bb_fest_id" value="<?php echo esc_attr( get_option('bb_fest_id') ); ?>" placeholder="" /></td>
                 </tr>
             </table>
 

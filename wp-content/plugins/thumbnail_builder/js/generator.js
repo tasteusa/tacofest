@@ -1,22 +1,22 @@
 ( function( $ ) {
     $(document).ready(function () {
-
+        var parentSelector = (typeof(generatorBlock) != "undefined") ? generatorBlock+' ' : '';
+        var reorderSelector = (typeof(reorderBlock) != "undefined") ? reorderBlock+' ' : '';
         var mediaFrame;
         var alert = $('<div class="alert thumbs-alert"></div>');
         var alertTimeout = null;
 
         function checkSubmitBtn(){
-            var thumbs = $('.single-linked-thumb');
-            var submBtn = $('.submit-thumb-btn');
+            var thumbs = $(parentSelector+'.single-linked-thumb');
+            var submBtn = $(parentSelector+'.submit-thumb-btn');
 
             if(thumbs.length <= 0) return submBtn.addClass('hidden');
             return submBtn.removeClass('hidden');
         }
 
         function showAlert(message, role, timeout, cb){
-            var buttons = $('.buttons-container');
-            buttons.addClass('hidden');
-            if($('.thumbs-alert').length > 0) $('.thumbs-alert').remove();
+            var buttons = $(parentSelector+'.buttons-container');
+            if($(parentSelector+'.thumbs-alert').length > 0) $(parentSelector+'.thumbs-alert').remove();
             var tmpAlert = alert.clone(true).addClass('alert-'+role).html(message);
             buttons.after(tmpAlert);
 
@@ -33,14 +33,15 @@
         function gatherData(){
             var data = [];
 
-            var thumbs = $('.single-linked-thumb');
+            var thumbs = $(parentSelector+'.single-linked-thumb');
             var error = false;
             thumbs.each(function(i, thumb){
                 var tmp = {
                     title: $.trim($(thumb).find('.title-field').val()),
                     attach_id: $(thumb).find('.hiddden-img-id').val(),
-                    tax: $(thumb).find('.category-field').data('value'),
-                    url:$.trim($(thumb).find('.url-field').val())
+                    tax: $(thumb).find('.category-field').val(),
+                    url:$.trim($(thumb).find('.url-field').val()),
+                    text:$.trim($(thumb).find('.text-field').val())
                 };
 
                 if($.trim(tmp.title) == ''){
@@ -56,11 +57,10 @@
         }
 
         function hideAlert(){
-            $('.buttons-container').removeClass('hidden');
-            if($('.thumbs-alert').length > 0) $('.thumbs-alert').remove();
+            if($(parentSelector+'.thumbs-alert').length > 0) $(parentSelector+'.thumbs-alert').remove();
         }
 
-        $('.submit-thumb-btn').on('click', function(){
+        $(parentSelector+'.submit-thumb-btn').on('click', function(){
             var thumbsData = gatherData();
             if(!thumbsData){
                 showAlert('One or more thumbnails have no title','danger', 3000,false);
@@ -76,30 +76,33 @@
                 },
                 dataType: "json",
                 success: function () {
-                    location.href=RedirectUrl;
-                    showAlert('Thumbnails Created','success', false, false);
+                    $(parentSelector+'.single-linked-thumb').remove();
+                    $(reorderSelector+'.load-thumbs').click();
+                    checkSubmitBtn();
+                    showAlert('Thumbnails Created','success', 3000, false);
                 },
                 error:function(){
+                    checkSubmitBtn();
                     showAlert('Server Error','danger', 3000, false);
                 }
             });
         });
 
-        $(document).on('click', '.single-linked-thumb .delete-thumb',function(){
+        $(document).on('click', parentSelector+'.single-linked-thumb .delete-thumb',function(){
             var thumb = $(this).closest('.single-linked-thumb');
-            if(thumb.find('.category-field').data('ui-autocomplete') != undefined) thumb.find('.category-field').autocomplete( "destroy" );
             thumb.remove();
             checkSubmitBtn();
-            $('.thumbs-container').sortable('refresh');
+            $(parentSelector+'.thumbs-container').sortable('refresh');
         });
 
-        $( ".thumbs-container" ).sortable({
+        $(parentSelector+".thumbs-container" ).sortable({
             items: "div.single-linked-thumb",
             tolerance: "pointer"
         });
-        $( ".thumbs-container" ).disableSelection();
 
-        $('.select-img-btn').on('click', function(){
+        $(parentSelector+".thumbs-container" ).disableSelection();
+
+        $(parentSelector+'.select-img-btn').on('click', function(){
             checkSubmitBtn();
             if ( mediaFrame ) {
                 mediaFrame.open();
@@ -123,20 +126,11 @@
                         'title': attachment.title
                     };
 
-                    var thumbHtml = $( "#thumbTemplate" ).tmpl( tmplData );
-                    $( ".row.thumbs-container" ).append(thumbHtml);
-                    thumbHtml.find('.category-field').first().autocomplete({
-                        source: ThumbCategories,
-                        minLength: 1,
-                        select: function ( event, ui ) {
-                            event.preventDefault();
-                            $(this).val(ui.item.label).data('value',ui.item.value);
-                            return ui.item.label;
-                        }
-                    });
+                    var thumbHtml = $("#thumbTemplate" ).tmpl( tmplData );
+                    $(parentSelector+".row.thumbs-container" ).append(thumbHtml);
                 });
                 checkSubmitBtn();
-                $('.thumbs-container').sortable('refresh');
+                $(parentSelector+'.thumbs-container').sortable('refresh');
             });
 
             mediaFrame.open();

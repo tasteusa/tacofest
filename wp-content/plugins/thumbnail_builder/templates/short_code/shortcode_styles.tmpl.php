@@ -68,7 +68,7 @@
         justify-content: center;
         width: 100%;
     }
-    #<?php echo $shortcodeId; ?> h3.lgts_category_title{
+    #<?php echo $shortcodeId; ?> h2.lgts_category_title{
         <?php if($cat_title_color): ?>
              color: <?php echo $cat_title_color ?>;
         <?php endif; ?>
@@ -129,4 +129,18 @@
         max-height: 60px;
          overflow: hidden;
      }
+    #<?php echo $shortcodeId; ?> .ltg_item p {
+         <?php if($description_font_size): ?>
+            font-size:<?php echo $description_font_size; ?>px;
+         <?php endif; ?>
+         <?php if($description_font_weight): ?>
+            font-weight:<?php echo $description_font_weight; ?>;
+         <?php endif; ?>
+         <?php if($description_text_align): ?>
+            text-align:<?php echo $description_text_align; ?>;
+         <?php endif; ?>
+         <?php if($description_text_color): ?>
+             color:<?php echo $description_text_color; ?>;
+         <?php endif; ?>
+    }
 </style>

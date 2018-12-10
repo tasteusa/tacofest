@@ -362,7 +362,7 @@ body{
 
 /****MainPage*************************************************************************************/
 
-.sessions-row .sessions-header{
+.sessions-row .sessions-header, .sessions-row .sessions-header h1{
     font-size: 72px;
     color: #de3b3b;
     font-family: PassionOne;
@@ -452,9 +452,9 @@ body{
     padding-bottom: 10px;
 }
 
-.tickets-row .single-ticket-block .taco-ticket-title{
+.tickets-row .single-ticket-block .taco-ticket-title, #Content .tickets-row .single-ticket-block .taco-ticket-title h2{
     font-family: PassionOne;
-    font-size: 42px;
+    font-size: 42px !important;
     color: black;
     line-height: initial;
     margin-top: 15px;
@@ -492,8 +492,8 @@ body{
     padding-top: 28px;
 }
 
-.tickets-row .single-ticket-block.taco-general-ticket .taco-ticket-title{
-    color: #f1d269;
+.tickets-row .single-ticket-block.taco-general-ticket .taco-ticket-title, #Content .tickets-row .single-ticket-block.taco-general-ticket .taco-ticket-title h2{
+    color: #f1d269 !important;
 }
 
 .tickets-row .single-ticket-block.taco-tequila-ticket{
@@ -503,8 +503,8 @@ body{
     padding-top: 33px;
 }
 
-.tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-title{
-    color: #80a039;
+.tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-title, #Content .tickets-row .single-ticket-block.taco-tequila-ticket .taco-ticket-title h2{
+    color: #80a039 !important;
 }
 
 .tickets-row .single-ticket-block.taco-vip-ticket{
@@ -513,8 +513,8 @@ body{
     display: block;
 }
 
-.tickets-row .single-ticket-block.taco-vip-ticket .taco-ticket-title{
-    color: #dd3333;
+.tickets-row .single-ticket-block.taco-vip-ticket .taco-ticket-title, #Content .tickets-row .single-ticket-block.taco-vip-ticket .taco-ticket-title h2{
+    color: #dd3333 !important;
     margin-top: 12px;
 }
 
@@ -654,4 +654,14 @@ body{
     }
 
 }
-
+.tacos_title{
+    margin-top: 40px;
+    text-align: center;
+}
+.tacos_under_title{
+    line-height: initial;
+    font-weight: 700;
+    color: black;
+    text-align: center;
+    font-size: 26px;
+}

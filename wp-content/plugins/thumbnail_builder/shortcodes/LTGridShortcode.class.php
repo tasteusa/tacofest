@@ -33,6 +33,7 @@ class LTGridShortcode {
         'cat_title_pos' => 'default',
         'cat_title_weight' => 'default',
         'show_description' => 'yes',
+
     ];
 
 
@@ -57,7 +58,7 @@ class LTGridShortcode {
         self::$defaults['th_title_weight'] = get_option('th_title_weight')? get_option('th_title_weight') : 'default';
         self::$defaults['th_image_size'] = get_option('th_image_size')? get_option('th_image_size') : 150;
         self::$defaults['th_image_sizing'] = get_option('th_image_sizing')? get_option('th_image_sizing') : 'auto';
-        self::$defaults['cat_title_font'] = get_option('cat_title_font')? get_option('cat_title_font') : 'sourceSansPro';
+        self::$defaults['cat_title_font'] = get_option('cat_title_font')? get_option('cat_title_font') : 'PassionOne';
         self::$defaults['cat_title_transform'] = get_option('cat_title_transform')? get_option('cat_title_transform') : 'none';
         self::$defaults['cat_title_size'] = get_option('cat_title_size')? get_option('cat_title_size') : 80;
         self::$defaults['cat_title_color'] = get_option('cat_title_color')? get_option('cat_title_color') : '#dd3333';
@@ -74,7 +75,9 @@ class LTGridShortcode {
         global $TBPluginUrl;
         wp_enqueue_style('ltgs_style', $TBPluginUrl . '/css/thumbnail_grid_shortcode.css');
         $args = (gettype($args) == 'array')?array_merge(self::$defaults,$args):self::$defaults;
-
+        global $post;
+        $realPost = $post;
+        $pageId = $post->ID;
 
         $result_thumbnails = array();
 
@@ -135,7 +138,9 @@ class LTGridShortcode {
         $isAllCats = (count($args['cat']) <= 0);
         $byCategoryContent = [];
         $catTitles = ['cat_0'=>null];
-        $catOrder = json_decode(get_option(self::$optName,'[]'));
+        $pageOptName = self::$optName.'_'.$pageId;
+        $catOrder = json_decode(get_option($pageOptName,'[]'));
+        if(!is_array($catOrder) || empty($catOrder)) $catOrder = json_decode(get_option(self::$optName,'[]'));
 
         if(!$isAllCats)foreach($catOrder as $taxId){
             if($taxId != '')$byCategoryContent['cat_'.$taxId] ='';

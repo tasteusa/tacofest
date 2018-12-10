@@ -5,7 +5,7 @@
     display: none;
 }
 
-.faq_title p{
+.faq_title h1{
     color: rgb(221, 51, 51);
     text-transform: uppercase;
     font-size: 80px;
@@ -16,7 +16,7 @@
     margin-top: 44px;
 }
 
-.faq_under_title p{
+.faq_under_title h2{
     font-family: PassionOne;
     line-height: 44px;
     font-size: 48px;
@@ -24,6 +24,16 @@
     color: black;
     margin-top: 40px;
 }
+
+.faq_main_text_second h3{
+    font-family: PassionOne;
+    line-height: 44px;
+    font-size: 36px;
+    margin-bottom: 0;
+    color: black;
+    margin-top: 40px;
+}
+
 .wpb_wrapper .faq_main_text_second{
     font-family: sourceSansPro;
     font-size: 26px;

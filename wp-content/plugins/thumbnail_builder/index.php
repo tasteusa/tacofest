@@ -32,6 +32,15 @@
     require_once $TBPluginDir.'shortcodes/LTGridShortcode.class.php';
     require_once $TBPluginDir.'by_button_widget.php';
 
+    add_action('wp_enqueue_scripts', 'byttonScripts');
+    function byttonScripts() {
+        if (get_option('bb_fest_id')) {
+            wp_register_script('byButton', plugin_dir_url(__FILE__) . '/js/byButton.js', ['jquery']);
+            wp_localize_script('byButton', 'buttonInfo', ['id' => get_option('bb_fest_id')]);
+            wp_enqueue_script( 'byButton' );
+        }
+    }
+
     register_activation_hook( __FILE__, array( 'TumbnailBuilder', 'plugin_activation' ) );
 
     register_deactivation_hook( __FILE__, array( 'TumbnailBuilder', 'plugin_deactivation' ) );

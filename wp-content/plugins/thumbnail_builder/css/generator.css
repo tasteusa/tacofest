@@ -14,3 +14,32 @@ body{
     overflow-y: auto;
     overflow-x: hidden;
 }
+.tab-content {
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: white;
+    padding: 20px;
+}
+.nav-tabs a, .nav-tabs a:hover, .nav-tabs a:focus
+{
+    outline: none !important;
+    -webkit-box-shadow: none !important;
+}
+.thumbs-alert{
+    position: fixed;
+    bottom: 0;
+    z-index: 99999;
+}
+
+.lgts-categories-list .lgts-categories-list-item{
+    border-color: #f1f1f1;
+    margin-bottom: 5px;
+    cursor: move;
+    box-shadow: 0 0 3px -1px black;
+}
+.lgts-categories-list .lgts-categories-list-item a{
+    cursor: pointer;
+}
+.lgts-categories-list .lgts-categories-list-item label{
+    margin-left: 5px;
+}

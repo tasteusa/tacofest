@@ -266,6 +266,45 @@ if(function_exists('vc_add_shortcode_param')){
                     "description" => __("Show category description under title?"),
                     'group' => 'Category Title'
                 ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Font size (px)"),
+                    "param_name" => "description_font_size",
+                    "value" => ['11','12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22'],
+                    "std" => get_option('description_font_size')? get_option('description_font_size') : '16',
+                    "description" => __("Set font size."),
+                    'group' => 'Description style'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Font weight"),
+                    "param_name" => "description_font_weight",
+                    "value" => ['100','200', '300', '400', '500', '600', '700', '800', '900'],
+                    "std" => get_option('description_font_weight')? get_option('description_font_weight') : '400',
+                    "description" => __("Set font weight."),
+                    'group' => 'Description style'
+                ),
+                array(
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Text align"),
+                    "param_name" => "description_text_align",
+                    "value" => ['center','left', 'right'],
+                    "std" => get_option('description_text_align')? get_option('description_text_align') : 'left',
+                    "description" => __("Set text alignment."),
+                    'group' => 'Description style'
+                ),
+                array(
+                    "type" => "vc_color_picker_param",
+                    "class" => "",
+                    "heading" => __("Description text color"),
+                    "param_name" => "description_text_color",
+                    "value" => get_option('description_text_color')? get_option('description_text_color') : '#000',
+                    "description" => __( "Select Color"),
+                    'group' => 'Description style'
+                ),
             ),
         ) );
     }

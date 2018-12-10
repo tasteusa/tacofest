@@ -59,16 +59,31 @@ class TumbnailBuilder {
         //add_action('quick_edit_custom_box', [$this,'displayQuickEditInputs'], 10, 2 );
         add_action('manage_linked_thumbnail_posts_custom_column', [$this,'editLinkedThumbnailColumnsData'], 10, 2 );
         add_action('admin_menu',[$this,'registerThumbGeneratorPage']);
-        add_action('admin_menu',[$this,'registerCatThumbsPage']);
-        add_action('admin_menu',[$this,'registerCatReorderPage']);
+        //add_action('admin_menu',[$this,'registerCatThumbsPage']);
+        //add_action('admin_menu',[$this,'registerCatReorderPage']);
         add_action('admin_menu',[$this,'registerCatSettingsPage']);
         add_action('admin_head', [$this, 'includeTableStyle']);
         add_filter( 'wp_terms_checklist_args', [$this,'termRadioChecklist'] );
+        add_action('admin_menu',  [$this,'registerTitlesSettingsPage']);
+
+
+
+        add_action( 'wp_enqueue_scripts',[$this,'titlesCSS'] );
     }
 
-    private function checkCatOrderOpt(){
+    private function checkCatOrderOpt($pageId=null){
+        $tmpOptName = self::$optName;
+        $optVal = false;
 
-        $optVal = get_option(self::$optName,false);
+        if(!empty($pageId)){
+            $tmpOptName = self::$optName.'_'.$pageId;
+            $optVal = get_option($tmpOptName, false);
+        }
+
+        if($optVal == false){
+            $optVal = get_option(self::$optName, false);
+        }
+
         $changedVal = ['0'];
         $keyValCategories =[];
         $CategoriesSorted =[];
@@ -82,7 +97,6 @@ class TumbnailBuilder {
             'orderby' => 'name',
             'hide_empty' => false,
         ] );
-
         foreach( $categories as $category ) {
             $keyValCategories[$category->term_id] = $category;
             if(!in_array((string)$category->term_id,$changedVal))$changedVal[]=(string)$category->term_id;
@@ -100,13 +114,21 @@ class TumbnailBuilder {
         }
 
         if($changedValNew !=  $optVal){
-            (!$optVal)?add_option(self::$optName,json_encode($changedValNew)):update_option(self::$optName,json_encode($changedValNew));
+            (!$optVal)?add_option($tmpOptName,json_encode($changedValNew)):update_option($tmpOptName,json_encode($changedValNew));
         }
-        /*echo '<pre>';
-        var_dump($optVal);
-        var_dump($CategoriesSorted);
-        echo '</pre>';exit;*/
-        self::$categories = $CategoriesSorted;
+
+        if(empty($pageId)) self::$categories = $CategoriesSorted;
+        return $CategoriesSorted;
+    }
+
+    public function getCatOrderByPage($pageId=null)
+    {
+        if(!empty($pageId))
+        {
+            $page = get_post($pageId);
+            if(empty($page)) return false;
+        }
+        return $this->checkCatOrderOpt($pageId);
     }
 
     public function enqueueAdminScripts(){
@@ -279,8 +301,8 @@ class TumbnailBuilder {
     public function registerThumbGeneratorPage() {
         add_submenu_page(
             "edit.php?post_type=".self::$postType,
-            __( 'Thumbnail Generator'),
-            __( 'Thumbnail Generator'),
+            __( 'Thumbnails Manager'),
+            __( 'Thumbnails Manager'),
             'manage_options',
             'thumbnail-generator',
             [$this, 'thumbGeneratorView']
@@ -294,17 +316,25 @@ class TumbnailBuilder {
         $redirectUrl = get_admin_url( null, '/edit.php?post_type=linked_thumbnail');
         $autocompleteCat = [];
         foreach( $categories as $category ) {
-            $autocompleteCat[] = ['label'=> $category->name, 'value'=>$category->term_id];
+            $autocompleteCat[$category->term_id] = $category->name;
         }
 
+        $pagesList = get_pages([
+            'hierarchical' => false,
+        ]);
         wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
         wp_enqueue_style('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/css/generator.css');
 
         wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
+        wp_enqueue_script('bootstrap.min', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
+        wp_enqueue_script('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/js/reorder.js', ['jquery','jquery.tmpl']);
         wp_enqueue_script('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/js/generator.js', ['jquery','jquery.tmpl']);
+        wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/cat_reorder.js', ['jquery','jquery.tmpl']);
 
+        require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb_reorder.tmpl.php';
+        require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.category.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/thumb_generator.tmpl.php';
     }
@@ -329,10 +359,11 @@ class TumbnailBuilder {
             $autocompleteCat[$category->term_id] = $category->name;
         }
 
-        wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
-        wp_enqueue_style('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/css/thumbs_reorder.css');
+        wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . 'css/bootstrap.min.css');
+        wp_enqueue_style('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . 'css/thumbs_reorder.css');
 
-        wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
+        wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . 'js/jquery.tmpl.js', ['jquery']);
+        wp_enqueue_script('bootstrap.min', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
         wp_enqueue_script('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/js/reorder.js', ['jquery','jquery.tmpl']);
@@ -361,6 +392,7 @@ class TumbnailBuilder {
         wp_enqueue_style('ltgs.cat.reorder', plugin_dir_url(__FILE__) . '/css/cat_reorder.css');
 
         wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
+        wp_enqueue_script('bootstrap.min', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
         wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/cat_reorder.js', ['jquery','jquery.tmpl']);
@@ -451,4 +483,80 @@ class TumbnailBuilder {
 
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/thumb_settings.tmpl.php';
     }
+
+    public function registerTitlesSettingsPage() {
+        $this->register_titles_settings();
+        add_options_page( 'Titles Settings',
+            'Titles Settings',
+            'manage_options',
+            'titles-settings',
+            [$this,'titlesSettingsView'] );
+    }
+
+    public function register_titles_settings(){
+        //register our settings
+        register_setting('titles_tag-settings-group', 'ttsg_h1_size');
+        register_setting('titles_tag-settings-group', 'ttsg_h1_color');
+        register_setting('titles_tag-settings-group', 'ttsg_h1_font');
+
+        register_setting('titles_tag-settings-group', 'ttsg_h2_size');
+        register_setting('titles_tag-settings-group', 'ttsg_h2_color');
+        register_setting('titles_tag-settings-group', 'ttsg_h2_font');
+
+        register_setting('titles_tag-settings-group', 'ttsg_h3_size');
+        register_setting('titles_tag-settings-group', 'ttsg_h3_color');
+        register_setting('titles_tag-settings-group', 'ttsg_h3_font');
+
+    }
+
+    public function titlesSettingsView() {
+
+        wp_enqueue_script( 'wp-color-picker' );
+        wp_enqueue_style( 'wp-color-picker' );
+
+        $defaults = [
+            'ttsg_h1_size' => get_option('ttsg_h1_size')? get_option('ttsg_h1_size') : '80' ,
+            'ttsg_h1_color' => get_option('ttsg_h1_color')? get_option('ttsg_h1_color') : '#e30613',
+            'ttsg_h1_font' => get_option('ttsg_h1_font')? get_option('ttsg_h1_font') : 'PassionOne',
+
+            'ttsg_h2_size' => get_option('ttsg_h2_size')? get_option('ttsg_h2_size') : '50' ,
+            'ttsg_h2_color' => get_option('ttsg_h2_color')? get_option('ttsg_h2_color') : '#e30613',
+            'ttsg_h2_font' => get_option('ttsg_h2_font')? get_option('ttsg_h2_font') : 'PassionOne',
+
+            'ttsg_h3_size' => get_option('ttsg_h3_size')? get_option('ttsg_h3_size') : '35' ,
+            'ttsg_h3_color' => get_option('ttsg_h3_color')? get_option('ttsg_h3_color') : '#fbb900',
+            'ttsg_h3_font' => get_option('ttsg_h3_font')? get_option('ttsg_h3_font') : 'PassionOne',
+        ];
+
+        require_once __DIR__.DIRECTORY_SEPARATOR.'templates/titles_settings.tmpl.php';
+    }
+    public function titlesCSS(){
+        $settings = [
+            'ttsg_h1_size' => get_option('ttsg_h1_size')? get_option('ttsg_h1_size') : '80' ,
+            'ttsg_h1_color' => get_option('ttsg_h1_color')? get_option('ttsg_h1_color') : '#e30613',
+            'ttsg_h1_font' => get_option('ttsg_h1_font')? get_option('ttsg_h1_font') : 'PassionOne',
+
+            'ttsg_h2_size' => get_option('ttsg_h2_size')? get_option('ttsg_h2_size') : '50' ,
+            'ttsg_h2_color' => get_option('ttsg_h2_color')? get_option('ttsg_h2_color') : '#e30613',
+            'ttsg_h2_font' => get_option('ttsg_h2_font')? get_option('ttsg_h2_font') : 'PassionOne',
+
+            'ttsg_h3_size' => get_option('ttsg_h3_size')? get_option('ttsg_h3_size') : '35' ,
+            'ttsg_h3_color' => get_option('ttsg_h3_color')? get_option('ttsg_h3_color') : '#fbb900',
+            'ttsg_h3_font' => get_option('ttsg_h3_font')? get_option('ttsg_h3_font') : 'PassionOne',
+
+        ];
+
+        $style = '';
+        $style .=  '#Content h1{ line-height: initial !important; font-size: '.$settings['ttsg_h1_size'].'px !important; color: '.$settings['ttsg_h1_color'].' !important; font-family: '.$settings['ttsg_h1_font'].' !important; }';
+        $style .=  '#Content h2{ line-height: initial !important; font-size: '.$settings['ttsg_h2_size'].'px !important; color: '.$settings['ttsg_h2_color'].' !important; font-family: '.$settings['ttsg_h2_font'].' !important; }';
+        $style .=  '#Content h3{ line-height: initial !important; font-size: '.$settings['ttsg_h3_size'].'px !important; color: '.$settings['ttsg_h3_color'].' !important; font-family: '.$settings['ttsg_h3_font'].' !important; }';
+
+
+
+        wp_enqueue_style('tb_style_css', plugin_dir_url(__FILE__) . '/css/style.css');
+
+        wp_add_inline_style( 'tb_style_css', $style );
+
+    }
+
 }

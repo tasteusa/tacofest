@@ -1,6 +1,6 @@
 <div class="row category-container  center-block">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h3 class="lgts_category_title"><?php echo $args['catName']['name']?></h3>
+        <h2 class="lgts_category_title"><?php echo $args['catName']['name']?></h2>
     </div>
     <?php if (isset($args['catName']['description']) && $args['catName']['description']!=''):?>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 category_description">

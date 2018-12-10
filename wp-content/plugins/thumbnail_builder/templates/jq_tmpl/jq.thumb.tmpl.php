@@ -14,8 +14,17 @@
                         <input type="text" name="url" class="form-control form-control-sm url-field" placeholder="Url">
                     </div>
                     <div class="form-group">
+                        <label>Text</label>
+                        <input type="text" name="text" class="form-control form-control-sm text-field" placeholder="Additional text" value="${text}">
+                    </div>
+                    <div class="form-group">
                         <label>Category</label>
-                        <input type="text" name="Category" class="form-control form-control-sm category-field" data-value="0" placeholder="Category">
+                        <select type="text" name="Category" class="form-control form-control-sm category-field" >
+                            <option value="0">Select Category</option>
+                            <?php foreach($autocompleteCat as $termId=>$termName): ?>
+                                <option value=<?php echo $termId?>> <?php echo $termName?> </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </form>
                 <div>
