@@ -188,6 +188,7 @@ if( $back_to_top_class == 'hide' ){
         };
 
         if (typeof(buttonInfo) != 'undefined') {
+
             window.EBWidgets.createWidget({
                 widgetType: 'checkout',
                 eventId: buttonInfo.id,
@@ -195,6 +196,7 @@ if( $back_to_top_class == 'hide' ){
                 modalTriggerElementId: 'eventbrite-widget-modal-trigger-'+buttonInfo.id,
                 onOrderComplete: exampleCallback
             });
+
         }
 
     });
