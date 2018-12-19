@@ -186,14 +186,17 @@ if( $back_to_top_class == 'hide' ){
         var exampleCallback = function() {
             console.log('Order complete!');
         };
-    
-        window.EBWidgets.createWidget({
-            widgetType: 'checkout',
-            eventId: '43128391179',
-            modal: true,
-            modalTriggerElementId: 'eventbrite-widget-modal-trigger-43128391179',
-            onOrderComplete: exampleCallback
-        });
+
+        if (typeof(buttonInfo) != 'undefined') {
+            window.EBWidgets.createWidget({
+                widgetType: 'checkout',
+                eventId: buttonInfo.id,
+                modal: true,
+                modalTriggerElementId: 'eventbrite-widget-modal-trigger-'+buttonInfo.id,
+                onOrderComplete: exampleCallback
+            });
+        }
+
     });
 })(jQuery);
 </script>
