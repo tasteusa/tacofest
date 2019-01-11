@@ -85,7 +85,7 @@ else:
         <?php endif; ?>
 
         <!-- #Header -->
-        <header id="Header">
+        <header id="Header" style="min-height: auto;">
             <?php if( mfn_header_style( true ) != 'header-creative' ) get_template_part( 'includes/header', 'top-vendorsponsor' ); ?>
 
         </header>
