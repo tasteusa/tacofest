@@ -60,10 +60,28 @@ function vendor_sponsor_form($atts) {
     <style>
         .imContainer #eventsLockerFrame{
             width: 100% !important;
+
         }
         .burger-menu-button.burger-menu-0 {
             display: none !important;
         }
+        @media (min-width: 768px){
+            .imContainer #eventsLockerFrame {
+                min-height: 2640px !important;
+            }
+            .imContainer {
+                padding-bottom: 2640px !important;
+            }
+        }
+        @media (max-width: 767px){
+            .imContainer #eventsLockerFrame {
+                min-height: 3020px !important;
+            }
+            .imContainer {
+                padding-bottom: 3020px !important;
+            }
+        }
+
     </style>
     <div class='imWrapper'>
         <div class='imContainer'>
