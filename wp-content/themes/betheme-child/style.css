@@ -665,3 +665,9 @@ body{
     text-align: center;
     font-size: 26px;
 }
+#Top_bar .mfnch-menu-split{
+    text-shadow: 1px 1px 8px rgba(0,0,0, .6);
+}
+#Top_bar.is-sticky .mfnch-menu-split{
+    text-shadow: none;
+}

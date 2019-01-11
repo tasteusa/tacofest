@@ -7,7 +7,7 @@
  * @author Muffin Group
  */
 
-get_header(); 
+get_header();
 
 // Class
 $portfolio_classes 	= '';

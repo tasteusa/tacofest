@@ -5,30 +5,10 @@
  * @package Betheme
  * @author Muffin Group
  */
-?><!DOCTYPE html>
-<html class="no-js<?php echo mfn_user_os(); ?>" <?php language_attributes(); ?><?php mfn_tag_schema(); ?>>
 
-<!-- head -->
-<head>
+get_header('vendorsponsor');
+?>
 
-    <!-- meta -->
-    <meta charset="<?php bloginfo( 'charset' ); ?>" />
-    <?php if( mfn_opts_get('responsive') ) echo '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">'; ?>
-
-    <?php do_action('wp_seo'); ?>
-
-    <link rel="shortcut icon" href="<?php mfn_opts_show('favicon-img',THEME_URI .'/images/favicon.ico'); ?>" type="image/x-icon" />
-
-    <!-- wp_head() -->
-    <?php wp_head(); ?>
-</head>
-
-<!-- body -->
-<body <?php body_class( 'template-blank' ); ?>>
-
-<?php do_action( 'mfn_hook_top' ); ?>
-
-<?php do_action( 'mfn_hook_content_before' ); ?>
 
 <!-- #Content -->
 <div id="Content">
@@ -66,6 +46,4 @@
 <?php do_action( 'mfn_hook_bottom' ); ?>
 
 
-
-</body>
-</html>
+<?php get_footer('vendorsponsor');?>

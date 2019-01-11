@@ -61,6 +61,9 @@ function vendor_sponsor_form($atts) {
         .imContainer #eventsLockerFrame{
             width: 100% !important;
         }
+        .burger-menu-button.burger-menu-0 {
+            display: none !important;
+        }
     </style>
     <div class='imWrapper'>
         <div class='imContainer'>
