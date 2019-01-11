@@ -57,9 +57,14 @@ function vendor_sponsor_form($atts) {
     ob_start();
     ?>
     <link rel='stylesheet' href='<?php echo $styles;?>'>
+    <style>
+        .imContainer #eventsLockerFrame{
+            width: 100% !important;
+        }
+    </style>
     <div class='imWrapper'>
         <div class='imContainer'>
-            <iframe id='eventsLockerFrame' src="<?php echo $url;?>" allowfullscreen></iframe>
+            <iframe id='eventsLockerFrame' src="<?php echo $url;?>" allowfullscreen style="width: 100%;"></iframe>
         </div>
     </div>
     <?php
