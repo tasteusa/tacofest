@@ -36,12 +36,23 @@
 
         <!-- .sections_group -->
         <div class="sections_group">
-            <?php
-            while ( have_posts() ){
-                the_post();							// Post Loop
-                mfn_builder_print( get_the_ID() );	// Content Builder & WordPress Editor Content
-            }
-            ?>
+            <div class="the_content_wrapper">
+                <div class="vc_row wpb_row vc_row-fluid">
+                    <div class="vc_column-inner">
+                        <div class="wpb_wrapper">
+
+                            <?php
+                            while ( have_posts() ){
+                                the_post();
+                                the_content();
+                            }
+                            ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- .four-columns - sidebar -->
