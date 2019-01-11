@@ -47,3 +47,23 @@ function load_taco_button_widget() {
     register_widget( 'TacoButton' );
 }
 add_action( 'widgets_init', 'load_taco_button_widget' );
+
+add_shortcode('vs_form', 'vendor_sponsor_form');
+// [vs_form url="https://eventslocker.com/events/Baltimore-Mac-and-Cheese-Festival_1269" styles="https://eventslocker.com/css/embedevents.css"]
+function vendor_sponsor_form($atts) {
+    $url = $atts['url'];
+    $styles = $atts['styles'];
+
+    ob_start();
+    ?>
+    <link rel='stylesheet' href='<?php echo $styles;?>'>
+    <div class='imWrapper'>
+        <div class='imContainer'>
+            <iframe id='eventsLockerFrame' src="<?php echo $url;?>" allowfullscreen></iframe>
+        </div>
+    </div>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+}
