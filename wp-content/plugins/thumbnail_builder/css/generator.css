@@ -43,3 +43,94 @@ body{
 .lgts-categories-list .lgts-categories-list-item label{
     margin-left: 5px;
 }
+.thumbs-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+.thumbs-container .single-linked-thumb{
+    padding-bottom: 20px;
+}
+.thumbs-container .single-linked-thumb .thumbnail{
+    height: 100%;
+}
+.thumbs-container .single-linked-thumb .thumbnail .danger{
+    border-color: red;
+}
+.set-winner-tip{
+    color:red;
+    display: none;
+}
+.winner-image{
+    position: absolute !important;
+    top:0;
+    left:0;
+    width: 100px;
+    height: 100px;
+    background-repeat:no-repeat;
+    background-size:contain;
+}
+.winner-image .clear:after {
+    display: none;
+    position: absolute;
+    content: "\00d7";
+    font-size: 22px;
+    font-weight: 700;
+    color: red;
+    top: -9px;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
+.winner-image:hover .clear:after{
+    display: block;
+}
+
+.image-wrapper-block{
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-position: center center;
+    position:relative;
+    overflow: hidden;
+}
+.winner-text{
+    position: absolute !important;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    border: 1px dashed red;
+    text-align: center;
+    width: 100%;
+    background-color: #ee7202;
+    font-size:22px;
+}
+
+.winner-text p{
+    background-color: transparent !important;
+    margin: 0 0 0px;
+    height: 100%;
+    font-size: inherit;
+}
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    font-size: 1.2em !important;
+    text-align: left !important;
+    width:auto;
+    padding:0 10px;
+    border-bottom:none;
+}
+.custom-handle {
+    width: 2.2em !important;
+    height: 1.6em !important;
+    top: 50% !important;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+}

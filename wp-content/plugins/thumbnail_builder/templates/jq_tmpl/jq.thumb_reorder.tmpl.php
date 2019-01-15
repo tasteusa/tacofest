@@ -27,6 +27,26 @@
                             {%/each%}
                         </select>
                     </div>
+                    <div class="form-group winner-select">
+                        <p>
+                            <label>
+                                <input type="checkbox" value="1"
+                                name="winner"
+                                {%if is_winner == 'true' %}checked{%/if%}
+                                class="is-winner form-control"> Mark as winner
+                            </label>
+                        </p>
+                    </div>
+                    <div class="form-group winner-place-select {%if is_winner != 'true' %}hidden{%/if%}">
+                        <p class="set-winner-tip">You should finish setting winner thumbnail in the Winner tab</p>
+                        <select name="place" class="place-select form-control" placeholder="Choose Place">
+                            <option selected value="0">Choose Place</option>
+                            <option {%if winner_place==1 %}selected{%/if%} value="1">1st Place Winner</option>
+                            <option {%if winner_place==2 %}selected{%/if%} value="2">2nd Place Winner</option>
+                            <option {%if winner_place==3 %}selected{%/if%} value="3">3rd Place Winner</option>
+                        </select>
+                        <p class="require-error text-danger"></p>
+                    </div>
                 </form>
                 <div>
                     <a class="btn btn-danger pull-left delete-thumb">remove</a>

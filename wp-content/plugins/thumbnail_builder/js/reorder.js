@@ -106,6 +106,8 @@
             }
 
             $(parentSelector+".thumbs-container" ).sortable( "disable" );
+            var isWinner = thumb.find('.is-winner').prop('checked');
+            var winnerPlace = thumb.find('.place-select');
             var data = {
                 action: 'tb_edit_thumb',
                 thumbId: thumb.find('.hiddden-thumb-id').val(),
@@ -113,8 +115,21 @@
                 thumbImg: (thumb.find('.hiddden-img-id').val() != '')?thumb.find('.hiddden-img-id').val():null,
                 thumbCat: (thumb.find('.category-field').val() != '')?thumb.find('.category-field').val():0,
                 thumbUrl:$.trim(thumb.find('.url-field').val()),
-                thumbText:$.trim(thumb.find('.text-field').val())
+                thumbText:$.trim(thumb.find('.text-field').val()),
+                thumbWinner: isWinner,
+                thumbWinnerPlace: winnerPlace.val()
             };
+            if(isWinner){
+                if(winnerPlace.val() == '0'){
+                    winnerPlace.addClass('danger');
+                    thumb.find('.require-error').text('Choose Place is required for winner' );
+                    return;
+                } else {
+                    winnerPlace.removeClass('danger');
+                    thumb.find('.require-error').empty();
+                }
+
+            }
             showAlert('Please wait...','info');
 
             btn.addClass('disabled');

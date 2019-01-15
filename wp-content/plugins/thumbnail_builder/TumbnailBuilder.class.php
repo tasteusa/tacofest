@@ -324,16 +324,19 @@ class TumbnailBuilder {
         ]);
         wp_enqueue_style('bootstrap.min', plugin_dir_url(__FILE__) . '/css/bootstrap.min.css');
         wp_enqueue_style('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/css/generator.css');
+        wp_enqueue_style('jquery-ui-css', plugin_dir_url(__FILE__) . '/js/jquery-ui/themes/smoothness/jquery-ui.min.css');
 
         wp_enqueue_script('jquery.tmpl', plugin_dir_url(__FILE__) . '/js/jquery.tmpl.js', ['jquery']);
         wp_enqueue_script('bootstrap.min', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', ['jquery']);
         $this->includeJqueryUi();
         wp_enqueue_media();
         wp_enqueue_script('ltgs.thumb.reorder', plugin_dir_url(__FILE__) . '/js/reorder.js', ['jquery','jquery.tmpl']);
+        wp_enqueue_script('ltgs.thumb.winner', plugin_dir_url(__FILE__) . '/js/winner.js', ['jquery', 'jquery.tmpl']);
         wp_enqueue_script('ltgs.thumb.generator', plugin_dir_url(__FILE__) . '/js/generator.js', ['jquery','jquery.tmpl']);
         wp_enqueue_script('thumb.reorder', plugin_dir_url(__FILE__) . '/js/cat_reorder.js', ['jquery','jquery.tmpl']);
 
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb_reorder.tmpl.php';
+        require_once __DIR__ . DIRECTORY_SEPARATOR . 'templates/jq_tmpl/jq.thumb_winner.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.category.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/jq_tmpl/jq.thumb.tmpl.php';
         require_once __DIR__.DIRECTORY_SEPARATOR.'templates/thumb_generator.tmpl.php';
