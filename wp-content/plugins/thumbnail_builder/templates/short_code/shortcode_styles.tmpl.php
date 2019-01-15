@@ -143,4 +143,16 @@
              color:<?php echo $description_text_color; ?>;
          <?php endif; ?>
     }
+    .center-block{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .thumbnails-row{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .thumbnails-winners-row{
+        margin-bottom: 30px;
+    }
 </style>

@@ -137,5 +137,25 @@
 
         });
 
+        $(document).on('click', '.winner-select [name="winner"]', function () {
+            var $this = $(this);
+            if($this.prop('checked')){
+                $this.closest('.single-linked-thumb').find('.winner-place-select').removeClass('hidden');
+                $this.closest('.single-linked-thumb').find('.set-winner-tip').fadeIn();
+            } else {
+                $this.closest('.single-linked-thumb').find('.winner-place-select').addClass('hidden');
+            }
+            setTimeout(function () {
+                $this.closest('.single-linked-thumb').find('.set-winner-tip').fadeOut()
+            }, 5000);
+        });
+
+        $(document).on('change', '.place-select', function () {
+            if($(this).val() != '0'){
+                $(this).removeClass('danger');
+                $(this).siblings('.require-error').empty();
+            }
+        });
+
     });
 })(jQuery);

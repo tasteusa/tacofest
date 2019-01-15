@@ -545,11 +545,54 @@ body{
     color: black;
 }
 
-@media only screen and (min-width: 1450px){
-    .section .section_wrapper, .page .container {
-        width: 1441px;
-        max-width: 1450px;
-    }
+.winner-image-wrapper-block{
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: relative;
+    overflow: hidden;
+    height: 33vh;
+    background-position: center center;
+    border: 1px solid #f6f6f6;
+}
+.winner-image{
+    position: absolute !important;
+    top:0;
+    left:0;
+    width: 100px;
+    height: 100px;
+    background-repeat:no-repeat;
+    background-size:contain;
+}
+.winner-text{
+    /*position: absolute !important;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%, -50%);*/
+    /*border: 1px dashed red;*/
+}
+
+.winner-text p{
+    background-color: transparent !important;
+    margin: 0 0 0px;
+    height: 100%;
+    line-height: 1.4em;
+}
+.p-15{
+    padding-bottom: 15px;
+}
+.pt-15{
+    padding-top: 15px;
+}
+.pb-15{
+    padding-bottom: 15px;
+}
+.py-15{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.px-15{
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .sessions-row .session-descr-header.food-subtitle p{
@@ -632,28 +675,6 @@ body{
     color: black;
     margin-bottom: 10px;
 }
-@media (max-width: 957px) {
-    .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
-        margin-right: 0px;
-    }
-}
-@media (max-width: 1560px) {
-    #Top_bar .menu_wrapper .menu li a span{
-        font-size: 26px
-    }
-    .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo {
-        width: 183px;
-        min-width: 183px;
-    }
-    .logo-valign-top #Top_bar #logo {
-        height: 170px;
-    }
-    .tickets-row .single-ticket-block, .tickets-row .single-ticket-block.taco-tequila-ticket, .tickets-row .single-ticket-block:last-child{
-        width: 380px;
-        margin-leftazenzin: 10px;
-    }
-
-}
 .tacos_title{
     margin-top: 40px;
     text-align: center;
@@ -670,4 +691,75 @@ body{
 }
 #Top_bar.is-sticky .mfnch-menu-split{
     text-shadow: none;
+}
+@media (min-width: 1281px) {}
+@media (min-width: 1025px) and (max-width: 1280px) {}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .winner-image-wrapper-block{
+        height: 300px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .winner-image-wrapper-block{
+        height: 280px;
+    }
+}
+@media only screen and (min-width: 1450px){
+    .section .section_wrapper, .page .container {
+        width: 1441px;
+        max-width: 1450px;
+    }
+}
+@media (max-width: 957px) {
+    .tickets-row .single-ticket-block,
+    .tickets-row .single-ticket-block.taco-tequila-ticket,
+    .tickets-row .single-ticket-block:last-child{
+        margin-right: 0px;
+    }
+}
+@media (max-width: 1560px) {
+    #Top_bar .menu_wrapper .menu li a span{
+        font-size: 26px
+    }
+    .header-split #Header .container-fluid .top_bar_left .menu_wrapper .logo {
+        width: 183px;
+        min-width: 183px;
+    }
+    .logo-valign-top #Top_bar #logo {
+        height: 170px;
+    }
+    .tickets-row .single-ticket-block,
+    .tickets-row .single-ticket-block.taco-tequila-ticket,
+    .tickets-row .single-ticket-block:last-child{
+        width: 380px;
+        margin-leftazenzin: 10px;
+    }
+
+}
+
+@media (max-width: 600px) {
+    .winner-image-wrapper-block{
+        height: 300px;
+    }
+}
+@media (min-width: 376px) and (max-width: 480px) {
+    .winner-image-wrapper-block{
+        height: 280px;
+    }
+}
+@media (min-width: 320px) and (max-width: 375px) {
+    .winner-image-wrapper-block{
+        height: 220px;
+    }
+    .winner-text{
+        font-size: 1rem;
+    }
+}
+@media (max-width: 320px) {
+    .winner-image-wrapper-block{
+        height: 200px;
+    }
+    .winner-text{
+        font-size: 1rem !important;;
+    }
 }
