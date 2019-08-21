@@ -3,4 +3,6 @@ wp-config.php
 wp-content/wflogs/config.php
 wp-content/wflogs/rules.php
 wp-content/wflogs/wafRules.rules
- wp-content/wflogs/
+wp-content/wflogs/
+wp-content/wflogs/*
+wp-content/cache/*
