@@ -1,1 +1,0 @@
-œï\]<?php exit; ?>a:1:{s:7:"content";s:64:"https://tacobeertequila.com/wp-includes/images/media/default.png";}

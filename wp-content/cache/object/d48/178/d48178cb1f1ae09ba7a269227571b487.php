@@ -1,1 +1,0 @@
-Cê\]<?php exit; ?>a:1:{s:7:"content";a:10:{s:14:"wordfence_case";b:1;s:26:"redirection_database_stage";b:1;s:25:"revslider_change_database";b:1;s:16:"revSliderAsTheme";b:1;s:19:"wpb_js_less_version";b:1;s:21:"description_font_size";b:1;s:23:"description_font_weight";b:1;s:22:"description_text_align";b:1;s:22:"description_text_color";b:1;s:29:"_transient_timeout_doing_cron";b:1;}}

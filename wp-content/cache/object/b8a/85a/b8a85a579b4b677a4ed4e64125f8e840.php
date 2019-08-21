@@ -1,1 +1,0 @@
-¶^]<?php exit; ?>a:1:{s:7:"content";O:8:"stdClass":2:{s:3:"url";s:27:"https://tacobeertequila.com";s:13:"subscriptions";a:0:{}}}
