@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SkyStats\n"
-"POT-Creation-Date: 2016-01-25 19:27-0000\n"
-"PO-Revision-Date: 2016-01-25 19:27-0000\n"
+"POT-Creation-Date: 2016-06-15 10:52-0000\n"
+"PO-Revision-Date: 2016-06-15 10:53-0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Access Denied"
 msgstr ""
 
-#: functions/ajax/settings.php:57 functions/options.php:35
+#: functions/ajax/settings.php:66 functions/options.php:35
 #: skystats-premium.php:226
 msgid "Mashboard"
 msgstr ""
@@ -421,33 +421,41 @@ msgstr ""
 msgid "%s Settings"
 msgstr ""
 
-#: skystats-premium.php:612 skystats-premium.php:669 skystats-premium.php:710
-#: skystats-premium.php:752 skystats-premium.php:796 skystats-premium.php:836
+#: skystats-premium.php:614 skystats-premium.php:674 skystats-premium.php:718
+#: skystats-premium.php:763 skystats-premium.php:810 skystats-premium.php:853
 msgid "Start date cannot be after the end date."
 msgstr ""
 
-#: skystats-premium.php:613 skystats-premium.php:668 skystats-premium.php:711
-#: skystats-premium.php:753 skystats-premium.php:797 skystats-premium.php:837
+#: skystats-premium.php:615 skystats-premium.php:673 skystats-premium.php:719
+#: skystats-premium.php:764 skystats-premium.php:811 skystats-premium.php:854
 msgid "Start and end date must be on or after January 1st, 2005."
 msgstr ""
 
-#: skystats-premium.php:614 skystats-premium.php:670 skystats-premium.php:712
-#: skystats-premium.php:754 skystats-premium.php:798 skystats-premium.php:838
+#: skystats-premium.php:616 skystats-premium.php:675 skystats-premium.php:720
+#: skystats-premium.php:765 skystats-premium.php:812 skystats-premium.php:855
 msgid "Start and end date cannot be after today."
 msgstr ""
 
-#: skystats-premium.php:615 skystats-premium.php:713
+#: skystats-premium.php:617 skystats-premium.php:721
 msgid ""
 "Please select a date period within or equal to 91 days. The current 91 days "
 "worth of data are being loaded for you automatically."
 msgstr ""
 
-#: skystats-premium.php:616 skystats-premium.php:755
+#: skystats-premium.php:618 skystats-premium.php:766
 msgid ""
 "Sorry, we don't have access to data for your account before {DATE} (or the "
 "data we have access to may be limited). Please select a different period. We "
 "will collect data for your account each day since you first setup the "
 "integration."
+msgstr ""
+
+#: skystats-premium.php:619 skystats-premium.php:676 skystats-premium.php:722
+#: skystats-premium.php:767 skystats-premium.php:813 skystats-premium.php:856
+msgid ""
+"Sorry, you don't have access to this integration's settings. Please contact "
+"the person who setup the integration, or has access to the settings, to "
+"setup the integration or change any settings for you."
 msgstr ""
 
 #: templates/default/admin/facebook.php:18
@@ -1861,10 +1869,11 @@ msgstr ""
 
 #: templates/default/admin/settings.php:160
 msgid ""
-"Select which users are allowed to view and edit the Settings.  By default, "
-"or if this field is left blank, only administrators will be able to view the "
-"settings. When selecting a user, be sure to remember to include yourself, so "
-"that you don't accidentally lock yourself out of the settings."
+"Select which users are allowed to view and edit the settings, setup "
+"integrations, and view and change their settings. By default, or if this "
+"field is left blank, only administrators will have access. When selecting a "
+"user, be sure to remember to include yourself, so that you don't "
+"accidentally lock yourself out of the settings."
 msgstr ""
 
 #: templates/default/admin/settings.php:177

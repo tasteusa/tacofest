@@ -25,6 +25,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_authorize', 'skystats_ajax_g
  */
 function skystats_ajax_google_analytics_authorize() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	skystats_api_google_analytics_delete_profile();
 
 	skystats_api_google_analytics_delete_profiles();
@@ -40,6 +50,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_reauthorize', 'skystats_ajax
  */
 function skystats_ajax_google_analytics_reauthorize() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	skystats_api_google_analytics_delete_profile();
 
 	skystats_api_google_analytics_delete_profiles();
@@ -54,6 +74,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_deauthorize', 'skystats_ajax
  * @since 0.0.1
  */
 function skystats_ajax_google_analytics_deauthorize() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	skystats_api_google_analytics_delete_profile();
 
@@ -90,6 +120,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_save_profile_id', 'skystats_
  * @since 0.0.1
  */
 function skystats_ajax_google_analytics_save_profile_id() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	if ( ! isset( $_POST['profile_id'] ) ) {
 		exit();
@@ -138,6 +178,20 @@ function skystats_ajax_google_analytics_api_query() {
 
 	$query = wp_strip_all_tags( $_GET['query'] );
 
+	$require_settings_access_queries = array( 'get_profiles', 'get_google_accounts' );
+
+	if ( in_array( $query, $require_settings_access_queries ) ) {
+		/**
+		 * Page access related functions.
+		 * @since 0.3.8
+		 */
+		require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+		if ( ! skystats_can_current_user_access_settings() ) {
+			echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+			exit();
+		}
+	}
+
 	switch ( $query ) {
 		case 'get_mashboard_view_data':
 			$mashboard_data = skystats_api_google_analytics_get_mashboard_view_data();
@@ -171,6 +225,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_save_google_account_email', 
  */
 function skystats_ajax_google_analytics_save_google_account_email() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	if ( ! isset( $_POST['email'] ) ) {
 		exit();
 	}
@@ -194,6 +258,16 @@ add_action( 'wp_ajax_skystats_ajax_google_analytics_reset_google_account_email',
  * @since 0.3.5
  */
 function skystats_ajax_google_analytics_reset_google_account_email() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	delete_option( 'skystats_selected_google_analytics_google_account_email' );
 

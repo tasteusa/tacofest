@@ -1,10 +1,10 @@
-=== SkyStats Pro ===
+﻿=== SkyStats Pro ===
 Contributors: SkyStats
 URL: https://skystats.com
 Tags: ajax, twitter analytics widget, twitter analytics, twitter stats, google, analytics dashboard, google analytics dashboard, google analytics widget, facebook insights, facebook analytics widget, facebook analytics dashboard, tracking, wpmu, multisite, skystats, stats, analytics, insights, admin, dashboard, mashboard, google analytics, facebook, twitter, google+, youtube, mailchimp, linkedin, campaign monitor, paypal, metrics, seo, marketing, reports, reporting, adwords, bi dashboard, business dashboard, google, google ads, google advertising, google adwords, google dashboard, google marketing, kpi dashboard, pay per click, ppc, social media, social media dashboard, social media widget, wordpress dashboard, mailchimp stats, mailchimp widget, mailchimp plugin, email marketing analytics, email marketing stats
 Requires at least: 3.0
-Tested up to: 4.4
-Stable tag: 0.3.7
+Tested up to: 4.8
+Stable tag: 0.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -149,7 +149,7 @@ Note: Must have an active Twitter Account for at least 30 days.
 
 = About =
 
-SkyStats is built with pride by [Thrive Internet Marketing](http://thrivenetmarketing.com/).  Thrive is a WordPress web design and SEO agency with proven results.
+SkyStats is built with pride by [Thrive Internet Marketing](http://thriveagency.com/). Thrive is a WordPress web design and SEO agency with proven results.
 
 == Installation ==
 
@@ -179,6 +179,34 @@ You can find answers to your questions, request support, or just drop us a line 
 8. Settings Page
 
 == Changelog ==
+
+= 0.4.6 - 13th November 2017 =
+* [BugFix] Added a default value for the second argument of the skystats_api_google_adwords_get_deauthorization_url() function.
+
+= 0.4.5 - 27th September 2017 =
+* [Compatibility] This version has been tested up to WordPress version 4.8.2.
+
+= 0.4.4 - 14th September 2017 =
+* [Compatibility] This version has been tested up to WordPress version 4.8.1.
+
+= 0.4.3 - 1st September 2017 =
+* [BugFix] Fixes possible issue with Google Adwords widget not displaying any data.
+
+= 0.4.2 - 15th June 2017 =
+* [Change] Setup flow for Google Adwords has changed slightly to prevent an issue where tokens can no longer be exchanged for new ones.
+
+= 0.4.1 - 29th April 2017 =
+* [BugFix] Fixes possible issue where Google Adwords will always use the cached version of your accounts, regardless of what the cache setting is set to.
+
+= 0.4.0 - 15th March 2017 =
+* [Compatibility] This version has been tested up to WordPress version 4.7.3.
+
+= 0.3.9 - 17th October 2016 =
+* [BugFix] Fixes possible issue when using more than one Google account where the list of properties and views are not updated to reflect the currently selected Google account.
+
+= 0.3.8 - 15th June 2016 =
+* [Feature] You can now restrict users from setting up or viewing/changing any integrations settings by using the Settings Access setting.
+* [BugFix] You can now empty the Stats Access and Settings Access settings and it will save correctly. When either of these settings are empty, only administrators can access the Stats or Settings.
 
 = 0.3.7 - 17th May 2016 =
 * [Compatibility] Fixes conflict with Edit Flow v0.8.1.

@@ -65,7 +65,7 @@
                             </div>
                             <div class="form-group">&nbsp;</div>
                             <div class="form-group">
-                                <label for="za">A-Z</label>
+                                <label for="za">Z-A</label>
                                 <input type="radio" id="za" name="sort_thumbs" value="desc">
                             </div>
                             <div class="form-group">&nbsp;</div>

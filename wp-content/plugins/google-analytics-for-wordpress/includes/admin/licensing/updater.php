@@ -78,7 +78,7 @@ class MonsterInsights_Updater {
      * @var bool|string
      */
     public $key = false;
-    
+
     /**
      * Holds the update data returned from the API.
      *
@@ -87,7 +87,7 @@ class MonsterInsights_Updater {
      * @var bool|object
      */
     public $update = false;
-    
+
     /**
      * Holds the plugin info details for the update.
      *
@@ -98,15 +98,6 @@ class MonsterInsights_Updater {
     public $info = false;
 
     /**
-     * Holds the base class object.
-     *
-     * @since 6.0.0
-     *
-     * @var object
-     */
-    public $base;
-
-    /**
      * Primary class constructor.
      *
      * @since 6.0.0
@@ -114,10 +105,6 @@ class MonsterInsights_Updater {
      * @param array $config Array of updater config args.
      */
     public function __construct( array $config ) {
-
-        // Load the base class object.
-        $this->base = MonsterInsights();
-
         // Set class properties.
         $accepted_args = array(
             'plugin_name',
@@ -133,18 +120,37 @@ class MonsterInsights_Updater {
         }
 
         // If the user cannot update plugins, stop processing here.
-        if ( ! current_user_can( 'update_plugins' ) ) {
+        if ( ! current_user_can( 'update_plugins' ) && ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) ) {
+            return;
+        }
+
+        // If it's our site, then return so we don't redirect loop.
+        if ( strpos( site_url(), 'monsterinsights.com' ) !== false ) {
             return;
         }
 
         // Load the updater hooks and filters.
         add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'update_plugins_filter' ) );
-        //add_filter( 'set_site_transient_update_plugins', array( $this, 'set_site_transient_update_plugins' ) );
-        //add_filter( 'transient_update_plugins', array( $this, 'transient_update_plugins' ) );
+
         add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
         add_filter( 'plugins_api', array( $this, 'plugins_api' ), 10, 3 );
 
+        // ManageWP premium update filters
+        //add_filter( 'mwp_premium_update_notification', array( $this, 'premium_update_push' ) );
+        //add_filter( 'mwp_premium_perform_update', array( $this, 'premium_update' ) );
+
+	    // Add additional info if the license is expired.
+	    add_action( 'in_plugin_update_message-'. $this->plugin_path, array( $this, 'maybe_show_license_expired_message' ), 10, 2 );
     }
+
+	public function maybe_show_license_expired_message( $plugin_data, $response ) {
+		// If there's no download link but there is an update available there's an issue with the license.
+		if ( empty( $response->package ) ) {
+			$settings_url = is_network_admin() ? network_admin_url( 'admin.php?page=monsterinsights_network' ) : admin_url( 'admin.php?page=monsterinsights_settings' );
+			// Translators: First one is a link to the settings page, second one is closing tag, third is a link to MonsterInsights.com
+			echo '<br />' . sprintf( __( 'In order to enable updates, you need to have a valid license key on the %1$ssettings page%2$s. If your license key is expired or you need a new key, then %3$sclick here to purchase MonsterInsights Pro%2$s.', 'google-analytics-for-wordpress' ), '<a href="' . esc_url( $settings_url ) . '">', '</a>', '<a href="' . monsterinsights_get_url( 'Plugin update', $this->plugin_name ) . '">' );
+		}
+	}
 
     /**
      * Infuse plugin update details when WordPress runs its update checker.
@@ -173,7 +179,12 @@ class MonsterInsights_Updater {
         // Infuse the update object with our data if the version from the remote API is newer.
         if ( isset( $this->update->new_version ) && version_compare( $this->version, $this->update->new_version, '<' ) ) {
             // The $plugin_update object contains new_version, package, slug and last_update keys.
-            $value->response[$this->plugin_path] = $this->update;
+            //$this->update->full_slug             = $this->plugin_slug;
+            //$this->update->name                  = $this->plugin_name;
+            $this->update->monsterinsights_plugin  = true;
+            $this->update->old_version             = $this->version;
+            $this->update->plugin                  = $this->plugin_path;
+            $value->response[$this->plugin_path]   = $this->update;
         }
 
         // Return the update object.
@@ -270,13 +281,47 @@ class MonsterInsights_Updater {
             $api->sections['description'] = $description;
         } else {
             $api->sections = array();
-        }     
+        }
 
         $api->download_link         = isset( $this->info->download_link )  ? $this->info->download_link  : '';
 
         // Return the new API object with our custom data.
         return $api;
 
+    }
+
+    // Integration with ManageWP
+    public function premium_update_push( $premium_update ) {
+        if ( ! function_exists( 'get_plugin_data' ) ) {
+            include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+
+        $update = $this->set_plugins_api( array() );
+        if ( ! empty( $update ) && version_compare( MONSTERINSIGHTS_VERSION, $update->version, '<' ) ) {
+            $plugin_data                = get_plugin_data( $update->slug );
+            $plugin_data['type']        = 'plugin';
+            $plugin_data['slug']        = $update->slug;
+            $plugin_data['new_version'] = $update->version;
+            $premium_update[]           = $plugin_data;
+        }
+        return $premium_update;
+    }
+
+    // Integration with ManageWP
+    public function premium_update( $premium_update ) {
+        if ( ! function_exists( 'get_plugin_data' ) ) {
+            include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+
+        $update = $this->set_plugins_api( array() );
+        if ( ! empty( $update ) && version_compare( MONSTERINSIGHTS_VERSION, $update->version, '<' ) ) {
+            $plugin_data                = get_plugin_data( $update->slug );
+            $plugin_data['type']        = 'plugin';
+            $plugin_data['slug']        = $update->slug;
+            $plugin_data['url']         = $update->download_link; // OR provide your own callback function for managing the update
+            array_push( $premium_update, $plugin_data );
+        }
+        return $premium_update;
     }
 
     /**

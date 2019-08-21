@@ -32,6 +32,20 @@ function skystats_ajax_twitter_api_query() {
 
 	$query = wp_strip_all_tags( $_GET['query'] );
 
+	$require_settings_access_queries = array( 'deauthorize', 'get_status' );
+
+	if ( in_array( $query, $require_settings_access_queries ) ) {
+		/**
+		 * Page access related functions.
+		 * @since 0.3.8
+		 */
+		require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+		if ( ! skystats_can_current_user_access_settings() ) {
+			echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+			exit();
+		}
+	}
+
 	if ( 'deauthorize' === $query ) {
 		skystats_api_twitter_deauthorize();
 		exit();

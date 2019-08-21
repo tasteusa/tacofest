@@ -36,7 +36,8 @@
         $(parentSelector+'.sort-thumbs-a-z').on('click',function(){
             var cat = $(parentSelector+'.category-select').val();
             var btn = $(this);
-            loadThumbsContainer(cat,'a-z',btn);
+            var order = $(parentSelector+'[name="sort_thumbs"]:checked').val();
+            loadThumbsContainer(cat,order,btn);
         });
 
         function loadThumbsContainer(cat,order,btn) {

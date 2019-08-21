@@ -9,6 +9,9 @@ else if (wfConfig::get('touppPromptNeeded')) {
 	echo wfView::create('gdpr/banner')->render();
 }
 ?>
+<?php if (isset($storageExceptionMessage)): ?>
+	<div class="notice notice-error"><p><?php echo $storageExceptionMessage; ?></p></div>
+<?php endif; ?>
 <div class="wrap wordfence">
 	<div class="wf-container-fluid">
 		<?php
@@ -29,7 +32,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF),
 						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about the Firewall</span>', 'wordfence'),
 					))->render();
-					require('menu_firewall_waf.php');
+					require(dirname(__FILE__) . '/menu_firewall_waf.php');
 					?>
 				</div> <!-- end waf block -->
 				<div id="blocking" class="wf-tab-content" data-title="Blocking">
@@ -40,7 +43,7 @@ else if (wfConfig::get('touppPromptNeeded')) {
 						'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_BLOCKING),
 						'helpLabelHTML' => __('Learn more<span class="wf-hidden-xs"> about Blocking</span>', 'wordfence'),
 					))->render();
-					require('menu_firewall_blocking.php');
+					require(dirname(__FILE__) . '/menu_firewall_blocking.php');
 					?>
 				</div> <!-- end blocking block -->
 			</div> <!-- end content block -->

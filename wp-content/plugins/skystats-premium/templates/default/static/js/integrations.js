@@ -62,6 +62,7 @@ function Integration( viewName ) {
 			}
 		]
 	};
+
 	if ( 'detail' === this.viewName ) {
 		// Use large markers for detail charts
 		this.chartOptions.series.points.radius = 3.5;
@@ -69,6 +70,7 @@ function Integration( viewName ) {
 		this.chartOptions.xaxis.tickLength = null;
 		this.$chartFigure = jQuery( '#skystats-detail-chart-key-container' );
 	}
+	this.currentUserCanAccessSettings = false;
 }
 
 /**
@@ -121,7 +123,13 @@ Integration.prototype.updateDataTabData = function( checkedDates ) {
 	if ( this.viewingSettingsTab ) {
 		return;
 	}
+
 	if ( this.loadingSettingsTabData ) {
+		return;
+	}
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();
 		return;
 	}
 
@@ -247,6 +255,11 @@ Integration.prototype.enableGridIcon = function() {
 	});
 };
 Integration.prototype.disableGridIcon = function() {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		return;
+	}
+
 	this.$gridIcon.addClass( 'skystats-disabled' );
 	var instance = this.$gridIcon.tooltip( 'instance' );
 	if ( null != instance ) {
@@ -297,6 +310,11 @@ Integration.prototype.enableSettingsIcon = function() {
  * Disable the settings icon tooltip and tab switchability.
  */
 Integration.prototype.disableSettingsIcon = function() {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		return;
+	}
+
 	if ( false === this.settingsIconEnabled ) {
 		return;
 	}
@@ -351,10 +369,22 @@ Integration.prototype.createPopupWindow = function( url, name, width, height, fe
 	this.popupWindow = window.open( url, name, features );
 };
 
+Integration.prototype.displayCurrentUserCannotAccessSettingsError = function() {
+	var selector = '.skystats-' + this.integrationId + '-settings-access-denied-error';
+	if ( $( selector ).length ) {
+		$( selector ).remove();
+	}
+	if ( this.$loadingContainer ) {
+		this.$loadingContainer.hide();
+	}
+	$( this.$chartContainer ).before( this.$userCannotAccessSettingsError );
+};
+
 // Google Analytics - child
 function GoogleAnalytics( viewName ) {
 	Integration.call( this, viewName );
 	this.integrationName = 'Google Analytics';
+	this.integrationId = 'google-analytics';
 	this.translations = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['trans']:
 		skystats_google_analytics['trans'];
@@ -443,6 +473,10 @@ function GoogleAnalytics( viewName ) {
 	this.authPopupWindowCompleteURL = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['auth_popup_window_complete_url'] :
 		skystats_google_analytics['auth_popup_window_complete_url'];
+
+	this.currentUserCanAccessSettings = ( 'mashboard' === viewName ) ? skystats_mashboard['current_user_can_access_settings'] : skystats_google_analytics['current_user_can_access_settings'];
+	this.userCannotAccessSettingsErrorMsg = this.translations['current_user_settings_access_denied_error'];
+	this.$userCannotAccessSettingsError = "<p class='skystats-error-message skystats-google-analytics-settings-access-denied-error'>" + this.userCannotAccessSettingsErrorMsg + "<p>";
 }
 GoogleAnalytics.prototype = createObject( Integration.prototype );
 GoogleAnalytics.prototype.constructor = GoogleAnalytics;
@@ -904,6 +938,12 @@ GoogleAnalytics.prototype.disableSettingsIcon = function() {
  * @param {string} requestType 'fresh' to retrieve results directly from API, otherwise 'cached' to try to return cached results first, then fresh second.
  */
 GoogleAnalytics.prototype.loadSettingsTabData = function( requestType ) {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();
+		return;
+	}
+
 	this.hideChartFigure();
 	this.$topDataErrorContainers.fadeOut();
 	var curInst = this,
@@ -1012,6 +1052,7 @@ GoogleAnalytics.prototype.displaySettingsTabData = function( response ) {
 				max_selected_options: 1,
 				width: '100%'
 			});
+			$profiles.trigger('chosen:updated');
 
 			// When a profile is selected and 'Save' is clicked.
 			var $saveGAProfileID = jQuery( '#save_ga_profile' );
@@ -1194,6 +1235,7 @@ function Facebook( viewName ) {
 	Integration.call( this, viewName );
 
 	this.integrationName = 'Facebook';
+	this.integrationId = 'facebook';
 
 	this.$loadingContainer = jQuery( '#skystats-facebook-loading-container' );
 
@@ -1272,6 +1314,10 @@ function Facebook( viewName ) {
 	this.authPopupWindowCompleteURL = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['auth_popup_window_complete_url'] :
 		skystats_facebook['auth_popup_window_complete_url'];
+
+	this.currentUserCanAccessSettings = ( 'mashboard' === viewName ) ? skystats_mashboard['current_user_can_access_settings'] : skystats_facebook['current_user_can_access_settings'];
+	this.userCannotAccessSettingsErrorMsg = this.translations['current_user_settings_access_denied_error'];
+	this.$userCannotAccessSettingsError = "<p class='skystats-error-message skystats-facebook-settings-access-denied-error'>" + this.userCannotAccessSettingsErrorMsg + "<p>";
 }
 Facebook.prototype = createObject( Integration.prototype );
 Facebook.prototype.constructor = Facebook;
@@ -1444,6 +1490,12 @@ Facebook.prototype.displayDataTabData = function() {
  * @param {string} requestType Whether to request fresh or cached results. Important when there is an error, and we must request fresh results.
  */
 Facebook.prototype.loadSettingsTabData = function( requestType ) {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();
+		return;
+	}
+
 	this.hideChartFigure();
 	this.$topDataErrorContainers.fadeOut();
 	this.$rangeErrorContainer.fadeOut();
@@ -1640,6 +1692,7 @@ function Twitter( viewName ) {
 	Integration.call( this, viewName );
 
 	this.integrationName = 'Twitter';
+	this.integrationId = 'twitter';
 
 	this.$loadingContainer = jQuery( '#skystats-twitter-loading-container' );
 
@@ -1717,6 +1770,10 @@ function Twitter( viewName ) {
 	this.authPopupWindowCompleteURL = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['auth_popup_window_complete_url'] :
 		skystats_twitter['auth_popup_window_complete_url'];
+
+	this.currentUserCanAccessSettings = ( 'mashboard' === viewName ) ? skystats_mashboard['current_user_can_access_settings'] : skystats_twitter['current_user_can_access_settings'];
+	this.userCannotAccessSettingsErrorMsg = this.translations['current_user_settings_access_denied_error'];
+	this.$userCannotAccessSettingsError = "<p class='skystats-error-message skystats-twitter-settings-access-denied-error'>" + this.userCannotAccessSettingsErrorMsg + "<p>";
 }
 Twitter.prototype = createObject( Integration.prototype );
 Twitter.prototype.constructor = Twitter;
@@ -2011,6 +2068,12 @@ Twitter.prototype.displayDataTabData = function() {
  * @param {string} requestType Whether to request fresh or cached results. Important when there is an error, and we must request fresh results.
  */
 Twitter.prototype.loadSettingsTabData = function( requestType ) {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();
+		return;
+	}
+
 	this.hideChartFigure();
 	var curInst = this,
 		$fadeOutObjects = ( 'mashboard' === this.viewName ) ?
@@ -2144,6 +2207,11 @@ function GoogleAdwords( viewName ) {
 	Integration.call( this, viewName );
 
 	this.integrationName = 'GoogleAdwords';
+	this.integrationId = 'google-adwords';
+
+	// (As of 0.4.2) Whether Google Adwords Setup button click has been registered
+	this.setup = ( 'mashboard' === this.viewName ) ?
+		skystats_mashboard['google_adwords']['setup'] : skystats_google_adwords['setup'];
 
 	this.$loadingContainer = jQuery( '#skystats-google-adwords-loading-container' );
 
@@ -2212,6 +2280,7 @@ function GoogleAdwords( viewName ) {
 	this.$settingsTabAuthorizeSection = jQuery( '#skystats-google-adwords-settings-authorize-section' );
 	this.$settingsTabCampaignSelectionSection = jQuery( '#skystats-google-adwords-campaign-selection-section' );
 	this.$settingsTabAccountSelectionSection = jQuery( '#skystats-google-adwords-account-selection-section' );
+	this.$settingsTabAddAccountsSection = jQuery( '#skystats-google-adwords-add-accounts-section' );
 
 	this.settingsClickEventName = 'click.google_adwords_settings';
 
@@ -2240,6 +2309,24 @@ function GoogleAdwords( viewName ) {
 	this.authPopupWindowCompleteURL = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['auth_popup_window_complete_url'] :
 		skystats_google_adwords['auth_popup_window_complete_url'];
+
+	this.currentUserCanAccessSettings = ( 'mashboard' === viewName ) ? skystats_mashboard['current_user_can_access_settings'] : skystats_google_adwords['current_user_can_access_settings'];
+	this.userCannotAccessSettingsErrorMsg = this.translations['current_user_settings_access_denied_error'];
+	this.$userCannotAccessSettingsError = "<p class='skystats-error-message skystats-google-adwords-settings-access-denied-error'>" + this.userCannotAccessSettingsErrorMsg + "<p>";
+
+	var curInst = this;
+
+	$('#skystats-google-adwords-authorize').click(function(e) {
+		e.preventDefault();
+		console.log("Google Adwords Setup Button Clicked");
+		jQuery.get( ajaxurl, {
+			action: 'skystats_ajax_google_adwords_api_query',
+			query: 'authorize'
+		}, function () {
+			curInst.setup = true;
+			curInst.loadDataTabData();
+		});
+	});
 }
 GoogleAdwords.prototype = createObject( Integration.prototype );
 GoogleAdwords.prototype.constructor = GoogleAdwords;
@@ -2248,11 +2335,21 @@ GoogleAdwords.prototype.constructor = GoogleAdwords;
  * Load data for the data tab.
  */
 GoogleAdwords.prototype.loadDataTabData = function() {
+
+	var curInst = this;
+
+	if ( ! this.setup ) {
+		this.$settingsTabSections.fadeOut();
+		this.$loadingContainer.fadeOut(400, function() {
+			curInst.$settingsTabAuthorizeSection.fadeIn();
+		});
+		return;
+	}
+
 	this.hideChartFigure();
 	this.$integrationErrorContainer.fadeOut();
 	this.viewingSettingsTab = false;
 	this.loadingDataTabData = true;
-	var curInst = this;
 	this.$settingsTabSections
 		.add( this.$chartContainer )
 		.add( this.$dataPointsContainer )
@@ -2596,6 +2693,12 @@ GoogleAdwords.prototype.displayDataTabData = function() {
  * @param {string} requestType Whether to request fresh or cached results. Important when there is an error, and we must request fresh results.
  */
 GoogleAdwords.prototype.loadSettingsTabData = function( requestType ) {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();
+		return;
+	}
+
 	if ( 'detail' === this.viewName ) {
 		this.$dataTableColumns.fadeOut();
 	}
@@ -2653,10 +2756,12 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 	curInst.$loadingContainer.fadeOut( 400, function () {
 
 		// Accounts
+
+		// error
 		if ( 'error' === accountResponse['responseType'] ) {
 			var context = accountResponse['responseContext'];
 			if ( 'authorization_required' === context ) {
-				curInst.$settingsTabAuthorizeSection.fadeIn();
+				curInst.$settingsTabAddAccountsSection.fadeIn();
 			} else {
 				if ( curInst.translations['google_adwords_api_errors'].hasOwnProperty( context ) ) {
 					curInst.$integrationErrorContainer.find('>p').html(curInst.translations['google_adwords_api_errors'][context]);
@@ -2668,38 +2773,26 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 
 			if ( 'success' === accountResponse['responseType'] ) {
 				var selectHTML = '',
-					$accountSelect = jQuery('#skystats-google-adwords-account-selection'),
-					accountsArr = [];
-				if ( jQuery.isArray( accountResponse['data'] ) ) {
-					jQuery.each(accountResponse['data'], function (i, v) {
-						accountsArr.push(v);
-					});
+					$accountSelect = jQuery('#skystats-google-adwords-account-selection');
 
-					accountsArr.sort( function ( a, b ) {
-						var aName = a.name.toLowerCase(),
-							bName = b.name.toLowerCase();
-						return ( ( aName < bName ) ? -1 : ( ( aName > bName ) ? 1 : 0 ) );
+				jQuery.each(accountResponse['data'], function (customerId, customerData) {
+					selectHTML += '<optgroup label="' + customerData['customer'] + ' (' + customerId + ')">';
+					jQuery.each(customerData['managedCustomers'], function (managedCustomerId, managedCustomerName) {
+						var selected = ( curInst.selectedCustomerId == managedCustomerId ) ? 'selected="selected"' : '';
+						selectHTML += '<option value="' + managedCustomerId.toString() + '" ' + selected + '>' + managedCustomerName + '</option>';
 					});
-				} else {
-					accountsArr = [
-						{ id: accountResponse['data']['id'], name: accountResponse['data']['name'] }
-					];
-				}
-				var accountsLen = accountsArr.length;
-				selectHTML += '<option value="select">Select Account</option>';
-				for (var i = 0; i < accountsLen; ++i) {
-					var customerSelected = ( curInst.selectedCustomerId == accountsArr[i]['id'] ) ? 'selected="selected"' : '',
-						customerId = accountsArr[i]['id'].toString(),
-						customerIdWithDash = customerId.slice( 0, 3 ) + '-' + customerId.slice( 3, 6 ) + '-' + customerId.slice( 6 );
-					selectHTML += '<option value="' + customerId + '" ' + customerSelected + '>' + accountsArr[i]['name'] + ' (' + customerIdWithDash + ')</option>';
-				}
+					selectHTML += '</optgroup>';
+				});
+
 				$accountSelect.html(selectHTML);
 
+				curInst.$settingsTabAddAccountsSection.fadeIn();
 				curInst.$settingsTabAccountSelectionSection.fadeIn();
 				$accountSelect.chosen({
 					max_selected_options: 1,
 					width: '100%'
 				});
+				//$accountSelect.trigger('chosen:updated');
 
 				$accountSelect.off('change');
 				$accountSelect.on( 'change', function() {
@@ -2707,9 +2800,9 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 					if ( 'select' == customerId || customerId == curInst.selectedCustomerId ) {
 						return;
 					}
+					curInst.selectedCustomerId = customerId;
 					curInst.$settingsTabCampaignSelectionSection.fadeOut( 400, function() {
 						curInst.$campaignSectionLoadingIcon.fadeIn( 400, function() {
-							curInst.selectedCustomerId = customerId;
 							jQuery.get(ajaxurl, {
 								action: 'skystats_ajax_google_adwords_api_query',
 								query: 'save_customer_id',
@@ -2777,6 +2870,7 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 						var campaignId = $campaignSelect.val();
 						curInst.selectedCampaignId = campaignId;
 						var customerId = $accountSelect.val();
+
 						// Customer ids the same (load & display data)
 						if (customerId == curInst.selectedCustomerId) {
 							curInst.$settingsTabSections.fadeOut(400).promise().done(function () {
@@ -2834,8 +2928,8 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 			curInst.enableSettingsIcon();
 		}
 
-		if ( curInst.$settingsTabAuthorizeSection.is( ':visible' ) ) {
-			var $authorize = jQuery( '#skystats-google-adwords-authorize' );
+		if ( curInst.$settingsTabAddAccountsSection.is( ':visible' ) ) {
+			var $authorize = jQuery( '#skystats-google-adwords-add-accounts' );
 			$authorize.off( 'click' );
 			$authorize.on( 'click', function( event ) {
 				event.preventDefault();
@@ -2866,6 +2960,7 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 			$deauthorize.off( 'click' );
 			$deauthorize.on( 'click', function( event ) {
 				event.preventDefault();
+				curInst.setup = false;
 				curInst.$integrationErrorContainer.fadeOut();
 				curInst.disableSettingsIcon();
 				curInst.$settingsTabSections.fadeOut( 400 ).promise().done( function() {
@@ -2874,11 +2969,35 @@ GoogleAdwords.prototype.displaySettingsTabData = function( accountResponse, camp
 							action: 'skystats_ajax_google_adwords_api_query',
 							query: 'deauthorize'
 						}, function() {
+							curInst.setup = false;
 							curInst.data = null;
 							curInst.viewingSettingsTab = false;
-							curInst.loadingSettingsTabData = true;
-							curInst.loadSettingsTabData( 'fresh' );
-						});
+							curInst.loadingSettingsTabData = false;
+							curInst.loadDataTabData();
+						} );
+					} );
+				});
+			});
+
+			var $deauthorizeLicense = jQuery( '#skystats-google-adwords-deauthorize-license' );
+			$deauthorizeLicense.off( 'click' );
+			$deauthorizeLicense.on( 'click', function( event ) {
+				event.preventDefault();
+				curInst.setup = false;
+				curInst.$integrationErrorContainer.fadeOut();
+				curInst.disableSettingsIcon();
+				curInst.$settingsTabSections.fadeOut( 400 ).promise().done( function() {
+					curInst.$loadingContainer.fadeIn( 400, function () {
+						jQuery.get( ajaxurl, {
+							action: 'skystats_ajax_google_adwords_api_query',
+							query: 'deauthorize_license'
+						}, function() {
+							curInst.setup = false;
+							curInst.data = null;
+							curInst.viewingSettingsTab = false;
+							curInst.loadingSettingsTabData = false;
+							curInst.loadDataTabData();
+						} );
 					} );
 				});
 			});
@@ -2901,9 +3020,10 @@ GoogleAdwords.prototype.resizeChart = function() {
  */
 function MailChimp( viewName ) {
 
-	Integration.call(this, viewName);
+	Integration.call( this, viewName );
 
 	this.integrationName = 'MailChimp';
+	this.integrationId = 'mailchimp';
 
 	this.$loadingContainer = jQuery('#skystats-mailchimp-loading-container');
 
@@ -2980,6 +3100,10 @@ function MailChimp( viewName ) {
 	this.authPopupWindowCompleteURL = ( 'mashboard' === this.viewName ) ?
 		skystats_mashboard['auth_popup_window_complete_url'] :
 		skystats_mailchimp['auth_popup_window_complete_url'];
+
+	this.currentUserCanAccessSettings = ( 'mashboard' === viewName ) ? skystats_mashboard['current_user_can_access_settings'] : skystats_mailchimp['current_user_can_access_settings'];
+	this.userCannotAccessSettingsErrorMsg = this.translations['current_user_settings_access_denied_error'];
+	this.$userCannotAccessSettingsError = "<p class='skystats-error-message skystats-mailchimp-settings-access-denied-error'>" + this.userCannotAccessSettingsErrorMsg + "<p>";
 }
 MailChimp.prototype = createObject( Integration.prototype );
 MailChimp.prototype.constructor = MailChimp;
@@ -3240,6 +3364,12 @@ MailChimp.prototype.displayDataTabData = function() {
  * @param {string} requestType Whether to request fresh or cached results. Important when there is an error, and we must request fresh results.
  */
 MailChimp.prototype.loadSettingsTabData = function( requestType ) {
+
+	if ( ! this.currentUserCanAccessSettings ) {
+		this.displayCurrentUserCannotAccessSettingsError();;
+		return;
+	}
+
 	if ( 'detail' === this.viewName ) {
 		this.$dataTableColumns.fadeOut();
 	}

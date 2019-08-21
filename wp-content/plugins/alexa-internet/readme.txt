@@ -2,7 +2,7 @@
 Contributors: alexainternet
 Tags: alexa, analytics
 Requires at least: 4.0
-Tested up to: 4.7
+Tested up to: 5.0
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -27,6 +27,18 @@ To certify your site's metrics:
 
 
 == Changelog ==
+
+= 4.1.2 =
+
+Fix the PHP 7.0 compatibility issue
+
+= 4.1.1 =
+
+Fix the bug due to merge conflict
+
+= 4.1 =
+
+Certify endpoint updated to certify.alexametrics.com/atrk.gif
 
 = 4.0 =
 

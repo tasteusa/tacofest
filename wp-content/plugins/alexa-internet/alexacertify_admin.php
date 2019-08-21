@@ -32,17 +32,9 @@ $formAction = str_replace( '%7E', '~', $_SERVER['REQUEST_URI']);
     <ol>
       <li>Visit <a href="http://www.alexa.com/account/sitesettings">your Site Settings</a>.</li>
       <li>Click the 'Certification Status' link for the site you wish to certify. This will take you to the 'Certification Status' page for your site.</li>
-      <!--li>Copy the Certify Code and paste it here:<br/>
+      <li>Copy the Certify Code and paste it here:<br/>
         <textarea name="alexacertify_certify" style="width: 80%; height: 8em;"><?= htmlspecialchars($this->certify_snippet) ?></textarea>
-      </li-->
-      <img src="http://tbar.alexa.com/wordpress/snippet_screen_shot.png"></img>
-      <li>Copy the atrk_acct and paste it here: <br/>
-        <input type="text" name="alexacerify_atrk_id" style="width: 100%;" value="<?=htmlspecialchars($this->certify_atrk_id)?>"></input>
       </li>
-      <li>Copy the domain and paste it here: <br/>
-        <input type="text" name="alexacerify_atrk_dn" style="width: 100%;" value="<?=htmlspecialchars($this->certify_domainn)?>"></input>
-      </li>
-      <?php wp_nonce_field( 'configure-alexa-internet-plugin' );?>
       <li>Press this <input type="submit" name="Submit" value="Add Certify Code" /> button to insert the code into your site.</li>
       <li>Go back to the 'Certification Status' page on alexa.com and press the 'Scan My Site' button.</li>
     </ol>

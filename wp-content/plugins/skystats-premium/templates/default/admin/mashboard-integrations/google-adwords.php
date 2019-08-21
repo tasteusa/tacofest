@@ -58,10 +58,17 @@ defined( 'ABSPATH' ) or exit();
 				<?php require_once SKYSTATS_API_FUNCTIONS_PATH . 'google-adwords.php'; ?>
 				<?php $api_authenticate_url = skystats_api_google_adwords_get_authorization_url( SKYSTATS_MASHBOARD_PAGE_URL ); ?>
 
+				<!-- Add Account(s) -->
+				<div id="skystats-google-adwords-add-accounts-section" class="skystats-google-adwords-settings-tab-section skystats-settings-tab-section">
+					<h3><?php _e( 'Add Account(s)', SKYSTATS_TEXT_DOMAIN ); ?></h3>
+					<p><?php _e( 'Click the button below to login with a Google Adwords account and make all of the account(s) that you have access to available for selection below.', SKYSTATS_TEXT_DOMAIN ); ?></p>
+					<a id="skystats-google-adwords-add-accounts" href="<?php echo esc_attr( $api_authenticate_url ); ?>" class="skystats-button"><?php _e( 'Authorize', SKYSTATS_TEXT_DOMAIN ); ?></a>
+				</div>
+
 				<!-- Account Selection -->
 				<div id="skystats-google-adwords-account-selection-section" class="skystats-google-adwords-settings-tab-section skystats-settings-tab-section">
 					<h3><?php _e( 'Select an Account', SKYSTATS_TEXT_DOMAIN ); ?></h3>
-					<p><?php _e( "Select an account from the list below. The account's campaigns will then be loaded for you.", SKYSTATS_TEXT_DOMAIN ); ?></p>
+					<p><?php _e( "Below are all the account(s) that you have access to through your Google Adwords account(s), or those which have already been added for this license key. Click on any of the accounts in order to be able to select a campaign.", SKYSTATS_TEXT_DOMAIN ); ?></p>
 					<select id="skystats-google-adwords-account-selection" class="skystats-card-settings-profiles"></select>
 				</div>
 
@@ -77,15 +84,17 @@ defined( 'ABSPATH' ) or exit();
 				<div id="skystats-google-adwords-settings-authorize-section"  class="skystats-google-adwords-settings-tab-section skystats-settings-tab-section">
 					<h3><?php _e( 'Setup', SKYSTATS_TEXT_DOMAIN ); ?></h3>
 					<p><?php _e( 'Click the button below to login to Google and allow the application to access your account(s) and campaign(s). You will then be able to select a campaign to display data for. Please make sure you login with an account that has setup at least one campaign.', SKYSTATS_TEXT_DOMAIN ); ?></p>
-					<a id="skystats-google-adwords-authorize" href="<?php echo esc_attr( $api_authenticate_url ); ?>" class="skystats-button"><?php _e( 'Setup', SKYSTATS_TEXT_DOMAIN ); ?></a>
+					<a id="skystats-google-adwords-authorize" class="skystats-button"><?php _e( 'Setup', SKYSTATS_TEXT_DOMAIN ); ?></a>
 				</div>
 
 				<!-- Deauthorize / Deauthenticate -->
 				<div id="skystats-google-adwords-settings-deauthorize-section" class="skystats-google-adwords-settings-tab-section skystats-settings-tab-section">
-					<h3><?php _e( 'Deauthorize', SKYSTATS_TEXT_DOMAIN ); ?></h3>
-					<p><?php _e( 'Purge all Google Adwords authentication and cache data from your local install.', SKYSTATS_TEXT_DOMAIN ); ?></p>
-					<?php $ga_deauthorize_url = esc_attr( skystats_api_google_adwords_get_deauthorization_url( SKYSTATS_MASHBOARD_PAGE_URL ) ); ?>
-					<a href="<?php echo $ga_deauthorize_url; ?>" id="skystats-google-adwords-deauthorize" class="skystats-button"><?php _e( 'Deauthorize', SKYSTATS_TEXT_DOMAIN ); ?></a>
+					<h3><?php _e( 'Deauthorize Site only', SKYSTATS_TEXT_DOMAIN ); ?></h3>
+					<p><?php _e( 'Purge all Google Adwords authentication and cache data from your local install, but allow other sites using the same license key to be able to continue using any accounts that have been authorized using this license key.', SKYSTATS_TEXT_DOMAIN ); ?></p>
+					<a href="#" id="skystats-google-adwords-deauthorize" class="skystats-button"><?php _e( 'Deauthorize', SKYSTATS_TEXT_DOMAIN ); ?></a>
+					<h3><?php _e( 'Deauthorize License-wide', SKYSTATS_TEXT_DOMAIN ); ?></h3>
+					<p><?php _e( 'Purge all Google Adwords authentication and cache data from your local install and remove any accounts authorized for this license key. Any sites using the same license key won\'t be able to see data for any of the accounts authorized for this license key unless someone with access to those accounts reauthorizes.', SKYSTATS_TEXT_DOMAIN ); ?></p>
+					<a href="#" id="skystats-google-adwords-deauthorize-license" class="skystats-button"><?php _e( 'Deauthorize', SKYSTATS_TEXT_DOMAIN ); ?></a>
 				</div>
 			</div>
 
@@ -113,8 +122,7 @@ defined( 'ABSPATH' ) or exit();
 						<div class="skystats-dashboard-data-point-footer">
 							<span id="skystats-google-adwords-clicks-change-direction"></span>
 							<span id="skystats-google-adwords-clicks-change" class="skystats-data-point-change"></span>
-							<?php $title = __( 'Clicks were made during the previous period.', SKYSTATS_TEXT_DOMAIN ); ?>
-							<span id="skystats-google-adwords-clicks-change-info" class="skystats-dashboard-data-point-heading-info skystats-tooltip skystats-service-data-point-change-percentage-info" data-tooltip-backup="<?php echo $title; ?>" data-tooltip="<?php echo $title; ?>"></span>
+							<?php $title = __( 'Clicks were made during the previous period.', SKYSTATS_TEXT_DOMAIN ); ?>							<span id="skystats-google-adwords-clicks-change-info" class="skystats-dashboard-data-point-heading-info skystats-tooltip skystats-service-data-point-change-percentage-info" data-tooltip-backup="<?php echo $title; ?>" data-tooltip="<?php echo $title; ?>"></span>
 						</div>
 					</div>
 

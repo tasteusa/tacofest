@@ -157,7 +157,7 @@ defined( 'ABSPATH' ) or exit();
 					<div class="skystats-form-group">
 						<label class="skystats-form-label" for="skystats_settings_users_allowed_access"><?php _e( 'Users', SKYSTATS_TEXT_DOMAIN ); ?></label>
 						<?php $skystats_settings_users_allowed_access = get_option( 'skystats_settings_users_allowed_access' ); ?>
-						<p><?php _e( 'Select which users are allowed to view and edit the Settings.  By default, or if this field is left blank, only administrators will be able to view the settings. When selecting a user, be sure to remember to include yourself, so that you don\'t accidentally lock yourself out of the settings.', SKYSTATS_TEXT_DOMAIN ); ?></p>
+						<p><?php _e( 'Select which users are allowed to view and edit the settings, setup integrations, and view and change their settings. By default, or if this field is left blank, only administrators will have access. When selecting a user, be sure to remember to include yourself, so that you don\'t accidentally lock yourself out of the settings.', SKYSTATS_TEXT_DOMAIN ); ?></p>
 						<?php
 						global $wpdb;
 						$results = $wpdb->get_results( "SELECT `ID`, `user_login` FROM `{$wpdb->users}`" );

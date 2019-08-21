@@ -127,5 +127,8 @@ function skystats_get_options() {
 	// (array) Ids of users as values that are allowed to view and change the Settings.
 	$options['blog']['skystats_settings_users_allowed_access'] = array();
 
+	// (bool) Whether Google Adwords has been setup (as of 0.4.2)
+	$options['blog']['skystats_google_adwords_setup'] = false;
+
 	return $options;
 }

@@ -4,7 +4,7 @@
 	Plugin Name: SkyStats Pro
 	Plugin URI: https://skystats.com
 	Description: A Better WordPress Dashboard.
-	Version: 0.3.7
+	Version: 0.4.6
 	Author: SkyStats
 	Author URI: https://skystats.com
 	License: GPLv2 or later
@@ -579,6 +579,7 @@ function skystats_admin_enqueue_mashboard_scripts() {
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'twitter.php';
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'google-adwords.php';
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'mailchimp.php';
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 
 	$mashboard_data = array(
 		'google_analytics' => array(
@@ -597,6 +598,7 @@ function skystats_admin_enqueue_mashboard_scripts() {
 			'selected_customer_id' => get_option( 'skystats_google_adwords_selected_customer_id' ),
 			'selected_campaign_id' => get_option( 'skystats_google_adwords_selected_campaign_id' ),
 			'auth_popup_window_url' => skystats_api_google_adwords_get_authorization_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
+			'setup' => get_option( 'skystats_google_adwords_setup' ),
 		),
 		'mailchimp' => array(
 			'auth_popup_window_url' => skystats_api_mailchimp_get_authorization_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
@@ -604,6 +606,7 @@ function skystats_admin_enqueue_mashboard_scripts() {
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
 		'template_images_url' => SKYSTATS_TEMPLATE_IMAGES_URL,
 		'mashboard_cards_visibility_status' => get_option( 'skystats_mashboard_cards_visibility_status' ),
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
 	);
 
 	$translations = array(
@@ -614,6 +617,7 @@ function skystats_admin_enqueue_mashboard_scripts() {
 		'date_range_exceeds_today'      => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_limit'      => __( 'Please select a date period within or equal to 91 days. The current 91 days worth of data are being loaded for you automatically.', SKYSTATS_TEXT_DOMAIN ),
 		'twitter_historical_data_error' => __( 'Sorry, we don\'t have access to data for your account before {DATE} (or the data we have access to may be limited). Please select a different period. We will collect data for your account each day since you first setup the integration.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -654,6 +658,7 @@ function skystats_admin_enqueue_google_analytics_scripts() {
 
 	skystats_enqueue_script( 'skystats-google-analytics', 'google-analytics-detail-page.js' );
 
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'google-analytics.php';
 
 	$google_analytics_data = array(
@@ -661,6 +666,7 @@ function skystats_admin_enqueue_google_analytics_scripts() {
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
 		'selected_profile_id'            => get_option( 'skystats_selected_google_analytics_profile_id' ),
 		'selected_google_account_email'  => get_option( 'skystats_selected_google_analytics_google_account_email' ),
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
 	);
 
 	$translations = array(
@@ -668,6 +674,7 @@ function skystats_admin_enqueue_google_analytics_scripts() {
 		'date_range_below_min'     => __( 'Start and end date must be on or after January 1st, 2005.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_same'          => __( 'Start date cannot be after the end date.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_today' => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -698,11 +705,13 @@ function skystats_admin_enqueue_facebook_scripts() {
 	skystats_enqueue_script( 'skystats-facebook', 'facebook-detail-page.js' );
 
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'facebook.php';
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 
 	$facebook_data = array(
 		'auth_popup_window_url' => skystats_facebook_get_authentication_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
 		'selected_page_id'    => get_option( 'skystats_selected_facebook_page_id' ),
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
 	);
 
 	$translations = array(
@@ -711,6 +720,7 @@ function skystats_admin_enqueue_facebook_scripts() {
 		'date_range_below_min'     => __( 'Start and end date must be on or after January 1st, 2005.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_today' => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_limit' => __( 'Please select a date period within or equal to 91 days. The current 91 days worth of data are being loaded for you automatically.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -741,10 +751,12 @@ function skystats_admin_enqueue_twitter_scripts() {
 	skystats_enqueue_script( 'skystats-twitter', 'twitter-detail-page.js' );
 
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'twitter.php';
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 
 	$twitter_data = array(
 		'auth_popup_window_url' => skystats_api_twitter_get_authorization_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
 	);
 
 	$translations = array(
@@ -753,6 +765,7 @@ function skystats_admin_enqueue_twitter_scripts() {
 		'date_range_below_min'     => __( 'Start and end date must be on or after January 1st, 2005.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_today' => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
 		'twitter_historical_data_error' => __( 'Sorry, we don\'t have access to data for your account before {DATE} (or the data we have access to may be limited). Please select a different period. We will collect data for your account each day since you first setup the integration.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -782,12 +795,15 @@ function skystats_admin_enqueue_google_adwords_scripts() {
 	skystats_enqueue_script( 'skystats-google-adwords', 'google-adwords-detail-page.js', array( 'jquery', 'jquery-ui-datepicker' ) );
 
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'google-adwords.php';
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 
 	$google_adwords_data = array(
 		'selected_customer_id' => get_option( 'skystats_google_adwords_selected_customer_id' ),
 		'selected_campaign_id' => get_option( 'skystats_google_adwords_selected_campaign_id' ),
 		'auth_popup_window_url'  => skystats_api_google_adwords_get_authorization_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
+		'setup' => get_option( 'skystats_google_adwords_setup' ),
 	);
 
 	$translations = array(
@@ -796,6 +812,7 @@ function skystats_admin_enqueue_google_adwords_scripts() {
 		'date_range_same'          => __( 'Start date cannot be after the end date.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_below_min'     => __( 'Start and end date must be on or after January 1st, 2005.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_today' => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -825,10 +842,12 @@ function skystats_admin_enqueue_mailchimp_scripts() {
 	skystats_enqueue_script( 'skystats-mailchimp', 'mailchimp-detail-page.js', array( 'jquery', 'jquery-ui-datepicker' ) );
 
 	require_once SKYSTATS_API_FUNCTIONS_PATH . 'mailchimp.php';
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
 
 	$mailchimp_data = array(
 		'auth_popup_window_url'  => skystats_api_mailchimp_get_authorization_url( SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL ),
 		'auth_popup_window_complete_url' => SKYSTATS_AUTH_POPUP_WINDOW_COMPLETE_URL,
+		'current_user_can_access_settings' => skystats_can_current_user_access_settings(),
 	);
 
 	$translations = array(
@@ -836,6 +855,7 @@ function skystats_admin_enqueue_mailchimp_scripts() {
 		'date_range_same'          => __( 'Start date cannot be after the end date.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_below_min'     => __( 'Start and end date must be on or after January 1st, 2005.', SKYSTATS_TEXT_DOMAIN ),
 		'date_range_exceeds_today' => __( 'Start and end date cannot be after today.', SKYSTATS_TEXT_DOMAIN ),
+		'current_user_settings_access_denied_error' => __( "Sorry, you don't have access to this integration's settings. Please contact the person who setup the integration, or has access to the settings, to setup the integration or change any settings for you.", SKYSTATS_TEXT_DOMAIN ),
 	);
 
 	// These versions don't handle multidimensional arrays
@@ -881,7 +901,7 @@ function skystats_admin_enqueue_settings_scripts() {
 		wp_enqueue_script( 'wp-color-picker' );
 	} else {
 		skystats_enqueue_minified_style( 'skystats-colorpicker', 'colorpicker.min.css' );
-		skystats_enqueue_minified_script( 'skystats-colorpicker', 'colorpicker.min.js');
+		skystats_enqueue_minified_script( 'skystats-colorpicker', 'colorpicker.min.js' );
 	}
 
 	skystats_enqueue_script( 'skystats-settings', 'settings.js' );
@@ -942,7 +962,6 @@ function skystats_admin_footer() {
 	 * De-enqueues/registers the Flot chart library on the Mashboard and
 	 * detail pages.
 	 */
-
 	if ( wp_script_is( 'flot' ) ) {
 		wp_dequeue_script( 'flot' );
 		if ( wp_script_is( 'flot', 'registered' ) ) {
@@ -950,14 +969,14 @@ function skystats_admin_footer() {
 		}
 	}
 
-    /*
-     * 0.3.7 - 17th May 2016
-     * Fixes conflict with "edit-flow" plugin v0.8.1
-     */
-    if ( wp_script_is( 'edit_flow-timepicker' ) ) {
-        wp_dequeue_script( 'edit_flow-timepicker' );
-        if ( wp_script_is( 'edit_flow-timepicker', 'registered' ) ) {
-            wp_deregister_script( 'edit_flow-timepicker' );
-        }
-    }
+	/*
+	 * 0.3.7 - 17th May 2016
+	 * Fixes conflict with "edit-flow" plugin v0.8.1
+	 */
+	if ( wp_script_is( 'edit_flow-timepicker' ) ) {
+		wp_dequeue_script( 'edit_flow-timepicker' );
+		if ( wp_script_is( 'edit_flow-timepicker', 'registered' ) ) {
+			wp_deregister_script( 'edit_flow-timepicker' );
+		}
+	}
 }

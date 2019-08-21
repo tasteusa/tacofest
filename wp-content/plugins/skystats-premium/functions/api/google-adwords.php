@@ -13,6 +13,14 @@ defined( 'ABSPATH' ) or exit();
 require_once dirname( __FILE__ ) . '/cache.php';
 
 /**
+ * @since 0.4.2
+ */
+function skystats_api_google_adwords_authorize() {
+	update_option( 'skystats_google_adwords_setup', true );
+	delete_option( 'skystats_google_adwords_accounts' );
+}
+
+/**
  * Return URL which allows a user to authenticate/authorize with Google Adwords.
  *
  * @since 0.2.8
@@ -27,7 +35,7 @@ function skystats_api_google_adwords_get_authorization_url( $redirect_url ) {
 		'licenseKey'    => get_option( 'skystats_license_key' ),
 		'licenseDomain' => home_url(),
 		'redirectURI'   => $redirect_url,
-	), SKYSTATS_API_URL . 'api/googleAdwords/authorize/' );
+	), SKYSTATS_GOOGLE_ADWORDS_API_URL . 'authorize/' );
 
 	return $url;
 }
@@ -39,15 +47,19 @@ function skystats_api_google_adwords_get_authorization_url( $redirect_url ) {
  *
  * @param string $redirect_url URL to redirect to on success/failure.
  *
+ * @param string $deauthorize_type (Optional) (Default: 'site') The type of deauthorization: 'site' or 'license'.
+ *                                 For site, just the local data is removed. For license, everything is removed.
+ *
  * @return string
  */
-function skystats_api_google_adwords_get_deauthorization_url( $redirect_url ) {
+function skystats_api_google_adwords_get_deauthorization_url( $redirect_url, $deauthorize_type = 'site' ) {
 
 	$url = add_query_arg( array(
 		'licenseKey'    => get_option( 'skystats_license_key' ),
 		'licenseDomain' => home_url(),
 		'redirectURI'   => $redirect_url,
-	), SKYSTATS_API_URL . 'api/googleAdwords/deauthorize/' );
+		'deauthorizeType' => $deauthorize_type,
+	), SKYSTATS_GOOGLE_ADWORDS_API_URL . 'deauthorize/' );
 
 	return $url;
 }
@@ -58,9 +70,12 @@ function skystats_api_google_adwords_get_deauthorization_url( $redirect_url ) {
  * Removes cached Google Adwords data.
  *
  * @since 0.2.8
+ *
+ * @param string $deauthorize_type
  */
-function skystats_api_google_adwords_deauthorize() {
+function skystats_api_google_adwords_deauthorize( $deauthorize_type ) {
 	skystats_api_cache_delete_name_like( 'skystats_cache_google_adwords' );
+	update_option( 'skystats_google_adwords_setup', false );
 	delete_option( 'skystats_google_adwords_accounts' );
 	delete_option( 'skystats_google_adwords_selected_customer_id' );
 	delete_option( 'skystats_google_adwords_selected_campaign_id' );
@@ -68,7 +83,8 @@ function skystats_api_google_adwords_deauthorize() {
 	wp_remote_get( add_query_arg( array(
 		'licenseKey'    => get_option( 'skystats_license_key' ),
 		'licenseDomain' => home_url(),
-	), SKYSTATS_API_URL . 'api/googleAdwords/deauthorize/' ), array(
+		'deauthorizeType' => $deauthorize_type,
+	), SKYSTATS_GOOGLE_ADWORDS_API_URL . 'deauthorize/' ), array(
 		'timeout'     => SKYSTATS_API_REQUEST_TIMEOUT,
 		'sslverify'   => SKYSTATS_API_REQUEST_VERIFY_SSL,
 		'compress'    => SKYSTATS_API_REQUEST_COMPRESS,
@@ -117,15 +133,17 @@ function skystats_api_google_adwords_get_accounts() {
 
 	$cache_option_name = 'skystats_google_adwords_accounts';
 
-	$cached_account_data = get_option( $cache_option_name );
-	if ( is_array( $cached_account_data ) && ! empty( $cached_account_data ) ) {
-		return $cached_account_data;
+	if ( 'enabled' === get_option( 'skystats_cache_mode' ) ) {
+		$cached_data = get_option( $cache_option_name );
+		if ( is_array( $cached_data ) && ! empty( $cached_data ) ) {
+			return $cached_data;
+		}
 	}
 
 	$url = add_query_arg( array(
 		'licenseKey'    => get_option( 'skystats_license_key' ),
 		'licenseDomain' => home_url(),
-	), SKYSTATS_API_URL . 'api/googleAdwords/getAccounts/' );
+	), SKYSTATS_GOOGLE_ADWORDS_API_URL . 'getAccounts/' );
 
 	$response = wp_remote_get( $url, array(
 		'timeout'     => SKYSTATS_API_REQUEST_TIMEOUT,
@@ -187,7 +205,7 @@ function skystats_api_google_adwords_get_campaign_data( $customer_id ) {
 		'licenseKey'    => get_option( 'skystats_license_key' ),
 		'licenseDomain' => home_url(),
 		'customerId'    => $customer_id,
-	), SKYSTATS_API_URL . 'api/googleAdwords/getCampaigns/' );
+	), SKYSTATS_GOOGLE_ADWORDS_API_URL . 'getCampaigns/' );
 
 	$response = wp_remote_get( $url, array(
 		'timeout'     => SKYSTATS_API_REQUEST_TIMEOUT,
@@ -269,9 +287,9 @@ function skystats_api_google_adwords_get_view_data( $view, $start_date, $end_dat
 	}
 
 	if ( 'mashboard' === $view ) {
-		$api_url = SKYSTATS_API_URL . 'api/googleAdwords/getMashboardViewData/';
+		$api_url = SKYSTATS_GOOGLE_ADWORDS_API_URL . 'getMashboardViewData/';
 	} else {
-		$api_url = SKYSTATS_API_URL . 'api/googleAdwords/getDetailViewData/';
+		$api_url = SKYSTATS_GOOGLE_ADWORDS_API_URL . 'getDetailViewData/';
 	}
 
 	$url = add_query_arg( array(
@@ -472,5 +490,6 @@ function skystats_api_google_adwords_get_api_error_translations() {
 		'no_data'                                                      => __( 'No data found for the selected period. Please try again or refine your search.', SKYSTATS_TEXT_DOMAIN ),
 		'http_error'                                                   => __( 'A HTTP Error occurred. This was likely caused by a timeout. Please try again.', SKYSTATS_TEXT_DOMAIN ),
 		'token_revoked'                                                => __( 'Your access token has been revoked and could not be refreshed for you. Please click "Deauthorize" and then "Setup" to re-setup the integration.', SKYSTATS_TEXT_DOMAIN ),
+		'reauthorization_required' => __( 'Reauthorization required. You may have revoked access through your Google account or someone has deauthorized the selected account for this license key. Please click the "Authorize" button under "Add Account(s)" to add account(s) from your Google Adwords account to continue.', SKYSTATS_TEXT_DOMAIN ),
 	);
 }

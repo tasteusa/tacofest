@@ -1,6 +1,5 @@
 <?php
-require_once('wfConfig.php');
-require_once('wfCountryMap.php');
+require_once(dirname(__FILE__) . '/wfConfig.php');
 class wfUtils {
 	private static $isWindows = false;
 	public static $scanLockFH = false;
@@ -109,7 +108,7 @@ class wfUtils {
 		if ($minutes) {
 			$components[] = self::pluralize($minutes, 'minute');
 		}
-		if ($secs) {
+		if ($secs && $secs >= 1) {
 			$components[] = self::pluralize($secs, 'second');
 		}
 		
@@ -515,11 +514,58 @@ class wfUtils {
 	public static function truthyToInt($value) {
 		return self::truthyToBoolean($value) ? 1 : 0;
 	}
+	
+	/**
+	 * Returns the whitelist presets, which first grabs the bundled list and then merges the dynamic list into it.
+	 * 
+	 * @return array
+	 */
+	public static function whitelistPresets() {
+		static $_cachedPresets = null;
+		if ($_cachedPresets === null) {
+			include(dirname(__FILE__) . '/wfIPWhitelist.php'); /** @var array $wfIPWhitelist */
+			$currentPresets = wfConfig::getJSON('whitelistPresets', array());
+			if (is_array($currentPresets)) {
+				$_cachedPresets = array_merge($wfIPWhitelist, $currentPresets);
+			}
+			else {
+				$_cachedPresets = $wfIPWhitelist;
+			}
+		}
+		return $_cachedPresets;
+	}
+	
+	/**
+	 * Returns an array containing all whitelisted service IPs/ranges. The returned array is grouped by service
+	 * tag: array('service1' => array('range1', 'range2', range3', ...), ...)
+	 * 
+	 * @return array
+	 */
+	public static function whitelistedServiceIPs() {
+		$result = array();
+		$whitelistPresets = self::whitelistPresets();
+		$whitelistedServices = wfConfig::getJSON('whitelistedServices', array());
+		foreach ($whitelistPresets as $tag => $preset) {
+			if (!isset($preset['n'])) { //Just an array of IPs/ranges
+				$result[$tag] = $preset;
+				continue;
+			}
+			
+			if ((isset($preset['h']) && $preset['h']) || (isset($preset['f']) && $preset['f'])) { //Forced
+				$result[$tag] = $preset['r'];
+				continue;
+			}
+			
+			if ((!isset($whitelistedServices[$tag]) && isset($preset['d']) && $preset['d']) || (isset($whitelistedServices[$tag]) && $whitelistedServices[$tag])) {
+				$result[$tag] = $preset['r'];
+			}
+		}
+		return $result;
+	}
 
 	/**
-	 * Get the list of whitelisted IPs and networks
-	 *
-	 * Results may include wfUserIPRange objects for now. Ideally everything would be in CIDR notation.
+	 * Get the list of whitelisted IPs and networks, which is a combination of preset IPs/ranges and user-entered
+	 * IPs/ranges.
 	 *
 	 * @param string	$filter	Group name to filter whitelist by
 	 * @return array
@@ -528,19 +574,16 @@ class wfUtils {
 		static $wfIPWhitelist;
 
 		if (!isset($wfIPWhitelist)) {
-			include('wfIPWhitelist.php');
-
-			// Memoize user defined whitelist IPs and ranges
-			// TODO: Convert everything to CIDR
+			$wfIPWhitelist = self::whitelistedServiceIPs();
+			
+			//Append user ranges
 			$wfIPWhitelist['user'] = array();
-
 			foreach (array_filter(explode(',', wfConfig::get('whitelisted'))) as $ip) {
 				$wfIPWhitelist['user'][] = new wfUserIPRange($ip);
 			}
 		}
 
 		$whitelist = array();
-
 		foreach ($wfIPWhitelist as $group => $values) {
 			if ($filter === null || $group === $filter) {
 				$whitelist = array_merge($whitelist, $values);
@@ -847,6 +890,24 @@ class wfUtils {
 		return false;
 	}
 
+	public static function getAllServerVariableIPs()
+	{
+		$variables = array('REMOTE_ADDR', 'HTTP_CF_CONNECTING_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR');
+		$ips = array();
+
+		foreach ($variables as $variable) {
+			$ip = isset($_SERVER[$variable]) ? $_SERVER[$variable] : false;
+
+			if ($ip && strpos($ip, ',') !== false) {
+				$ips[$variable] = preg_replace('/[\s,]/', '', explode(',', $ip));
+			} else {
+				$ips[$variable] = $ip;
+			}
+		}
+
+		return $ips;
+	}
+
 	public static function getIPAndServerVariable($howGet = null, $trustedProxies = null) {
 		$connectionIP = array_key_exists('REMOTE_ADDR', $_SERVER) ? array($_SERVER['REMOTE_ADDR'], 'REMOTE_ADDR') : array('127.0.0.1', 'REMOTE_ADDR');
 
@@ -930,7 +991,7 @@ class wfUtils {
 	public static function isValidEmail($email, $strict = false) {
 		//We don't default to strict, full validation because poorly-configured servers can crash due to the regex PHP uses in filter_var($email, FILTER_VALIDATE_EMAIL)
 		if ($strict) {
-			return filter_var($email, FILTER_VALIDATE_EMAIL !== false);
+			return (filter_var($email, FILTER_VALIDATE_EMAIL) !== false);
 		}
 		
 		return preg_match('/^[^@\s]+@[^@\s]+\.[^@\s]+$/i', $email) === 1;
@@ -957,7 +1018,7 @@ class wfUtils {
 	public static function tmpl($file, $data){
 		extract($data);
 		ob_start();
-		include $file;
+		include dirname(__FILE__) . DIRECTORY_SEPARATOR . $file;
 		return ob_get_contents() . (ob_end_clean() ? "" : "");
 	}
 	public static function bigRandomHex(){
@@ -1109,13 +1170,27 @@ class wfUtils {
 	}
 	public static function getScanFileError() {
 		$fileTime = wfConfig::get('scanFileProcessing');
-		if (! $fileTime) {
+		if (!$fileTime) {
 			return;
 		}
 		list($file, $time) =  unserialize($fileTime);
 		if ($time+10 < time()) {
-			$files = wfConfig::get('scan_exclude') . "\n" . $file;
-			wfConfig::set('scan_exclude', self::cleanupOneEntryPerLine($files));
+			$add = true;
+			$excludePatterns = wordfenceScanner::getExcludeFilePattern(wordfenceScanner::EXCLUSION_PATTERNS_USER);
+			if ($excludePatterns) {
+				foreach ($excludePatterns as $pattern) {
+					if (preg_match($pattern, $file)) {
+						$add = false;
+						break;
+					}
+				}
+			}
+			
+			if ($add) {
+				$files = wfConfig::get('scan_exclude') . "\n" . $file;
+				wfConfig::set('scan_exclude', self::cleanupOneEntryPerLine($files));
+			}
+			
 			self::endProcessingFile();
 		}
 	}
@@ -1147,6 +1222,9 @@ class wfUtils {
 
 		wfConfig::set('wf_scanRunning', '');
 		wfIssues::updateScanStillRunning(false);
+		if (wfCentral::isConnected()) {
+			wfCentral::updateScanStatus();
+		}
 	}
 	public static function getIPGeo($IP){ //Works with int or dotted
 
@@ -1325,8 +1403,9 @@ class wfUtils {
 		return $tooBig;
 	}
 	public static function countryCode2Name($code){
-		if(isset(wfCountryMap::$map[$code])){
-			return wfCountryMap::$map[$code];
+		require(dirname(__FILE__) . '/wfBulkCountries.php'); /** @var array $wfBulkCountries */
+		if(isset($wfBulkCountries[$code])){
+			return $wfBulkCountries[$code];
 		} else {
 			return '';
 		}
@@ -1343,16 +1422,22 @@ class wfUtils {
 		}
 		
 		if (!class_exists('wfGeoIP2')) {
+			wfUtils::error_clear_last();
 			require_once(dirname(__FILE__) . '/../models/common/wfGeoIP2.php');
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
 		}
 		
 		try {
-			$geoip = wfGeoIP2::shared();
-			$code = $geoip->countryCode($IP);
+			wfUtils::error_clear_last();
+			$geoip = @wfGeoIP2::shared();
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
+			wfUtils::error_clear_last();
+			$code = @$geoip->countryCode($IP);
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
 			return is_string($code) ? $code : '';
 		}
 		catch (Exception $e) {
-			//Ignore
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:', $e->getMessage());
 		}
 		
 		return '';
@@ -1363,15 +1448,22 @@ class wfUtils {
 		}
 		
 		if (!class_exists('wfGeoIP2')) {
+			wfUtils::error_clear_last();
 			require_once(dirname(__FILE__) . '/../models/common/wfGeoIP2.php');
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
 		}
 		
 		try {
-			$geoip = wfGeoIP2::shared();
-			return $geoip->version();
+			wfUtils::error_clear_last();
+			$geoip = @wfGeoIP2::shared();
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
+			wfUtils::error_clear_last();
+			$version = @$geoip->version();
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:');
+			return $version;
 		}
 		catch (Exception $e) {
-			//Ignore
+			wfUtils::check_and_log_last_error('geoip', 'GeoIP Error:', $e->getMessage());
 		}
 		
 		return 0;
@@ -1420,6 +1512,63 @@ class wfUtils {
 	}
 	public static function isRefererBlocked($refPattern){
 		return fnmatch($refPattern, !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', FNM_CASEFOLD);
+	}
+	
+	public static function error_clear_last() {
+		if (function_exists('error_clear_last')) {
+			error_clear_last();
+		}
+		else {
+			// set error_get_last() to defined state by forcing an undefined variable error
+			set_error_handler('wfUtils::_resetErrorsHandler', 0);
+			@$undefinedVariable;
+			restore_error_handler();
+		}
+	}
+	
+	/**
+	 * Logs the error given or the last PHP error to our log, rate limiting if needed.
+	 * 
+	 * @param string $limiter_key
+	 * @param string $label
+	 * @param null|string $error The error to log. If null, it will be the result of error_get_last
+	 * @param int $rate Logging will only occur once per $rate seconds.
+	 */
+	public static function check_and_log_last_error($limiter_key, $label, $error = null, $rate = 3600 /* 1 hour */) {
+		if ($error === null) {
+			$error = error_get_last();
+			if ($error === null) {
+				return;
+			}
+			else if ($error['file'] === __FILE__) {
+				return;
+			}
+			$error = $error['message'];
+		}
+		
+		$rateKey = 'lastError_rate_' . $limiter_key;
+		$previousKey = 'lastError_prev_' . $limiter_key;
+		$previousError = wfConfig::getJSON($previousKey, array(0, false));
+		if ($previousError[1] != $error) {
+			if (wfConfig::getInt($rateKey) < time() - $rate) {
+				wfConfig::set($rateKey, time());
+				wfConfig::setJSON($previousKey, array(time(), $error));
+				wordfence::status(2, 'error', $label . ' ' . $error);
+			}
+		}
+	}
+	
+	public static function last_error($limiter_key) {
+		$previousKey = 'lastError_prev_' . $limiter_key;
+		$previousError = wfConfig::getJSON($previousKey, array(0, false));
+		if ($previousError[1]) {
+			return wfUtils::formatLocalTime(get_option('date_format') . ' ' . get_option('time_format'), $previousError[0]) . ': ' . $previousError[1];
+		}
+		return false;
+	}
+	
+	public static function _resetErrorsHandler($errno, $errstr, $errfile, $errline) {
+		//Do nothing
 	}
 
 	/**
@@ -1569,7 +1718,7 @@ class wfUtils {
 
 		if (file_exists($readmePath)) {
 			$readmePathInfo = pathinfo($readmePath);
-			require_once ABSPATH . WPINC . '/pluggable.php';
+			require_once(ABSPATH . WPINC . '/pluggable.php');
 			$hiddenReadmeFile = $readmePathInfo['filename'] . '.' . wp_hash('readme') . '.' . $readmePathInfo['extension'];
 			return @rename($readmePath, $readmePathInfo['dirname'] . '/' . $hiddenReadmeFile);
 		}
@@ -1585,7 +1734,7 @@ class wfUtils {
 			$readmePath = ABSPATH . 'readme.html';
 		}
 		$readmePathInfo = pathinfo($readmePath);
-		require_once ABSPATH . WPINC . '/pluggable.php';
+		require_once(ABSPATH . WPINC . '/pluggable.php');
 		$hiddenReadmeFile = $readmePathInfo['dirname'] . '/' . $readmePathInfo['filename'] . '.' . wp_hash('readme') . '.' . $readmePathInfo['extension'];
 		if (file_exists($hiddenReadmeFile)) {
 			return @rename($hiddenReadmeFile, $readmePath);
@@ -2061,6 +2210,12 @@ class wfUtils {
 				$homeurl = home_url($path, $scheme);
 			}
 		}
+		else {
+			$homeurl = set_url_scheme($homeurl, $scheme);
+			if ($path && is_string($path)) {
+				$homeurl .= '/' . ltrim($path, '/');
+			}
+		}
 		return $homeurl;
 	}
 	
@@ -2127,6 +2282,14 @@ class wfUtils {
 		}
 	}
 	
+	/**
+	 * Equivalent to network_site_url but uses the cached value for the URL if we have it
+	 * to avoid breaking on sites that define it based on the requesting hostname.
+	 * 
+	 * @param string $path
+	 * @param null|string $scheme
+	 * @return string
+	 */
 	public static function wpSiteURL($path = '', $scheme = null) {
 		$siteurl = wfConfig::get('wp_site_url', '');
 		if (function_exists('get_bloginfo') && empty($siteurl)) {
@@ -2137,7 +2300,40 @@ class wfUtils {
 				$siteurl = site_url($path, $scheme);
 			}
 		}
+		else {
+			$siteurl = set_url_scheme($siteurl, $scheme);
+			if ($path && is_string($path)) {
+				$siteurl .= '/' . ltrim($path, '/');
+			}
+		}
 		return $siteurl;
+	}
+	
+	/**
+	 * Equivalent to network_admin_url but uses the cached value for the URL if we have it
+	 * to avoid breaking on sites that define it based on the requesting hostname.
+	 *
+	 * @param string $path
+	 * @param null|string $scheme
+	 * @return string
+	 */
+	public static function wpAdminURL($path = '', $scheme = null) {
+		if (!is_multisite()) {
+			$adminURL = self::wpSiteURL('wp-admin/', $scheme);
+		}
+		else {
+			$adminURL = self::wpSiteURL('wp-admin/network/', $scheme);
+		}
+		
+		if ($path && is_string($path)) {
+			$adminURL .= ltrim($path, '/');
+		}
+		
+		if (!is_multisite()) {
+			return apply_filters('admin_url', $adminURL, $path, null);
+		}
+		
+		return apply_filters('network_admin_url', $adminURL, $path);
 	}
 	
 	public static function wafInstallationType() {
@@ -2207,11 +2403,12 @@ class wfUtils {
 		static $encodings = array();
 		static $overloaded = null;
 		
-		if (is_null($overloaded))
+		if (is_null($overloaded)) {
+			// phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated
 			$overloaded = function_exists('mb_internal_encoding') && (ini_get('mbstring.func_overload') & 2);
+		}
 		
-		if (false === $overloaded)
-			return;
+		if (false === $overloaded) { return; }
 		
 		if (!$reset) {
 			$encoding = mb_internal_encoding();
@@ -2365,6 +2562,14 @@ class wfUtils {
 		
 		$values = array_values($array);
 		return $values[count($values) - 1];
+	}
+	
+	public static function array_strtolower($array) {
+		$result = array();
+		foreach ($array as $a) {
+			$result[] = strtolower($a);
+		}
+		return $result;
 	}
 	
 	public static function array_column($input = null, $columnKey = null, $indexKey = null) { //Polyfill from https://github.com/ramsey/array_column/blob/master/src/array_column.php
@@ -2569,6 +2774,79 @@ class wfUtils {
 			}
 		}
 		return new DateTime($timestring);
+	}
+	
+	/**
+	 * Base64URL-encodes the given payload. This is identical to base64_encode except it substitutes characters
+	 * not safe for use in URLs.
+	 * 
+	 * @param string $payload
+	 * @return string
+	 */
+	public static function base64url_encode($payload) {
+		$intermediate = base64_encode($payload);
+		$intermediate = rtrim($intermediate, '=');
+		$intermediate = str_replace('+', '-', $intermediate);
+		$intermediate = str_replace('/', '_', $intermediate);
+		return $intermediate;
+	}
+	
+	/**
+	 * Base64URL-decodes the given payload. This is identical to base64_encode except it allows for the characters
+	 * substituted by base64url_encode.
+	 * 
+	 * @param string $payload
+	 * @return string
+	 */
+	public static function base64url_decode($payload) {
+		$intermediate = str_replace('_', '/', $payload);
+		$intermediate = str_replace('-', '+', $intermediate);
+		$intermediate = base64_decode($intermediate);
+		return $intermediate;
+	}
+	
+	/**
+	 * Returns a signed JWT for the given payload. Payload is expected to be an array suitable for JSON-encoding.
+	 * 
+	 * @param array $payload
+	 * @param int $maxAge How long the JWT will be considered valid.
+	 * @return string
+	 */
+	public static function generateJWT($payload, $maxAge = 604800 /* 7 days */) {
+		$payload['_exp'] = time() + $maxAge;
+		$key = wfConfig::get('longEncKey');
+		$header = '{"alg":"HS256","typ":"JWT"}';
+		$body = self::base64url_encode($header) . '.' . self::base64url_encode(json_encode($payload));
+		$signature = hash_hmac('sha256', $body, $key, true);
+		return $body . '.' . self::base64url_encode($signature);
+	}
+	
+	/**
+	 * Decodes and returns the payload of a JWT. This also validates the signature.
+	 * 
+	 * @param string $token
+	 * @return array|bool The decoded payload or false if the token is invalid or fails validation.
+	 */
+	public static function decodeJWT($token) {
+		$components = explode('.', $token);
+		if (count($components) != 3) {
+			return false;
+		}
+		
+		$key = wfConfig::get('longEncKey');
+		$body = $components[0] . '.' . $components[1];
+		$signature = hash_hmac('sha256', $body, $key, true);
+		$testSignature = self::base64url_decode($components[2]);
+		if (!hash_equals($signature, $testSignature)) {
+			return false;
+		}
+		
+		$json = self::base64url_decode($components[1]);
+		$payload = @json_decode($json, true);
+		if (isset($payload['_exp']) && $payload['_exp'] < time()) {
+			return false;
+		}
+		return $payload;
 	}
 }
 

@@ -36,7 +36,7 @@ if (!isset($collapseable)) {
 							'optionName' => 'loginSecurityEnabled',
 							'value' => wfConfig::get('loginSecurityEnabled') ? '1': '0',
 							'titleHTML' => '<strong>' . __('Enable brute force protection', 'wordfence') . '</strong>',
-							'subtitle' => __('This option enables all "Brute Force Protection" options, including two-factor authentication, strong password enforcement, and invalid login throttling. You can modify individual options below.', 'wordfence'),
+							'subtitle' => __('This option enables all "Brute Force Protection" options, including strong password enforcement and invalid login throttling. You can modify individual options below.', 'wordfence'),
 							'states' => array(
 								array('value' => '0', 'label' => __('Off', 'wordfence')),
 								array('value' => '1', 'label' => __('On', 'wordfence')),
@@ -49,7 +49,7 @@ if (!isset($collapseable)) {
 					</li>
 					<li>
 						<?php
-						$breakpoints = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100, 200, 500);
+						$breakpoints = array(2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100, 200, 500);
 						$options = array();
 						foreach ($breakpoints as $b) {
 							$options[] = array('value' => $b, 'label' => $b);
@@ -225,6 +225,19 @@ if (!isset($collapseable)) {
 							'value' => wfConfig::get('other_blockBadPOST') ? 1 : 0,
 							'title' => __('Block IPs who send POST requests with blank User-Agent and Referer', 'wordfence'),
 							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_BLOCK_BAD_POST),
+						))->render();
+						?>
+					</li>
+					<li>
+						<?php
+						echo wfView::create('options/option-textarea', array(
+							'textOptionName' => 'blockCustomText',
+							'textValue' => wfConfig::get('blockCustomText'),
+							'title' => __('Custom text shown on block pages', 'wordfence'),
+							'alignTitle' => 'top',
+							'subtitleHTML' => __('HTML tags will be stripped prior to output and line breaks will be converted into the appropriate tags.', 'wordfence'),
+							'subtitlePosition' => 'value',
+							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_CUSTOM_BLOCK_TEXT),
 						))->render();
 						?>
 					</li>

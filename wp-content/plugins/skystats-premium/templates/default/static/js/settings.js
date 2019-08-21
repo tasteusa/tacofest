@@ -165,6 +165,7 @@ jQuery( window ).ready( function( $ ) {
 			$saveSettingsButton = $( this ),
 			$saveSettingsResult = $( '#skystats-save-settings-result' );
 		$loadingImg.show();
+		console.log($( '#skystats_settings_users_allowed_access' ).val());
 		$saveSettingsButton.add( $saveSettingsResult ).fadeOut( 400 ).promise().done( function() {
 			$loadingImg.fadeIn( 400, function() {
 				$.post( ajaxurl, {

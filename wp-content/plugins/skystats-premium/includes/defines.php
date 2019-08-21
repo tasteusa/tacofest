@@ -60,7 +60,7 @@ define( 'SKYSTATS_MODE', 'remote_prod' );
  * 
  * @var string
  */
-define( 'SKYSTATS_VERSION', '0.3.7' );
+define( 'SKYSTATS_VERSION', '0.4.6' );
 
 /**
  * Name of template to use.
@@ -432,6 +432,20 @@ define( 'SKYSTATS_GOOGLE_ANALYTICS_API_GET_TOP_LANDING_PAGES_URL', SKYSTATS_GOOG
 define( 'SKYSTATS_GOOGLE_ANALYTICS_API_GET_TOP_VISITOR_LOCATIONS_URL', SKYSTATS_GOOGLE_ANALYTICS_API_URL . 'getTopVisitorLocations' );
 
 /**
+ * @since 0.4.2
+ *
+ * @var string
+ */
+define( 'SKYSTATS_GOOGLE_ADWORDS_API_VERSION', 'v1' );
+
+/**
+ * @since 0.4.2
+ *
+ * @var string
+ */
+define( 'SKYSTATS_GOOGLE_ADWORDS_API_URL', SKYSTATS_API_URL . 'api/v1/googleAdwords/' );
+
+/**
  * Timeout for API calls in seconds.
  * 
  * @since 0.0.1
@@ -541,7 +555,7 @@ define( 'SKYSTATS_RENEW_LICENSE_KEY_URL', 'https://skystats.com/checkout/?edd_li
  *
  * @var string
  */
-define( 'SKYSTATS_SCRIPTS_VERSION', 'skystats-premium-037-1463472655' );
+define( 'SKYSTATS_SCRIPTS_VERSION', 'skystats-premium-046-1510612990' );
 
 /**
  * Authorization popup window complete URL.

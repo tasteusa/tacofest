@@ -14,6 +14,15 @@ add_action( 'wp_ajax_skystats_ajax_settings_save_settings', 'skystats_ajax_setti
 
 function skystats_ajax_settings_save_settings() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.4.0
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		exit();
+	}
+
 	// Brand Name
 	$brand_name = ( ! empty( $_POST['brand_name'] ) ) ?
 		wp_strip_all_tags( stripslashes( $_POST['brand_name'] ) ) :
@@ -111,32 +120,45 @@ function skystats_ajax_settings_save_settings() {
 	}
 
 	// Role identifiers allowed to view and access the reports (mashboard & detail pages)
-	if ( is_array( $_POST['skystats_reports_users_allowed_access'] ) && ! empty( $_POST['skystats_reports_users_allowed_access'] ) ) {
-		$skystats_reports_users_allowed_access = $_POST['skystats_reports_users_allowed_access'];
-		$registered_roles = array_keys( (array) get_editable_roles() );
-		$role_identifiers = array();
-		foreach ( $skystats_reports_users_allowed_access as $role_identifier ) {
-			if ( in_array( $role_identifier, $registered_roles ) ) {
-				$role_identifiers[] = $role_identifier;
+	if ( array_key_exists( 'skystats_reports_users_allowed_access', $_POST ) ) {
+
+		if ( empty( $_POST['skystats_reports_users_allowed_access'] ) ) {
+			update_option( 'skystats_reports_users_allowed_access', array() );
+		} elseif ( is_array( $_POST['skystats_reports_users_allowed_access'] ) ) {
+			$skystats_reports_users_allowed_access = $_POST['skystats_reports_users_allowed_access'];
+			$registered_roles = array_keys( (array) get_editable_roles() );
+			$role_identifiers = array();
+			foreach ( $skystats_reports_users_allowed_access as $role_identifier ) {
+				if ( in_array( $role_identifier, $registered_roles ) ) {
+					$role_identifiers[] = $role_identifier;
+				}
 			}
-		}
-		if ( ! empty( $role_identifiers ) ) {
-			update_option( 'skystats_reports_users_allowed_access', $role_identifiers );
+			if ( ! empty( $role_identifiers ) ) {
+				update_option( 'skystats_reports_users_allowed_access', $role_identifiers );
+			}
 		}
 	}
 
-	// User ids allowed access to view and edit the Settings
-	if ( is_array( $_POST['skystats_settings_users_allowed_access'] ) && ! empty( $_POST['skystats_settings_users_allowed_access'] ) ) {
-		$settings_user_ids_allowed_access = $_POST['skystats_settings_users_allowed_access'];
-		$user_ids = array();
-		foreach ( $settings_user_ids_allowed_access as &$user_id ) {
-			$user_id = (string) $user_id;
-			if ( ctype_digit( $user_id ) && ! in_array( $user_id, $user_ids ) ) {
-				$user_ids[] = $user_id;
+	/*
+	 * User ids allowed to view/change the SkyStats settings, as well as view/change an integrations settings, or setup
+	 * integrations.
+	 */
+	if ( array_key_exists( 'skystats_settings_users_allowed_access', $_POST ) ) {
+
+		if ( empty( $_POST['skystats_settings_users_allowed_access'] ) ) {
+			update_option( 'skystats_settings_users_allowed_access', array() );
+		} elseif ( is_array( $_POST['skystats_settings_users_allowed_access'] ) ) {
+			$settings_user_ids_allowed_access = $_POST['skystats_settings_users_allowed_access'];
+			$user_ids = array();
+			foreach ( $settings_user_ids_allowed_access as &$user_id ) {
+				$user_id = (string) $user_id;
+				if ( ctype_digit( $user_id ) && ! in_array( $user_id, $user_ids ) ) {
+					$user_ids[] = $user_id;
+				}
 			}
-		}
-		if ( ! empty( $user_ids ) ) {
-			update_option( 'skystats_settings_users_allowed_access', $user_ids );
+			if ( ! empty( $user_ids ) ) {
+				update_option( 'skystats_settings_users_allowed_access', $user_ids );
+			}
 		}
 	}
 

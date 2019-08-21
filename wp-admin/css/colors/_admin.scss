@@ -84,9 +84,7 @@ input[type=radio]:checked:before {
 /* List tables */
 
 .wrap .add-new-h2:hover, /* deprecated */
-.wrap .page-title-action:hover,
-.tablenav .tablenav-pages a:hover,
-.tablenav .tablenav-pages a:focus {
+.wrap .page-title-action:hover {
 	color: $menu-text;
 	background-color: $menu-background;
 }
@@ -132,7 +130,7 @@ input[type=radio]:checked:before {
 
 /* Active tabs use a bottom border color that matches the page background color. */
 
-.about-wrap h2 .nav-tab-active,
+.about-wrap .nav-tab-active,
 .nav-tab-active,
 .nav-tab-active:hover {
 	background-color: $body-background;
@@ -350,6 +348,26 @@ ul#adminmenu > li.current > a.current:after {
 	background: $adminbar-input-background;
 }
 
+/* Admin Bar: recovery mode */
+
+#wpadminbar #wp-admin-bar-recovery-mode {
+	color: $adminbar-recovery-exit-text;
+	background-color: $adminbar-recovery-exit-background;
+}
+
+#wpadminbar #wp-admin-bar-recovery-mode .ab-item,
+#wpadminbar #wp-admin-bar-recovery-mode a.ab-item {
+	color: $adminbar-recovery-exit-text;
+}
+
+#wpadminbar .ab-top-menu > #wp-admin-bar-recovery-mode.hover >.ab-item,
+#wpadminbar.nojq .quicklinks .ab-top-menu > #wp-admin-bar-recovery-mode > .ab-item:focus,
+#wpadminbar:not(.mobile) .ab-top-menu > #wp-admin-bar-recovery-mode:hover > .ab-item,
+#wpadminbar:not(.mobile) .ab-top-menu > #wp-admin-bar-recovery-mode > .ab-item:focus {
+	color: $adminbar-recovery-exit-text;
+	background-color: $adminbar-recovery-exit-background-alt;
+}
+
 /* Admin Bar: my account */
 
 #wpadminbar .quicklinks li#wp-admin-bar-my-account.with-avatar > a img {
@@ -408,12 +426,7 @@ ul#adminmenu > li.current > a.current:after {
 }
 
 .media-selection .attachment.selection.details .thumbnail {
-	-webkit-box-shadow:
-		0px 0px 0px 1px #fff,
-		0px 0px 0px 3px $highlight-color;
-	box-shadow:
-		0px 0px 0px 1px #fff,
-		0px 0px 0px 3px $highlight-color;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px $highlight-color;
 }
 
 

@@ -26,6 +26,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_authenticate', 'skystats_ajax_facebo
  */
 function skystats_ajax_facebook_authenticate() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	skystats_api_facebook_delete_pages();
 
 	skystats_api_facebook_delete_cached_page_id();
@@ -40,6 +50,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_authorize', 'skystats_ajax_facebook_
  * @since 1.0.0
  */
 function skystats_ajax_facebook_authorize() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	skystats_api_facebook_delete_pages();
 
@@ -56,6 +76,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_reauthorize', 'skystats_ajax_faceboo
  */
 function skystats_ajax_facebook_reauthorize() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	skystats_api_facebook_delete_pages();
 
 	skystats_api_facebook_delete_cached_page_id();
@@ -70,6 +100,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_deauthorize', 'skystats_ajax_faceboo
  * @since 1.0.0
  */
 function skystats_ajax_facebook_deauthorize() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	skystats_api_facebook_delete_pages();
 
@@ -114,6 +154,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_save_page_id', 'skystats_ajax_facebo
  */
 function skystats_ajax_facebook_save_page_id() {
 
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
+
 	if ( ! isset( $_POST['page_id'] ) ) {
 		exit();
 	}
@@ -137,6 +187,16 @@ add_action( 'wp_ajax_skystats_ajax_facebook_get_page_list', 'skystats_ajax_faceb
  * @since 1.0.0
  */
 function skystats_ajax_facebook_get_page_list() {
+
+	/**
+	 * Page access related functions.
+	 * @since 0.3.8
+	 */
+	require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+	if ( ! skystats_can_current_user_access_settings() ) {
+		echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+		exit();
+	}
 
 	$request_type = isset( $_GET['request_type'] ) && 'cached' === $_GET['request_type'] ? 'cached' : 'fresh';
 

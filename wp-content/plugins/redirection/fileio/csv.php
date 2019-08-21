@@ -4,34 +4,32 @@ class Red_Csv_File extends Red_FileIO {
 	const CSV_SOURCE = 0;
 	const CSV_TARGET = 1;
 	const CSV_REGEX = 2;
-	const CSV_TYPE = 3;
-	const CSV_CODE = 4;
+	const CSV_CODE = 3;
 
-	public function export( array $items ) {
-		$filename = 'redirection-'.date_i18n( get_option( 'date_format' ) ).'.csv';
+	public function force_download() {
+		parent::force_download();
 
 		header( 'Content-Type: text/csv' );
-		header( 'Cache-Control: no-cache, must-revalidate' );
-		header( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
-		header( 'Content-Disposition: attachment; filename="'.$filename.'"' );
-
-		$stdout = fopen( 'php://output', 'w' );
-
-		$this->output_to_file( $stdout, $items );
+		header( 'Content-Disposition: attachment; filename="' . $this->export_filename( 'csv' ) . '"' );
 	}
 
-	public function output_to_file( $handle, array $items ) {
-		fputcsv( $handle, array( 'source', 'target', 'regex', 'type', 'code', 'match', 'hits', 'title' ) );
+	public function get_data( array $items, array $groups ) {
+		$lines[] = implode( ',', array( 'source', 'target', 'regex', 'type', 'code', 'match', 'hits', 'title' ) );
 
 		foreach ( $items as $line ) {
-			fwrite( $handle, $this->item_as_csv( $line ).PHP_EOL );
+			$lines[] = $this->item_as_csv( $line );
 		}
+
+		return implode( PHP_EOL, $lines ) . PHP_EOL;
 	}
 
 	public function item_as_csv( $item ) {
+		$data = $item->match->get_data();
+		$data = isset( $data['url'] ) ? $data = $data['url'] : '*';
+
 		$csv = array(
 			$item->get_url(),
-			$item->get_action_data(),
+			$data,
 			$item->is_regex() ? 1 : 0,
 			$item->get_action_type(),
 			$item->get_action_code(),
@@ -45,7 +43,7 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function escape_csv( $item ) {
-		return '"'.str_replace( '"', '""', $item ).'"';
+		return '"' . str_replace( '"', '""', $item ) . '"';
 	}
 
 	public function load( $group, $filename, $data ) {
@@ -55,17 +53,23 @@ class Red_Csv_File extends Red_FileIO {
 
 		ini_set( 'auto_detect_line_endings', false );
 
+		$count = 0;
 		if ( $file ) {
-			return $this->load_from_file( $group, $file );
+			$count = $this->load_from_file( $group, $file, ',' );
+
+			// Try again with semicolons - Excel often exports CSV with semicolons
+			if ( $count === 0 ) {
+				$count = $this->load_from_file( $group, $file, ';' );
+			}
 		}
 
-		return 0;
+		return $count;
 	}
 
-	public function load_from_file( $group_id, $file ) {
+	public function load_from_file( $group_id, $file, $separator ) {
 		$count = 0;
 
-		while ( ( $csv = fgetcsv( $file, 5000, ',' ) ) ) {
+		while ( ( $csv = fgetcsv( $file, 5000, $separator ) ) ) {
 			$item = $this->csv_as_item( $csv, $group_id );
 
 			if ( $item ) {
@@ -89,14 +93,14 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function csv_as_item( $csv, $group ) {
-		if ( $csv[ self::CSV_SOURCE ] !== 'source' && $csv[ self::CSV_TARGET ] !== 'target' && count( $csv ) > 1 ) {
+		if ( count( $csv ) > 1 && $csv[ self::CSV_SOURCE ] !== 'source' && $csv[ self::CSV_TARGET ] !== 'target' ) {
 			return array(
-				'source'      => trim( $csv[ self::CSV_SOURCE ] ),
-				'target'      => trim( $csv[ self::CSV_TARGET ] ),
+				'url'         => trim( $csv[ self::CSV_SOURCE ] ),
+				'action_data' => array( 'url' => trim( $csv[ self::CSV_TARGET ] ) ),
 				'regex'       => isset( $csv[ self::CSV_REGEX ] ) ? $this->parse_regex( $csv[ self::CSV_REGEX ] ) : $this->is_regex( $csv[ self::CSV_SOURCE ] ),
 				'group_id'    => $group,
-				'match'       => 'url',
-				'red_action'  => 'url',
+				'match_type'  => 'url',
+				'action_type' => 'url',
 				'action_code' => isset( $csv[ self::CSV_CODE ] ) ? $this->get_valid_code( $csv[ self::CSV_CODE ] ) : 301,
 			);
 		}

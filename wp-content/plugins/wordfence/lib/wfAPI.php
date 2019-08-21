@@ -1,6 +1,6 @@
 <?php
-require_once('wordfenceConstants.php');
-require_once('wordfenceClass.php');
+require_once(dirname(__FILE__) . '/wordfenceConstants.php');
+require_once(dirname(__FILE__) . '/wordfenceClass.php');
 
 class wfAPI {
 	const KEY_TYPE_FREE = 'free';
@@ -69,8 +69,16 @@ class wfAPI {
 		if (isset($dat['_hasKeyConflict'])) {
 			$hasKeyConflict = ($dat['_hasKeyConflict'] == 1);
 			if ($hasKeyConflict) {
-				new wfNotification(null, wfNotification::PRIORITY_HIGH_CRITICAL, '<a href="' . network_admin_url('admin.php?page=Wordfence&subpage=global_options') . '">The Wordfence API key you\'re using does not match this site\'s address. Premium features are disabled.</a>', 'wfplugin_keyconflict', null, array(array('link' => 'https://www.wordfence.com/manage-wordfence-api-keys/', 'label' => 'Manage Keys')));
+				new wfNotification(null, wfNotification::PRIORITY_HIGH_CRITICAL, '<a href="' . wfUtils::wpAdminURL('admin.php?page=Wordfence&subpage=global_options') . '">The Wordfence license you\'re using does not match this site\'s address. Premium features are disabled.</a>', 'wfplugin_keyconflict', null, array(array('link' => 'https://www.wordfence.com/manage-wordfence-api-keys/', 'label' => 'Manage Keys')));
 				wfConfig::set('hasKeyConflict', 1);
+			}
+		}
+		
+		$keyNoLongerValid = false;
+		if (isset($dat['_keyNoLongerValid'])) {
+			$keyNoLongerValid = ($dat['_keyNoLongerValid'] == 1);
+			if ($keyNoLongerValid) {
+				wordfence::ajax_downgradeLicense_callback();
 			}
 		}
 		
@@ -100,7 +108,7 @@ class wfAPI {
 		wordfence::status(4, 'info', "Calling Wordfence API v" . WORDFENCE_API_VERSION . ":" . $url);
 
 		if (!function_exists('wp_remote_post')) {
-			require_once ABSPATH . WPINC . 'http.php';
+			require_once(ABSPATH . WPINC . 'http.php');
 		}
 
 		$ssl_verify = (bool) wfConfig::get('ssl_verify');
@@ -166,15 +174,32 @@ class wfAPI {
 	}
 
 	public function makeAPIQueryString() {
-		$homeurl = wfUtils::wpHomeURL();
+		$cv = null;
+		$cs = null;
+		if (function_exists('curl_version')) {
+			$curl = curl_version();
+			$cv = $curl['version'];
+			$cs = $curl['ssl_version'];
+		}
+		
+		$values = array(
+			'wp' => $this->wordpressVersion,
+			'wf' => WORDFENCE_VERSION,
+			'ms' => (is_multisite() ? get_blog_count() : false),
+			'h' => wfUtils::wpHomeURL(),
+			'sslv' => function_exists('openssl_verify') && defined('OPENSSL_VERSION_NUMBER') ? OPENSSL_VERSION_NUMBER : null,
+			'pv' => phpversion(),
+			'pt' => php_sapi_name(),
+			'cv' => $cv,
+			'cs' => $cs,
+			'sv' => (isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null),
+			'dv' => wfConfig::get('dbVersion', null),
+		);
+		
 		return self::buildQuery(array(
-			'v'         => $this->wordpressVersion,
-			's'         => $homeurl,
-			'k'         => $this->APIKey,
-			'openssl'   => function_exists('openssl_verify') && defined('OPENSSL_VERSION_NUMBER') ? OPENSSL_VERSION_NUMBER : '0.0.0',
-			'phpv'      => phpversion(),
+			'k' => $this->APIKey,
+			's' => wfUtils::base64url_encode(json_encode($values)),
 			'betaFeed'  => (int) wfConfig::get('betaThreatDefenseFeed'),
-			'cacheType' => wfConfig::get('cacheType'),
 		));
 	}
 
@@ -192,9 +217,14 @@ class wfAPI {
 
 	public static function SSLEnabled() {
 		if (!function_exists('wp_http_supports')) {
-			require_once ABSPATH . WPINC . 'http.php';
+			require_once(ABSPATH . WPINC . 'http.php');
 		}
 		return wp_http_supports(array('ssl'));
+	}
+	
+	public function getTextImageURL($text) {
+		$apiURL = $this->getAPIURL();
+		return rtrim($apiURL, '/') . '/v' . WORDFENCE_API_VERSION . '/?' . $this->makeAPIQueryString() . '&' . self::buildQuery(array('action' => 'image', 'txt' => base64_encode($text)));
 	}
 }
 

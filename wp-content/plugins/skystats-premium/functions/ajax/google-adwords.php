@@ -32,8 +32,32 @@ function skystats_ajax_google_adwords_api_query() {
 
 	$query = wp_strip_all_tags( $_GET['query'] );
 
+	$require_settings_access_queries = array( 'deauthorize', 'get_accounts', 'save_customer_id', 'save_campaign_id' );
+
+	if ( in_array( $query, $require_settings_access_queries ) ) {
+		/**
+		 * Page access related functions.
+		 * @since 0.3.8
+		 */
+		require_once SKYSTATS_FUNCTIONS_PATH . 'access.php';
+		if ( ! skystats_can_current_user_access_settings() ) {
+			echo json_encode( array( 'data' => null, 'responseType' => 'error', 'responseContext' => 'user_settings_access_denied' ) );
+			exit();
+		}
+	}
+
+	if ( 'authorize' === $query ) {
+		skystats_api_google_adwords_authorize();
+		exit();
+	}
+
 	if ( 'deauthorize' === $query ) {
-		skystats_api_google_adwords_deauthorize();
+		skystats_api_google_adwords_deauthorize( 'site' );
+		exit();
+	}
+
+	if ( 'deauthorize_license' === $query ) {
+		skystats_api_google_adwords_deauthorize( 'license' );
 		exit();
 	}
 
